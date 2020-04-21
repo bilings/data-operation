@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.setting.ExtOrganizationMapper">
+    <select id="extOrganizationList" resultType="com.hifo.dataoperation.entity.ExtOrganization">
+        SELECT
+        subscribemethod
+        FROM
+        ext_organization a
+        <where>
+            <if test="extOrganization.id > 0">
+                AND a.id = #{extOrganization.id}
+            </if>
+            <if test="extOrganization.name  != null and extOrganization.name != ''">
+                AND a.name = #{extOrganization.name}
+            </if>
+        </where>
+    </select>
+</mapper>

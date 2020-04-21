@@ -1,0 +1,12 @@
+#builtRecommendMergeIndex_wrapper {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 100%;
+}
+#builtRecommendMergeIndex_wrapper #districtSelect{
+    height:37px;
+}
+#builtRecommendMergeIndex_wrapper #sourceSelect{
+    height:37px;
+}

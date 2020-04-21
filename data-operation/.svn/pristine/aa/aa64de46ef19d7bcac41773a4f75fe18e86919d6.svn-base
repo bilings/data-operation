@@ -1,0 +1,70 @@
+#customerOrgIndex_wrapper .layui-header {
+    background-color: #FFFFFF;
+}
+
+#customerOrgIndex_wrapper #orgTree {
+    background-color: #FFFFFF;
+}
+
+#customerOrgIndex_wrapper .layui-tree-skin-blank{
+    background-color: #FFFFFF;
+}
+
+#customerOrgIndex_wrapper .layui-side {
+    border: 1px solid #e6e6e6;
+    margin-left: 10px;
+    margin-bottom: 10px;
+}
+
+#customerOrgIndex_wrapper #orgDetail {
+    border: 1px solid #e6e6e6;
+    height: 50px;
+    margin-bottom: 8px;
+    margin-left: 20px;
+    margin-right: 30px;
+}
+
+#customerOrgIndex_wrapper #orgDetail .layui-inline {
+    width: auto;
+}
+
+#customerOrgIndex_wrapper #orgDetail .layui-form-label {
+    width: auto;
+    margin-right: -10px;
+}
+
+#customerOrgIndex_wrapper #orgDetail input {
+    width: auto;
+    margin-right: 100px;
+    border: 0px;
+}
+
+#customerOrgIndex_wrapper #tableShow {
+    margin-left: 20px;
+    margin-right: 30px;
+}
+
+#customerOrgIndex_wrapper #tableShow label {
+    margin-top: 10px;
+    float: none;
+}
+
+.layui-layer-iframe .layui-layer-ico {
+    background-repeat: repeat !important;
+    background-position-x: 210px !important;
+    background-position-y: 20px !important;
+}
+
+/*全局设定，输入框的大小*/
+.layui-form-label {
+    padding: 5px 15px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    line-height: 30px;
+}
+
+.layui-form-select dl dd, .layui-form-select dl dt {
+    line-height: 30px;
+}

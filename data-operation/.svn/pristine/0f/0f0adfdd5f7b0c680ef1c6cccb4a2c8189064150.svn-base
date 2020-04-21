@@ -1,0 +1,16 @@
+package com.hifo.dataoperation.vo;
+
+import lombok.Data;
+
+/**
+ * 
+ * @author 杨捷
+ * @date 2019年6月12日
+ * @description
+ */
+@Data
+public class CoeGroupTree{
+	private String name;
+    private Long id;
+    private Long parentId;
+}

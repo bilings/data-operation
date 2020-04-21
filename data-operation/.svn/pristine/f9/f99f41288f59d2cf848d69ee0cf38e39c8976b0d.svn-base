@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="coe.css" rel="stylesheet">
+    <link rel="stylesheet" href="/resource/zTree_v3/css/zTreeStyle/zTreeStyle.css" type="text/css">
+    <title>均价</title>
+</head>
+<body>
+<div id="avgCoe_wrapper">
+    <div class="layui-tab" lay-filter="tabCoe">
+
+        <input type="button" id="addCityCoeBtn" class="layui-btn" value="添加">
+        <div class="layui-tab-content">
+            <div class="layui-tab-item layui-show">
+                <div class="layui-row layui-col-space15">
+                    <div class="layui-col-md2">
+                        <div class="layui-card">
+                            <div class="layui-card-body-tree">
+                                <input type="hidden" class="configId" value="">
+                                <br>
+                                <ul id="treeDemo_floorCoe" class="ztree"></ul>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md10">
+                        <div class="layui-tab">
+                            <ul class="layui-tab-title">
+                                <li class="layui-this" data-name="floorCoe" lay-id="haveLift">有电梯</li>
+                                <li data-name="orientationCoe" lay-id="noLift">无电梯</li>
+                                <input  type="button" value="删除" id="removeRow" class="layui-btn layui-btn-primary controlBox">
+                                <input  type="button" value="添加" id="addRow" class="layui-btn controlBox">
+                                <input  type="button" value="立即保存" id="save" class="layui-btn layui-btn-warm controlBox">
+
+                            </ul>
+                            <div class="layui-tab-content" id="body_floorCoe" name="coe-body">
+                                <div class="layui-tab-item layui-show" data-type="haveLift">
+                                    <input type="hidden" class="colCount" value="0">
+                                    <table  class="layui-table coeTable">
+                                        <thead><tr><td>总楼层</td></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                                <div class="layui-tab-item" data-type="noLift">
+                                    <input type="hidden" class="colCount" value="0">
+                                    <table class="layui-table coeTable">
+                                        <thead><tr><td>总楼层1</td></thead>
+                                        <tbody></tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="/resource/zTree_v3/js/jquery-1.4.4.min.js"></script>
+<script type="text/javascript" src="/resource/zTree_v3/js/jquery.ztree.all.js"></script>
+<script type="text/javascript" src="coe.js"></script>
+
+<style type="text/css">
+    .ztree li span.button.add {
+        margin-left: 2px;
+        margin-right: -1px;
+        background-position: -144px 0;
+        vertical-align: top;
+        *vertical-align: middle
+    }
+</style>
+</body>
+</html>

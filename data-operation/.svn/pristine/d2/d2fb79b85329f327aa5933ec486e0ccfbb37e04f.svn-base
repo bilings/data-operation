@@ -1,0 +1,32 @@
+package com.hifo.dataoperation.timetask.config;
+
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@Data
+@EqualsAndHashCode(callSuper=true)
+@Configuration
+@ConfigurationProperties(prefix = "task.query")
+public class QueryConfig extends CommonConfig{
+	
+	/**
+	 * 任务cron表达式
+	 */
+	@Value("0 0 0 31 2 ?")
+	private String cron;
+	/**
+	 * 分页size
+	 */
+	@Value("1000")
+	private Integer pageSize;
+	
+	/**
+	 * 查询间隔时间
+	 */
+	@Value("1000")
+	private Long spaceTime;
+}

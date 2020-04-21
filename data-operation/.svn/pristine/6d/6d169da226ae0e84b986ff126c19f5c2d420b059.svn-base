@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="index.css" rel="stylesheet">
+    <title>员工管理</title>
+</head>
+<body>
+<div id="employeeIndex_wrapper">
+    <table class="layui-table" id="employeeTable" lay-filter="employeeTable"></table>
+    <script type="text/html" id="employeeToolbar" lay-filter="employeeToolbar">
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="newEmployee" lay-event="newEmployee">新增员工</button>
+        </div>
+        <div class="layui-inline">
+            <input type="text" id="keyword" class="layui-input" placeholder="姓名/用户名搜索" autocomplete="off"/>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="searchButton" lay-event="searchButton">搜索</button>
+        </div>
+    </script>
+    <script type="text/html" id="employeeBar">
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="editEmployee">编辑</a>
+        <a class="layui-btn layui-btn-danger layui-btn-xs" lay-event="deleteEmployee">删除</a>
+    </script>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

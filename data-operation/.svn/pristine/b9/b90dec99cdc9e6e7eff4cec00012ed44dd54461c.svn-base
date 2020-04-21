@@ -1,0 +1,56 @@
+
+server:
+  port: 8099
+#mongodb 数据库连接
+spring:
+  data:
+    mongodb:
+      uri: mongodb://192.168.4.106:27017/basic
+     #连接池
+  datasource:
+    #连接池
+    druid:
+      url: jdbc:mysql://192.168.4.105:3306/hkb_2?characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useUnicode=true
+#    url: jdbc:mysql://192.168.4.105:3306/hkb_2?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: hifo123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 10000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+web:
+  #前端文件存放绝对路径
+  web-path: C:/hkb
+  #文件存放绝对路径
+  upload-path: C:/hkb/upload/
+  #文件访问相对路径
+  rel-path: ../../../upload/
+task: 
+  query: 
+    cron: 0 0 0 * * ?
+    pageSize: 100
+    spaceTime: 500
+    coreSize: 20
+    maxSize: 100
+    queueSize: 10000
+  contrast: 
+    spaceTime: 5
+    contrastSpaceTime: 5
+    coreSize: 50
+    maxSize: 200
+    queueSize: 20000
+    nameScoreMix: 50.00
+    addrScoreMix: 30.00
+    strPattern: "宿舍|单位|设计院|小区|住宅|公司|苑|家园|街区|院|生活区|广场|公寓|別墅|花园|宿舍楼"
+

@@ -1,0 +1,126 @@
+$(function () {
+    init();
+});
+
+/**
+ * 后台链接
+ * @type {{}}
+ */
+const urlConfig = {
+    buildingType: '/avgPrice/buildingType',
+    addAvgPrice: '/avgPrice/addAvgPrice',
+    estateList: '/estate/list'
+};
+
+/**
+ * 初始化方法
+ */
+function init() {
+    //日期
+    initDate();
+    //提交事件
+    submitAdd();
+    //建筑类型下拉加载
+    $common.initBaseSelect(urlConfig.buildingType, null, 'buildingType', '建筑类型');
+
+    afterSelectAll();
+
+    searchEstateName("");
+}
+
+/**
+ *日期选择插件
+ */
+function initDate() {
+    //年月范
+    layui.laydate.render({
+        elem: '#calDate', //指定元素
+        type: 'month',
+        format: 'yyyyMM',
+    });
+}
+
+/**
+ * 提交新增表单数据
+ */
+function submitAdd() {
+    let form = layui.form;
+    //监听提交
+    form.on('submit(submitAvgPrice)', function (data) {
+        console.log(data.field);
+        //let param = {};
+        $.post({
+            url: urlConfig.addAvgPrice,
+            data: JSON.stringify(data.field),
+            contentType: "application/json",
+            success: function (res) {
+                if (res.code === 0) {
+                    layer.msg("新增均价成功！");
+                }
+            }
+        });
+    });
+}
+
+
+function  afterSelectAll() {
+    afterSelect("buildingType");
+    afterSelect("estateId");
+}
+
+function afterSelect(selectId) {
+    let form = layui.form;
+    form.on('select('+selectId+')', function (data) {
+        console.log(data);
+        let v1 = $("#estateId").val();
+        let v2 = $("#buildingType").val();
+        if (!v1 || !v2){
+            return;
+        }
+        $.post({
+            url: urlConfig.estateList,
+            data: JSON.stringify({page:1,limit:10, id:v1, buildingCategoryCode:v2}),
+            contentType: "application/json",
+            success: function (val) {
+                let res = JSON.parse(val);
+                console.log(res);
+
+                if (res.code === 0) {
+                    $("#areaSegment").val(res.data.first().id);
+
+
+
+                }
+            }
+        });
+    });
+}
+
+function searchEstateName(name){
+    $.post({
+        url: urlConfig.estateList,
+        data: JSON.stringify({page:1,limit:10,name:name}),
+        contentType: "application/json",
+        success: function (val) {
+            let res = JSON.parse(val);
+            $('#estateId').append('<option selected value="">请输入选择</option>');
+            $.each(res.data, function (index, item) {
+                let v = "";
+                if(item.name){
+                    v+=item.name+"—";
+                }
+                if(item.cityName){
+                    v+=item.cityName+"—";
+                }
+                if(item.districtName){
+                    v+=item.districtName;
+                }
+                $('#estateId').append('<option value="' + item.id + '">' + v + '</option>');
+                //console.log(v);
+            });
+            layui.form.render('select');
+        }
+    });
+
+}
+

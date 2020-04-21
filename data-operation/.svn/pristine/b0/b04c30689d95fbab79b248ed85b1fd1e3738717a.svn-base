@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="price.css" rel="stylesheet">
+    <title>均价管理</title>
+</head>
+<body>
+<div id="avgPriceIndex_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <!--行政区-->
+                <div class="layui-input-inline" id="districtDiv">
+                    <select id="districtSelect" class="layui-input" name="districtSelect" ></select>
+                </div>
+                <!--楼盘名称-->
+                <div class="layui-input-inline">
+                    <input type="text" id="estateName" class="layui-input" placeholder="楼盘名称" autocomplete="off"/>
+                </div>
+                <!--建筑类别-->
+                <div class="layui-input-inline" id="buildingTypeDiv">
+                    <select id="buildingTypeSelect" class="layui-input" name="buildingTypeSelect" ></select>
+                </div>
+                <!--案例数范围-->
+                <div class="layui-input-inline">
+                    <input type="text" id="caseNumMin" class="layui-input" placeholder="案例数最小值" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" id="caseNumMax" class="layui-input" placeholder="案例数最大值" autocomplete="off"/>
+                </div>
+                <!--时间范围-->
+                <div class="layui-input-inline" id="timeScope">
+                    <input type="text" class="layui-input" id="calDate" placeholder="开始时间-结束时间">
+                </div>
+                <!--环比范围-->
+                <div class="layui-input-inline">
+                    <input type="text" id="monthGainMin" class="layui-input" placeholder="环比最小" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" id="monthGainMax" class="layui-input" placeholder="环比最大" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline" id="btnDiv">
+                    <button id="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">
+                        <li class="layui-icon layui-icon-search"></li>
+                    </button>
+                    <button id="clearBtn" type="reset" class="layui-btn  layui-btn-sm layui-btn-radius layui-btn-normal">清 空</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/html" id="avgPriceToolbar" lay-filter="avgPriceToolbar">
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="batchHide" lay-event="batchHide">批量隐藏</button>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="batchShow" lay-event="batchShow">取消隐藏</button>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="addAvgPrice" lay-event="addAvgPrice">新增均价</button>
+        </div>
+    </script>
+
+    <table class="layui-table" id="avgPriceTable" lay-filter="avgPriceTable"></table>
+
+    <script type="text/html" id="avgPriceBar">
+        <a class="layui-btn layui-btn-primary layui-btn-sm" style="border: 0;" lay-event="hide">
+            <i class="layui-icon {{ d.visibility == '1' ? 'layui-icon-ok-circle' : 'layui-icon-close-fill' }}"></i>
+        </a>
+        <a href="#" style="color: blue" lay-event="correctAvgPrice">修正系统均价</a>
+    </script>
+
+    <!--Tpl物业品质 -->
+    <script type="text/html" id="qualityTpl">
+        {{#  if(d.quality ==15 ){ }}
+        双拼别墅
+        {{#  } else if(d.quality ==14 ){ }}
+        叠拼别墅
+        {{#  } else if(d.quality ==10 ){ }}
+        普通住宅（公寓）
+        {{#  } else if(d.quality ==16 ){ }}
+        独立别墅
+        {{#  } else if(d.quality ==17 ){ }}
+        类独栋
+        {{#  } else if(d.quality ==13 ){ }}
+        联排别墅
+        {{#  } else if(d.quality ==12 ){ }}
+        花园洋房
+        {{#  } else if(d.quality ==11 ){ }}
+        高档公寓
+        {{#  } }}
+    </script>
+
+    <!--Tpl建筑类别 -->
+    <script type="text/html" id="buildingTypeTpl">
+        {{#  if(d.buildingType ==19 ){ }}
+        低层
+        {{#  } else if(d.buildingType ==20 ){ }}
+        多层
+        {{#  } else if(d.buildingType ==21 ){ }}
+        小高层
+        {{#  } else if(d.buildingType ==23 ){ }}
+        超高层
+        {{#  } else if(d.buildingType ==22 ){ }}
+        高层
+        {{#  } }}
+    </script>
+
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="price.js"></script>
+</body>
+</html>

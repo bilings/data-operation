@@ -1,0 +1,475 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.hifo.dataoperation.mapper.estate.BusBuildingMapper">
+    <resultMap id="BaseResultMap" type="com.hifo.dataoperation.entity.BusBuilding">
+        <result column="id" property="id" jdbcType="BIGINT"/>
+        <result column="esId" property="esId" jdbcType="VARCHAR"/>
+        <result column="organizationId" property="organizationId" jdbcType="INTEGER"/>
+        <result column="estateId" property="estateId" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="alias" property="alias" jdbcType="VARCHAR"/>
+        <result column="unitNo" property="unitNo" jdbcType="INTEGER"/>
+        <result column="unitName" property="unitName" jdbcType="VARCHAR"/>
+        <result column="floorOverGroundNo" property="floorOverGroundNo" jdbcType="INTEGER"/>
+        <result column="floorUnderGroundNo" property="floorUnderGroundNo" jdbcType="INTEGER"/>
+        <result column="floorTotalNo" property="floorTotalNo" jdbcType="INTEGER"/>
+        <result column="roomNoPerFloor" property="roomNoPerFloor" jdbcType="INTEGER"/>
+        <result column="roomNo" property="roomNo" jdbcType="INTEGER"/>
+        <result column="builtDate" property="builtDate" jdbcType="VARCHAR"/>
+        <result column="liftNo" property="liftNo" jdbcType="INTEGER"/>
+        <result column="liftBrand" property="liftBrand" jdbcType="VARCHAR"/>
+        <result column="address" property="address" jdbcType="VARCHAR"/>
+        <result column="structure" property="structure" jdbcType="VARCHAR"/>
+        <result column="buildingType" property="buildingType" jdbcType="VARCHAR"/>
+        <result column="landArea" property="landArea" jdbcType="REAL"/>
+        <result column="quality" property="quality" jdbcType="VARCHAR"/>
+        <result column="avgPrice" property="avgPrice" jdbcType="REAL"/>
+        <result column="priceCoe" property="priceCoe" jdbcType="REAL"/>
+        <result column="wallDecoration" property="wallDecoration" jdbcType="VARCHAR"/>
+        <result column="publicDecoration" property="publicDecoration" jdbcType="VARCHAR"/>
+        <result column="nonStandDesc" property="nonStandDesc" jdbcType="VARCHAR"/>
+        <result column="priceDesc" property="priceDesc" jdbcType="VARCHAR"/>
+        <result column="connector" property="connector" jdbcType="CHAR"/>
+        <result column="basePrice" property="basePrice" jdbcType="REAL"/>
+        <result column="baseRoomNo" property="baseRoomNo" jdbcType="VARCHAR"/>
+        <result column="lngGd" property="lngGd" jdbcType="REAL"/>
+        <result column="latGd" property="latGd" jdbcType="REAL"/>
+        <result column="lngBd" property="lngBd" jdbcType="REAL"/>
+        <result column="latBd" property="latBd" jdbcType="REAL"/>
+        <result column="haveLift" property="haveLift" jdbcType="CHAR"/>
+        <result column="canEvaluate" property="canEvaluate" jdbcType="CHAR"/>
+        <result column="isPerfect" property="isPerfect" jdbcType="CHAR"/>
+        <result column="visibility" property="visibility" jdbcType="CHAR"/>
+        <result column="createId" property="createId" jdbcType="INTEGER"/>
+        <result column="createName" property="createName" jdbcType="VARCHAR"/>
+        <result column="updateId" property="updateId" jdbcType="INTEGER"/>
+        <result column="updateName" property="updateName" jdbcType="VARCHAR"/>
+        <result column="updateTime" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <insert id="insertSelective" parameterType="com.hifo.dataoperation.entity.BusBuilding">
+        insert into bus_building
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                id,
+            </if>
+            <if test="esId != null">
+                esId,
+            </if>
+            <if test="organizationId != null">
+                organizationId,
+            </if>
+            <if test="estateId != null">
+                estateId,
+            </if>
+            <if test="name != null">
+                name,
+            </if>
+            <if test="alias != null">
+                alias,
+            </if>
+            <if test="unitNo != null">
+                unitNo,
+            </if>
+            <if test="floorOverGroundNo != null">
+                floorOverGroundNo,
+            </if>
+            <if test="floorUnderGroundNo != null">
+                floorUnderGroundNo,
+            </if>
+            <if test="floorTotalNo != null">
+                floorTotalNo,
+            </if>
+            <if test="roomNoPerFloor != null">
+                roomNoPerFloor,
+            </if>
+            <if test="roomNo != null">
+                roomNo,
+            </if>
+            <if test="builtDate != null">
+                builtDate,
+            </if>
+            <if test="liftNo != null">
+                liftNo,
+            </if>
+            <if test="liftBrand != null">
+                liftBrand,
+            </if>
+            <if test="address != null">
+                address,
+            </if>
+            <if test="structure != null">
+                structure,
+            </if>
+            <if test="buildingType != null">
+                buildingType,
+            </if>
+            <if test="landArea != null">
+                landArea,
+            </if>
+            <if test="quality != null">
+                quality,
+            </if>
+            <if test="avgPrice != null">
+                avgPrice,
+            </if>
+            <if test="priceCoe != null">
+                priceCoe,
+            </if>
+            <if test="wallDecoration != null">
+                wallDecoration,
+            </if>
+            <if test="publicDecoration != null">
+                publicDecoration,
+            </if>
+            <if test="nonStandDesc != null">
+                nonStandDesc,
+            </if>
+            <if test="priceDesc != null">
+                priceDesc,
+            </if>
+            <if test="connector != null">
+                connector,
+            </if>
+            <if test="basePrice != null">
+                basePrice,
+            </if>
+            <if test="baseRoomNo != null">
+                baseRoomNo,
+            </if>
+            <if test="lngGd != null">
+                lngGd,
+            </if>
+            <if test="latGd != null">
+                latGd,
+            </if>
+            <if test="lngBd != null">
+                lngBd,
+            </if>
+            <if test="latBd != null">
+                latBd,
+            </if>
+            <if test="haveLift != null">
+                haveLift,
+            </if>
+            <if test="canEvaluate != null">
+                canEvaluate,
+            </if>
+            <if test="isPerfect != null">
+                isPerfect,
+            </if>
+            <if test="visibility != null">
+                visibility,
+            </if>
+            <if test="createId != null">
+                createId,
+            </if>
+            <if test="createName != null">
+                createName,
+            </if>
+            <if test="updateId != null">
+                updateId,
+            </if>
+            <if test="updateName != null">
+                updateName,
+            </if>
+            <if test="updateTime != null">
+                updateTime,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="id != null">
+                #{id,jdbcType=BIGINT},
+            </if>
+            <if test="esId != null">
+                #{esId,jdbcType=VARCHAR},
+            </if>
+            <if test="organizationId != null">
+                #{organizationId,jdbcType=INTEGER},
+            </if>
+            <if test="estateId != null">
+                #{estateId,jdbcType=BIGINT},
+            </if>
+            <if test="name != null">
+                #{name,jdbcType=VARCHAR},
+            </if>
+            <if test="alias != null">
+                #{alias,jdbcType=VARCHAR},
+            </if>
+            <if test="unitNo != null">
+                #{unitNo,jdbcType=INTEGER},
+            </if>
+            <if test="floorOverGroundNo != null">
+                #{floorOverGroundNo,jdbcType=INTEGER},
+            </if>
+            <if test="floorUnderGroundNo != null">
+                #{floorUnderGroundNo,jdbcType=INTEGER},
+            </if>
+            <if test="floorTotalNo != null">
+                #{floorTotalNo,jdbcType=INTEGER},
+            </if>
+            <if test="roomNoPerFloor != null">
+                #{roomNoPerFloor,jdbcType=INTEGER},
+            </if>
+            <if test="roomNo != null">
+                #{roomNo,jdbcType=INTEGER},
+            </if>
+            <if test="builtDate != null">
+                #{builtDate,jdbcType=VARCHAR},
+            </if>
+            <if test="liftNo != null">
+                #{liftNo,jdbcType=INTEGER},
+            </if>
+            <if test="liftBrand != null">
+                #{liftBrand,jdbcType=VARCHAR},
+            </if>
+            <if test="address != null">
+                #{address,jdbcType=VARCHAR},
+            </if>
+            <if test="structure != null">
+                #{structure,jdbcType=VARCHAR},
+            </if>
+            <if test="buildingType != null">
+                #{buildingType,jdbcType=VARCHAR},
+            </if>
+            <if test="landArea != null">
+                #{landArea,jdbcType=REAL},
+            </if>
+            <if test="quality != null">
+                #{quality,jdbcType=VARCHAR},
+            </if>
+            <if test="avgPrice != null">
+                #{avgPrice,jdbcType=REAL},
+            </if>
+            <if test="priceCoe != null">
+                #{priceCoe,jdbcType=REAL},
+            </if>
+            <if test="wallDecoration != null">
+                #{wallDecoration,jdbcType=VARCHAR},
+            </if>
+            <if test="publicDecoration != null">
+                #{publicDecoration,jdbcType=VARCHAR},
+            </if>
+            <if test="nonStandDesc != null">
+                #{nonStandDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="priceDesc != null">
+                #{priceDesc,jdbcType=VARCHAR},
+            </if>
+            <if test="connector != null">
+                #{connector,jdbcType=CHAR},
+            </if>
+            <if test="basePrice != null">
+                #{basePrice,jdbcType=REAL},
+            </if>
+            <if test="baseRoomNo != null">
+                #{baseRoomNo,jdbcType=VARCHAR},
+            </if>
+            <if test="lngGd != null">
+                #{lngGd,jdbcType=REAL},
+            </if>
+            <if test="latGd != null">
+                #{latGd,jdbcType=REAL},
+            </if>
+            <if test="lngBd != null">
+                #{lngBd,jdbcType=REAL},
+            </if>
+            <if test="latBd != null">
+                #{latBd,jdbcType=REAL},
+            </if>
+            <if test="haveLift != null">
+                #{haveLift,jdbcType=CHAR},
+            </if>
+            <if test="canEvaluate != null">
+                #{canEvaluate,jdbcType=CHAR},
+            </if>
+            <if test="isPerfect != null">
+                #{isPerfect,jdbcType=CHAR},
+            </if>
+            <if test="visibility != null">
+                #{visibility,jdbcType=CHAR},
+            </if>
+            <if test="createId != null">
+                #{createId,jdbcType=INTEGER},
+            </if>
+            <if test="createName != null">
+                #{createName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateId != null">
+                #{updateId,jdbcType=INTEGER},
+            </if>
+            <if test="updateName != null">
+                #{updateName,jdbcType=VARCHAR},
+            </if>
+            <if test="updateTime != null">
+                #{updateTime,jdbcType=TIMESTAMP},
+            </if>
+        </trim>
+    </insert>
+    <!-- 查询 -->
+    <select id="getBuildingList" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from bus_building
+        where estateId = #{communityId,jdbcType=BIGINT}
+        <if test="visibility == null or visibility == ''">
+            and visibility in('1' ,'2')
+        </if>
+        <if test="name != null and name != ''">
+            and INSTR(name, #{name,jdbcType=VARCHAR} )>0
+        </if>
+        <if test="address != null and address != ''">
+            and INSTR(address, #{address,jdbcType=VARCHAR})>0
+        </if>
+        <if test="quality != null and quality != ''">
+            and quality = #{quality,jdbcType=VARCHAR}
+        </if>
+        <if test="visibility != null and visibility != ''">
+            and visibility = #{visibility,jdbcType=VARCHAR}
+        </if>
+    </select>
+
+    <update id="hideBuilding" parameterType="java.util.List">
+        UPDATE bus_building SET visibility = "1" WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <update id="showBuilding" parameterType="java.util.List">
+        UPDATE bus_building SET visibility = "2" WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <update id="transferBuilding" parameterType="java.util.List">
+        UPDATE bus_building SET estateId = #{estateId,jdbcType=BIGINT} WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item}
+        </foreach>
+    </update>
+
+    <select id="findById" resultMap="BaseResultMap">
+    SELECT * FROM  bus_building  WHERE id = #{id}
+  </select>
+
+    <update id="fillSave" parameterType="java.util.List">
+        <foreach collection="list" item="item" index="index" open="" close="" separator=";">
+            update bus_building
+            set
+            esId= #{item.esId,jdbcType=VARCHAR},
+            organizationId= #{item.organizationId,jdbcType=INTEGER},
+            estateId= #{item.estateId,jdbcType=BIGINT},
+            name= #{item.name,jdbcType=VARCHAR},
+            alias= #{item.alias,jdbcType=VARCHAR},
+            unitNo= #{item.unitNo,jdbcType=INTEGER},
+            floorOverGroundNo= #{item.floorOverGroundNo,jdbcType=INTEGER},
+            floorUnderGroundNo= #{item.floorUnderGroundNo,jdbcType=INTEGER},
+            floorTotalNo= #{item.floorTotalNo,jdbcType=INTEGER},
+            roomNoPerFloor= #{item.roomNoPerFloor,jdbcType=INTEGER},
+            roomNo= #{item.roomNo,jdbcType=INTEGER},
+            builtDate= #{item.builtDate,jdbcType=VARCHAR},
+            liftNo= #{item.liftNo,jdbcType=INTEGER},
+            liftBrand= #{item.liftBrand,jdbcType=VARCHAR},
+            address= #{item.address,jdbcType=VARCHAR},
+            structure= #{item.structure,jdbcType=VARCHAR},
+            buildingType= #{item.buildingType,jdbcType=VARCHAR},
+            landArea= #{item.landArea,jdbcType=REAL},
+            quality= #{item.quality,jdbcType=VARCHAR},
+            avgPrice= #{item.avgPrice,jdbcType=REAL},
+            priceCoe= #{item.priceCoe,jdbcType=REAL},
+            wallDecoration= #{item.wallDecoration,jdbcType=VARCHAR},
+            publicDecoration= #{item.publicDecoration,jdbcType=VARCHAR},
+            nonStandDesc= #{item.nonStandDesc,jdbcType=VARCHAR},
+            priceDesc= #{item.priceDesc,jdbcType=VARCHAR},
+            connector= #{item.connector,jdbcType=CHAR},
+            basePrice= #{item.basePrice,jdbcType=REAL},
+            baseRoomNo= #{item.baseRoomNo,jdbcType=VARCHAR},
+            lngGd= #{item.lngGd,jdbcType=REAL},
+            latGd= #{item.latGd,jdbcType=REAL},
+            lngBd= #{item.lngBd,jdbcType=REAL},
+            latBd= #{item.latBd,jdbcType=REAL},
+            haveLift= #{item.haveLift,jdbcType=CHAR},
+            canEvaluate= #{item.canEvaluate,jdbcType=CHAR},
+            isPerfect= #{item.isPerfect,jdbcType=CHAR},
+            visibility= #{item.visibility,jdbcType=CHAR},
+            createId= #{item.createId,jdbcType=INTEGER},
+            createName= #{item.createName,jdbcType=VARCHAR},
+            updateId= #{item.updateId,jdbcType=INTEGER},
+            updateName= #{item.updateName,jdbcType=VARCHAR},
+            updateTime=#{item.updateTime,jdbcType=TIMESTAMP}
+            where id = #{item.id};
+        </foreach>
+    </update>
+
+    <update id="fillSaveOne" parameterType="com.hifo.dataoperation.entity.BusBuilding">
+      update bus_building
+      set
+      alias= #{alias,jdbcType=VARCHAR},
+      unitNo=  #{unitNo,jdbcType=INTEGER},
+      floorOverGroundNo= #{floorOverGroundNo,jdbcType=INTEGER},
+      floorUnderGroundNo=  #{floorUnderGroundNo,jdbcType=INTEGER},
+      floorTotalNo=  #{floorTotalNo,jdbcType=INTEGER},
+      roomNoPerFloor=  #{roomNoPerFloor,jdbcType=INTEGER},
+      roomNo=  #{roomNo,jdbcType=INTEGER},
+      builtDate=  #{builtDate,jdbcType=VARCHAR},
+      liftNo=  #{liftNo,jdbcType=INTEGER},
+      liftBrand=  #{liftBrand,jdbcType=VARCHAR},
+      address=  #{address,jdbcType=VARCHAR},
+      structure= #{structure,jdbcType=VARCHAR},
+      buildingType= #{buildingType,jdbcType=VARCHAR},
+      landArea= #{landArea,jdbcType=REAL},
+      quality=  #{quality,jdbcType=VARCHAR},
+      avgPrice=  #{avgPrice,jdbcType=REAL},
+      priceCoe=  #{priceCoe,jdbcType=REAL},
+      wallDecoration=  #{wallDecoration,jdbcType=VARCHAR},
+      publicDecoration=  #{publicDecoration,jdbcType=VARCHAR},
+      nonStandDesc= #{nonStandDesc,jdbcType=VARCHAR},
+      priceDesc= #{priceDesc,jdbcType=VARCHAR},
+      connector=  #{connector,jdbcType=CHAR},
+      basePrice= #{basePrice,jdbcType=REAL},
+      baseRoomNo= #{baseRoomNo,jdbcType=VARCHAR},
+      lngGd= #{lngGd,jdbcType=REAL},
+      latGd= #{latGd,jdbcType=REAL},
+      lngBd=  #{lngBd,jdbcType=REAL},
+      latBd=  #{latBd,jdbcType=REAL},
+      haveLift= #{haveLift,jdbcType=CHAR},
+      canEvaluate= #{canEvaluate,jdbcType=CHAR},
+      isPerfect= #{isPerfect,jdbcType=CHAR},
+      visibility= '1',
+      createId=  #{createId,jdbcType=INTEGER},
+      createName= #{createName,jdbcType=VARCHAR},
+      updateId= #{updateId,jdbcType=INTEGER},
+      updateName= #{updateName,jdbcType=VARCHAR},
+      updateTime=#{updateTime,jdbcType=TIMESTAMP}
+      where id = #{id};
+  </update>
+    <update id="deleteBuilding" parameterType="java.util.List">
+        UPDATE bus_building SET visibility = #{visibility,jdbcType=CHAR} WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" separator="," close=")">
+            #{item.id}
+        </foreach>
+    </update>
+
+
+    <!-- 分页查询 -->
+    <select id="query" resultType="com.hifo.dataoperation.entity.FillBuilding">
+        SELECT bus_estate.cityName as cityName,bus_estate.districtName as districtName,bus_estate.`name` as
+        estateName,bus_building.*
+        FROM bus_estate ,bus_building
+        WHERE bus_estate.id = bus_building.estateId
+        and bus_building.estateId = #{busBuilding.estateId}
+        <if test="busBuilding.name!=null and busBuilding.name!=''">
+            AND (bus_building.name like '%${busBuilding.name}%' or address like '%${busBuilding.name}%')
+        </if>
+        <choose>
+            <when test="busBuilding.visibility!=null and busBuilding.visibility!=''">
+                AND bus_building.visibility=#{busBuilding.visibility}
+            </when>
+            <otherwise>
+                and bus_building.visibility in (1, 2)
+            </otherwise>
+        </choose>
+        limit ${start},${limit}
+    </select>
+</mapper>

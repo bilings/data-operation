@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.setting.BusSettingMapper">
+    <select id="busSettingList" resultType="com.hifo.dataoperation.entity.BusSetting">
+        SELECT
+        id,dictionaryId,organizationId,cityName,scope,print,inquirySheetName,organizationType,simplyName,evaluateDesc,showOptions,logo,chapter,subscribeInterval,subscribeMethod,updateId,updateName,updateTime
+        FROM
+        bus_setting a
+        <where>
+            <if test="busSetting.dictionaryId > 0">
+                AND a.dictionaryId = #{busSetting.dictionaryId}
+            </if>
+            <if test="busSetting.organizationId > 0">
+                AND a.organizationId = #{busSetting.organizationId}
+            </if>
+        </where>
+    </select>
+</mapper>

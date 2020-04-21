@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="index.css" rel="stylesheet">
+    <title>房号信息</title>
+</head>
+<body>
+<div id="roomIndex_wrapper">
+
+    <!--隐藏控件 用于存放当前页面室号数量 当增加或者减少时 更新该值 用于下一次设置调用-->
+    <input type="text" id="roomNumId" style="display: none">
+    <!--隐藏控件 用于存放当前单元数-->
+    <input type="text" id="unitNum" style="display: none">
+    <!--隐藏控件 用于存放当前点击的第几个单元-->
+    <input type="text" id="unitNumCurrent" style="display: block">
+    <!--隐藏控件 楼层数-->
+    <input type="text" id="floorTotalNo" style="display: block">
+    <!--隐藏控件 数据库中是否有该楼栋下的数据 1 表示有， 0 表示无-->
+<!--    <input type="text" id="isHaveData" style="display: block">-->
+
+
+
+
+    <fieldset class="layui-elem-field layui-field-title" style="margin-top: 20px;">
+        <legend>楼盘详情—楼栋管理—房号表格</legend>
+    </fieldset>
+    <form class="layui-form" action="">
+        <div class="layui-tab" lay-filter="test">
+            <ul class="layui-tab-title" id="sysListId">
+                <script id="sys-template" type="text/x-handlebars-template">
+                    {{#each syslist}}
+                    {{#if @first}}
+                    <li class="layui-this" lay-id="11" onclick="currentUnit('{{@index}}')">{{this}}</li>
+                    {{else}}
+                    <li lay-id="11" onclick="currentUnit('{{@index}}')">{{this}}</li>
+                    {{/if}}
+                    {{/each}}
+                </script>
+            </ul>
+            <div class="layui-tab-content" id="sysListId_2">
+                <script id="sys-template_2" type="text/x-handlebars-template">
+                    {{#each syslist_2}}
+                    {{#if @first}}
+                    <div class="layui-tab-item layui-show">
+
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline" style="float:left;">
+                                        <label class="layui-form-label">房号连接符</label>
+                                        <div class="layui-input-inline">
+                                            <select name="modules" lay-verify="required" lay-search="">
+                                                <option value="1" class="layui-this">-</option>
+                                                <option value="2">0</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-input-block" style="float:left;margin-left:20px;">
+                                        <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
+                                    </div>
+<!--                                    <select id="condition" name="condition" loadData="condition" defaultValue="0"  lay-ignore></select>-->
+                                </div>
+                            </div>
+
+
+                            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                                <ul class="layui-tab-title">
+                                    {{#each list}}
+                                    {{#if @first}}
+                                    <li class="layui-this" onclick="qryItem('1','{{this.name}}')">{{this.name}}</li>
+                                    {{else}}
+                                    <li onclick="qryItem('2','{{this.name}}')">{{this.name}}</li>
+                                    {{/if}}
+                                    {{/each}}
+                                </ul>
+                                <!--循环表格内容开始-->
+
+                                <div class="layui-tab-content" style="height: 100px;">
+                                    {{#each list}}
+                                    {{#if @first}}
+                                    <div class="layui-tab-item layui-show">
+                                        <div class="cloudTableAuto">
+                                            <!-- 第一个table -->
+                                            <table class="cloudTable cloudMtxTableHead">
+                                                <colgroup>
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                </colgroup>
+                                                <thead class="cloudTable_header">
+                                                <tr>
+                                                    <th width="10%">物理层</th>
+                                                    <th width="10%">逻辑层</th>
+                                                    <!--                                                <th width="10%"><span style="cursor: pointer" onclick="addRoom();">㊀&nbsp;</span>逻辑层&nbsp;<span style="cursor: pointer" onclick="delRoom();">㊉</span></th>-->
+                                                    <th width="10%" id="nominalFloor_{{../unitNo}}_title_hiden"
+                                                        style="display: none"></th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                            <!-- 第二个table 外层包裹div并设置高度，超出出现滚动条 -->
+
+                                            <div class="cloudMtxTable_body">
+                                                <table class="cloudTable" style="table-layout:fixed"
+                                                       id="{{../unitNo}}_table_id">
+
+                                                    <colgroup>
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                    </colgroup>
+                                                    <tbody class="cloudTable_body ">
+                                                    {{#each list}}
+                                                    <tr>
+                                                        {{#compare @index ../../unitNo }}
+                                                        <td style="text-align: left" class="data-cell"
+                                                            id="physicsFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}_cell">
+                                                            <input type="text" style="width:65%"
+                                                                   id="physicsFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}"
+                                                                   value="{{physicsFloor}}"></td>
+                                                        <td style="text-align: left" class="data-cell"
+                                                            id="nominalFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}_cell">
+                                                            <input type="text" style="width:65%"
+                                                                   id="nominalFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}"
+                                                                   value="{{nominalFloor}}"></td>
+                                                        {{else}}
+                                                        {{/compare}}
+
+
+                                                        <td class="data-cell" style="display: none"
+                                                            id="nominalFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}_cell_hiden"></td>
+                                                        <!--                                                    <td class="data-cell"><input type="text" style="width:90%" id="roomNoUnit_{{roomNoUnit}}_{{../parentIndex}}" value="{{roomNoUnit}}"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>-->
+                                                    </tr>
+                                                    {{/each}}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    {{else}}
+                                    {{/if}}
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {{else}}
+                    <div class="layui-tab-item">
+
+                        <div class="layui-tab-item layui-show">
+                            <div class="layui-tab-item layui-show">
+                                <div class="layui-form-item">
+                                    <div class="layui-inline" style="float:left;">
+                                        <label class="layui-form-label">房号连接符</label>
+                                        <div class="layui-input-inline">
+                                            <select name="modules" lay-verify="required" lay-search="">
+                                                <option value="1" class="layui-this">-</option>
+                                                <option value="2">0</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="layui-input-block" style="float:left;margin-left:20px;">
+                                        <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
+                                    </div>
+                                </div>
+                            </div>
+
+
+                            <div class="layui-tab layui-tab-brief" lay-filter="docDemoTabBrief">
+                                <ul class="layui-tab-title">
+                                    {{#each list}}
+                                    {{#if @first}}
+                                    <li class="layui-this" onclick="qryItem('1')">{{this.name}}</li>
+                                    {{else}}
+                                    <li onclick="qryItem('2')">{{this.name}}</li>
+                                    {{/if}}
+                                    {{/each}}
+                                </ul>
+                                <!--循环表格内容开始-->
+
+                                <div class="layui-tab-content" style="height: 100px;">
+                                    {{#each list}}
+                                    {{#if @first}}
+                                    <div class="layui-tab-item layui-show">
+                                        <div class="cloudTableAuto">
+                                            <!-- 第一个table -->
+                                            <table class="cloudTable cloudMtxTableHead">
+                                                <colgroup>
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                    <col width="10%">
+                                                </colgroup>
+                                                <thead class="cloudTable_header">
+                                                <tr>
+                                                    <th width="10%">物理层</th>
+                                                    <th width="10%">逻辑层</th>
+                                                    <!--                                                <th width="10%"><span style="cursor: pointer" onclick="addRoom();">㊀&nbsp;</span>逻辑层&nbsp;<span style="cursor: pointer" onclick="delRoom();">㊉</span></th>-->
+                                                    <th width="10%" id="nominalFloor_{{../unitNo}}_title_hiden"
+                                                        style="display: none"></th>
+                                                </tr>
+                                                </thead>
+                                            </table>
+                                            <!-- 第二个table 外层包裹div并设置高度，超出出现滚动条 -->
+
+                                            <div class="cloudMtxTable_body">
+                                                <table class="cloudTable" style="table-layout:fixed"
+                                                       id="{{../unitNo}}_table_id">
+
+                                                    <colgroup>
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                        <col width="10%">
+                                                    </colgroup>
+                                                    <tbody class="cloudTable_body ">
+                                                    {{#each list}}
+                                                    <tr>
+                                                        {{#compare @index ../../unitNo }}
+                                                        <td style="text-align: left" class="data-cell"
+                                                            id="physicsFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}_cell">
+                                                            <input type="text" style="width:65%"
+                                                                   id="physicsFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}"
+                                                                   value="{{physicsFloor}}"></td>
+                                                        <td style="text-align: left" class="data-cell"
+                                                            id="nominalFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}_cell">
+                                                            <input type="text" style="width:65%"
+                                                                   id="nominalFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}"
+                                                                   value="{{nominalFloor}}"></td>
+                                                        {{else}}
+                                                        {{/compare}}
+
+
+                                                        <td class="data-cell" style="display: none"
+                                                            id="nominalFloor_{{../../unitNo}}_{{../parentIndex}}_{{physicsFloor}}_cell_hiden"></td>
+                                                        <!--                                                    <td class="data-cell"><input type="text" style="width:90%" id="roomNoUnit_{{roomNoUnit}}_{{../parentIndex}}" value="{{roomNoUnit}}"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>
+                                                                                                            <td class="data-cell"><input type="text" style="width:90%"></td>-->
+                                                    </tr>
+                                                    {{/each}}
+                                                    </tbody>
+
+                                                </table>
+                                            </div>
+
+
+                                        </div>
+                                    </div>
+                                    {{else}}
+                                    {{/if}}
+                                    {{/each}}
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    {{/if}}
+                    {{/each}}
+                </script>
+
+
+            </div>
+        </div>
+    </form>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

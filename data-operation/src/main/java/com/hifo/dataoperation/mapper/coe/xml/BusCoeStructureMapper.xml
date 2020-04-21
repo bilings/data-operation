@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.coe.BusCoeStructureMapper">
+
+<select id="getCoeStructureWithItemList" resultType="com.hifo.dataoperation.entity.coe.CoeStructureWithItem">
+SELECT
+	s.id,
+	pid,
+	coeType,
+	groupid,
+	fullcode,
+	NAME,
+	conditionType,
+	organizationId,
+	i.dictionaryIds,
+	i.id itemid,
+	i.dictionaryNames,
+	i.rangStart,
+	i.rangEnd
+FROM
+	bus_coe_structure s
+left OUTER JOIN
+	bus_coe_item i
+on
+	s.id = i.coeStructureId
+WHERE
+	groupid = #{groupId}
+</select>
+ 
+</mapper>

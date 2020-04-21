@@ -1,0 +1,615 @@
+var estateEdit_obj = {
+    urlConfig: {
+        detail: '/estate/detail',
+        districtOfCity: '/setting/districtOfCity',
+        blockOfCity: '/setting/blockOfCity',
+        townOfCity: '/setting/townOfCity',
+        dictionary: '/setting/dictionary',
+        boolOption: '/setting/boolOption',
+        liftOption: '/setting/liftOption',
+        update: '/estate/update',
+        updatePosition: '/estate/updatePosition'
+    },
+
+    /**
+     * 全局楼盘变量，新增时为空
+     */
+    estate: null,
+    cityName:parent.homeIndex_obj.currentCity,
+    id:layui.util.urlParam('id'),
+
+    init: function () {
+        this._initVerify();
+        this._showHeadInfo();
+        this._initbuildYearStart();
+        this._initbuildYearEnd();
+        this._initIcon();
+    },
+
+
+    /**
+     * 初始化搜索条按钮
+     * @private
+     */
+    _initIcon: function () {
+        var _this = this;
+        $('#estateEdit_wrapper #nameIcon').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '数据来源',
+                content: 'log.html?communityId='+_this.id+"&type=nameIcon",
+                area: ['97%', '97%']
+            });
+        });
+        $('#estateEdit_wrapper #blockIcon').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '数据来源',
+                content: 'log.html?communityId='+_this.id+"&type=blockIcon",
+                area: ['97%', '97%']
+            });
+        });
+        $('#estateEdit_wrapper #roadIcon').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '数据来源',
+                content: 'log.html?communityId='+_this.id+"&type=roadIcon",
+                area: ['97%', '97%']
+            });
+        });
+        $('#estateEdit_wrapper #numberIcon').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '数据来源',
+                content: 'log.html?communityId='+_this.id+"&type=numberIcon",
+                area: ['97%', '97%']
+            });
+        });
+    },
+
+    _initbuildYearStart: function () {
+        layui.laydate.render({
+            elem: '#buildYearStart',
+            theme: 'molv',
+            type: 'year',
+            change: function (value, date, endDate) {
+                $('#buildYearStart').val(value);
+                $('.layui-this').click(function () {
+                    $('.layui-laydate').remove();
+                });
+            }
+        });
+    },
+    _initbuildYearEnd: function () {
+        layui.laydate.render({
+            elem: '#buildYearEnd',
+            theme: 'molv',
+            type: 'year',
+            change: function (value, date, endDate) {
+                $('#buildYearEnd').val(value);
+                $('.layui-this').click(function () {
+                    $('.layui-laydate').remove();
+                });
+            }
+        });
+    },
+
+    _initVerify: function () {
+        layui.form.verify({
+            numberOrEmpty: function (value, item) {
+                if (value !== '') {
+                    if (!/^\d+$/.test(value)) {
+                        return '只能填写整数';
+                    }
+                }
+            },
+            floatOrEmpty: function (value, item) {
+                if (value !== '') {
+                    if (!/^(\d+|\d+\.\d{1,2})$/.test(value)) {
+                        return '只能填写数字';
+                    }
+                }
+            }
+        });
+    },
+
+    /**
+     * 楼盘信息
+     * @private
+     */
+    _showHeadInfo: function () {
+        var _this = this;
+        $.get({
+            url: _this.urlConfig.detail,
+            data: {id: layui.util.urlParam('id')},
+            success: function (res) {
+                // 设置楼盘对象
+                _this.estate = res.data;
+                try {
+                    var text=_this.estate.name;
+                    if(_this.estate.isVirtual == "0"){
+                        text=text+'&nbsp;<span class="layui-badge layui-bg-cyan">虚</span>';
+                    }
+                    $('#estateEdit_wrapper #nameSpan').html(text);
+                    $('#estateEdit_wrapper #addrDetailSpan').html(_this.estate.address);
+                    // 详细地址是json数组，特殊
+                    $('#estateEdit_wrapper #road').val(_this.estate.stdAddress.road);
+                    $('#estateEdit_wrapper #number').val(_this.estate.stdAddress.number);
+                } catch (e) {
+                }
+                // 设置界面上的初始值（仅限于输入框，下拉通过下面操作）
+                $.each($('#estateEdit_wrapper [name=label-value]'), function (index, item) {
+                    var key = item.id;
+                    if (_this.estate && _this.estate[key]) {
+                        $('#estateEdit_wrapper #' + key).val(_this.estate[key]);
+                    }
+                });
+                // 新增的时候楼盘对象为空，自动添加城市
+                if (!_this.estate) {
+                    $('#estateEdit_wrapper #cityName').val(parent.homeIndex_obj.currentCity);
+                }
+                // 面包屑
+                _this._initCrumbs();
+                // 按钮
+                _this._initButton();
+                // 下拉
+                _this._initSelect();
+                // 多选
+                _this._initCheckbox();
+                // 地图坐标显示
+                _this._initPositionBtn();
+            }
+        });
+    },
+
+    /**
+     * 初始化面包屑
+     * @private
+     */
+    _initCrumbs: function () {
+        var _this = this;
+        // 新增时不显示面包屑
+        if (_this.estate) {
+            $('#estateEdit_wrapper #crumbForEdit').css('display', '');
+        } else {
+            $('#estateEdit_wrapper #crumbForEdit').css('display', 'none');
+        }
+        // 楼栋
+        $('#estateEdit_wrapper #buildingList').on('click', function () {
+            parent.homeIndex_obj._addTab('楼栋-' + _this.estate.name, '../building/index.html?estateId=' + _this.estate.id, false, '');
+        });
+        // 合并历史
+        $('#estateEdit_wrapper #history').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '合并虚拟信息',
+                content: 'history.html?id=' + _this.estate.id,
+                area: ['90%', '90%']
+            });
+        });
+    },
+
+    /**
+     * 地图标志按钮
+     * @private
+     */
+    _initPositionBtn: function () {
+        var _this = this;
+        var map ;
+        var location;
+        try {
+             location=_this.estate.location;
+        }catch (e) {
+        }
+        if(!(typeof location == "undefined" || location == null || location == "")){
+            location=_this.estate.location.split(",")
+            // 定义map
+            map = new AMap.Map('container', {
+                resizeEnable: true, //是否监控地图容器尺寸变化
+                zoom: 16,
+                center: location //初始化地图中心点
+            });
+        }else{
+            // 定义map
+             map = new AMap.Map('container', {
+                resizeEnable: true, //是否监控地图容器尺寸变化
+                zoom: 16,
+            });
+            location = [];
+        }
+
+
+        // 构造点标记
+        var markerInit = new AMap.Marker({
+            draggable:true,
+            icon: "https://webapi.amap.com/theme/v1.3/markers/n/mark_b.png",
+            position: location
+        });
+
+        // 初始化标记点
+        map.add(markerInit);
+        AMapUI.loadUI(['misc/PoiPicker'], function(PoiPicker) {
+            var poiPicker = new PoiPicker({
+                mode: 'dragMarker',
+                city:parent.homeIndex_obj.currentCity,
+                input: 'pickerInput',
+                AutocompleteOptions:{
+                    citylimit:true,
+                    type:"商务住宅"
+                }
+            });
+            //初始化poiPicker
+            poiPickerReady(poiPicker);
+        });
+
+        function poiPickerReady(poiPicker) {
+            window.poiPicker = poiPicker;
+            // 新标记点初始化
+            var marker = new AMap.Marker(
+                {
+                    draggable: true
+                }
+            );
+            var infoWindow = new AMap.InfoWindow({
+                offset: new AMap.Pixel(0, -20)
+            });
+
+            //选取了某个POI
+            poiPicker.on('poiPicked', function (poiResult) {
+                var poi = poiResult.item,
+                    info = {
+                        name: poi.name,
+                        location: poi.location.toString(),
+                        address: poi.address
+                    };
+                marker.setMap(map);
+                infoWindow.setMap(map);
+                marker.setPosition(poi.location);
+                infoWindow.setPosition(poi.location);
+                infoWindow.setContent('POI信息: <pre>' + JSON.stringify(info, null, 2) + '</pre>');
+                // 传入经纬度，设置地图中心点
+                map.setCenter(marker.getPosition());
+                infoWindow.open(map, marker.getPosition());
+                // 删除初始化标记点
+                map.remove(markerInit);
+                $("#pickerInput").val(poi.name)
+                var data = {
+                    id: layui.util.urlParam('id'),
+                    location: poi.location.toString()
+                };
+                $.ajax({
+                    contentType: 'application/json',
+                    url: '/estate/updatePosition',
+                    type: "PUT",
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                        layer.msg('保存成功');
+                    }
+                });
+            });
+
+            poiPicker.on('success', function (positionResult) {
+                console.log(positionResult.address)
+            });
+           // 拖拽初始化marker之后
+            AMap.event.addListener(markerInit, "dragend", function (e) {
+                map.clearInfoWindow()
+                var info = {
+                    location: e.lnglat.lng + ":" + e.lnglat.lat,
+                };
+
+                markerInit.setMap(map);
+                infoWindow.setMap(map);
+                markerInit.setPosition(new AMap.LngLat(e.lnglat.lng, e.lnglat.lat));
+                infoWindow.setPosition(new AMap.LngLat(e.lnglat.lng, e.lnglat.lat));
+                infoWindow.setContent('POI信息: <pre>' + JSON.stringify(info, null, 2) + '</pre>');
+                // 传入经纬度，设置地图中心点
+                map.setCenter(markerInit.getPosition());
+                infoWindow.open(map, markerInit.getPosition());
+                var data = {
+                    id: layui.util.urlParam('id'),
+                    location: e.lnglat.lng + "," + e.lnglat.lat
+                };
+                $.ajax({
+                    contentType: 'application/json',
+                    url: '/estate/updatePosition',
+                    type: "PUT",
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                        layer.msg('保存成功');
+                    }
+                });
+
+            });
+            // 拖拽marker之后
+            AMap.event.addListener(marker, "dragend", function (e) {
+                map.clearInfoWindow()
+                var info = {
+                    location: e.lnglat.lng + ":" + e.lnglat.lat,
+                };
+
+                marker.setMap(map);
+                infoWindow.setMap(map);
+                marker.setPosition(new AMap.LngLat(e.lnglat.lng, e.lnglat.lat));
+                infoWindow.setPosition(new AMap.LngLat(e.lnglat.lng, e.lnglat.lat));
+                infoWindow.setContent('POI信息: <pre>' + JSON.stringify(info, null, 2) + '</pre>');
+                // 传入经纬度，设置地图中心点
+                map.setCenter(marker.getPosition());
+                infoWindow.open(map, marker.getPosition());
+                var data = {
+                    id: layui.util.urlParam('id'),
+                    location: e.lnglat.lng + "," + e.lnglat.lat
+                };
+                $.ajax({
+                    contentType: 'application/json',
+                    url: '/estate/updatePosition',
+                    type: "PUT",
+                    data: JSON.stringify(data),
+                    success: function (res) {
+                            layer.msg('保存成功');
+                    }
+                });
+
+            });
+            poiPicker.onCityReady(function () {
+                poiPicker.searchByKeyword(_this.estate.name);
+            });
+        }
+    },
+
+    /**
+     * 修改保存按钮
+     * @private
+     */
+    _initButton: function () {
+        var _this = this;
+        layui.form.on('submit(updateBtn)', function (param) {
+            var equipment = _this._getCheckboxValue('equipment');
+            var buildingCategory = _this._getCheckboxValue('buildingCategory');
+            var quality = _this._getCheckboxValue('quality');
+            var stdAddress = {
+                road: $('#estateEdit_wrapper #road').val(),
+                number: $('#estateEdit_wrapper #number').val(),
+                address : $('#estateEdit_wrapper #road').val()+$('#estateEdit_wrapper #number').val(),
+                districtId : $('#estateEdit_wrapper #districtId').val(),
+                stdMethod : "web",
+                city :$('#estateEdit_wrapper #cityName').val(),
+                parseCode : 4,
+                district : param.form.districtId.selectedOptions[0].text,
+                stdTime : "2020-03-16 16:23:11",
+                parseInfo : "",
+                cityId : parent.homeIndex_obj.currentCityMongoId
+            };
+            var data = {
+                id: layui.util.urlParam('id'),
+                cityId: parent.homeIndex_obj.currentCityMongoId,
+                cityName: $('#estateEdit_wrapper #cityName').val(),
+                districtId: $('#estateEdit_wrapper #districtId').val(),
+                districtName: param.form.districtId.selectedOptions[0].text,
+                blockId: $('#estateEdit_wrapper blockSelect').val(),
+                blockName: param.form.blockSelect.selectedOptions[0].text,
+                townId: $('#estateEdit_wrapper #townSelect').val(),
+                townName: param.form.townSelect.selectedOptions[0].text,
+                name: $('#estateEdit_wrapper #name').val(),
+                otherName: $('#estateEdit_wrapper #otherName').val().split(','),
+                totalNumberOfBuildings: $('#estateEdit_wrapper #totalNumberOfBuildings').val(),
+                totalRoomCount: $('#estateEdit_wrapper #totalRoomCount').val(),
+                coverageArea: $('#estateEdit_wrapper #coverageArea').val(),
+                grossBuildArea: $('#estateEdit_wrapper #grossBuildArea').val(),
+                floorAreaRatio: $('#estateEdit_wrapper #floorAreaRatio').val(),
+                greeningRate: $('#estateEdit_wrapper #greeningRate').val(),
+                numberOfParkingSpaces: $('#estateEdit_wrapper #numberOfParkingSpaces').val(),
+                buildYearStart: $('#estateEdit_wrapper #buildYearStart').val(),
+                buildYearEnd: $('#estateEdit_wrapper #buildYearEnd').val(),
+                address:$('#estateEdit_wrapper #road').val()+$('#estateEdit_wrapper #number').val()+"号",
+                stdAddress: stdAddress,
+                otherAddress: $('#estateEdit_wrapper #otherAddress').val().split(','),
+                developerName: $('#estateEdit_wrapper #developerName').val(),
+                developerBrand: $('#estateEdit_wrapper #developerBrand').val(),
+                equipment: equipment,
+                type: $('#estateEdit_wrapper #type').val(),
+                buildingCategory: buildingCategory,
+                quality: quality,
+                priceDesc: $('#estateEdit_wrapper #priceDesc').val(),
+                haveLift: $('#estateEdit_wrapper #haveLift').val(),
+                isPerfect: $('#estateEdit_wrapper #isPerfect').val(),
+                isVirtual: $('#estateEdit_wrapper #isVirtual').val(),
+                isDeleted: false,
+                isSpecial: $('#estateEdit_wrapper #isSpecial').val()
+            };
+            $.ajax({
+                contentType: 'application/json',
+                url: _this.urlConfig.update,
+                type: "PUT",
+                data: JSON.stringify(data),
+                success: function (res) {
+                    if (res.code !== 0) {
+                        layer.alert(res.msg);
+                        return;
+                    }
+                    if (_this.estate == null) {
+                        // 新增完打开新建楼盘
+                        parent.homeIndex_obj._addTab(res.data.name, '../estate/edit.html?id=' + res.data.id, false, '');
+                        // 关闭新增tab
+                        parent.layui.element.tabDelete('tabs', '新增楼盘');
+                    } else {
+                        // 编辑的时候直接刷新
+                        _this._showHeadInfo();
+                        layer.msg('保存成功');
+                    }
+                }
+            });
+            return false;
+        });
+    },
+
+    /**
+     * 下拉
+     * @private
+     */
+    _initSelect: function () {
+        var _this = this;
+        var cityMongoId = parent.homeIndex_obj.currentCityMongoId;
+        // 行政区
+        _this._initBasicSelect(_this.urlConfig.districtOfCity, {parentId: cityMongoId}, 'districtId', 'districtId');
+        // 片区板块
+        _this._initBasicSelect(_this.urlConfig.blockOfCity, {parentId: cityMongoId}, 'blockSelect', 'blockId');
+        // 产权形式
+        _this._initAdvanceSelect(_this.urlConfig.dictionary, {category: '产权形式'}, 'type', 'item');
+        // 主力类别
+        _this._initAdvanceSelect(_this.urlConfig.dictionary, {category: '建筑类别'}, 'mainCategory', 'item');
+        // 主力品质
+        _this._initAdvanceSelect(_this.urlConfig.dictionary, {category: '住宅品质'}, 'mainQuality', 'item');
+        // 是否可估
+        // _this._initAdvanceSelect(_this.urlConfig.boolOption, {category: 'bool'}, 'canEvaluate', 'value');
+        // 是否完善
+        _this._initAdvanceSelect(_this.urlConfig.boolOption, {}, 'isPerfect', 'value');
+
+        _this._initAdvanceSelect(_this.urlConfig.boolOption, {}, 'isSpecial', 'value');
+
+        _this._initAdvanceSelect(_this.urlConfig.boolOption, {}, 'isVirtual', 'value');
+        // 有无电梯
+        _this._initAdvanceSelect(_this.urlConfig.liftOption, {}, 'haveLift', 'value');
+
+        // 绑定街道行政区级联下拉
+        layui.use(['layer', 'jquery', 'form'], function () {
+            layui.form.on('select(districtId)', function () {
+                var districtId = $('#estateEdit_wrapper #districtId').val();
+                if (districtId) {
+                    // 乡镇
+                    _this._initBasicSelect(_this.urlConfig.townOfCity, {
+                        cityMongoId: cityMongoId,
+                        parentId: districtId
+                    }, 'townSelect', 'townId');
+                }
+            });
+        });
+    },
+
+    /**
+     * 区划下拉处理
+     *
+     * @param url
+     * @param data
+     * @param id
+     * @param areaId
+     * @private
+     */
+    _initBasicSelect: function (url, data, id, areaId) {
+        var _this = this;
+        $.get({
+            url: url,
+            data: data,
+            success: function (res) {
+                $('#estateEdit_wrapper #' + id).html('<option></option>');
+                $.each(res.data, function (index, item) {
+                    if (!data.cityMongoId && index == 0) {
+                        // 乡镇
+                        _this._initBasicSelect(_this.urlConfig.townOfCity, {
+                            cityMongoId: data.parentId,
+                            parentId: item.id
+                        }, 'townSelect', 'townId');
+                    }
+                    if (_this.estate && item.id === _this.estate[areaId]) {
+                        $('#estateEdit_wrapper #' + id).append('<option value="' + item.id + '" selected="">' + item.name + '</option>');
+                    } else {
+                        $('#estateEdit_wrapper #' + id).append('<option value="' + item.id + '">' + item.name + '</option>');
+                    }
+                });
+                layui.form.render('select');
+            }
+        });
+    },
+
+    /**
+     * value和text不同的下拉
+     * @param url
+     * @param data
+     * @param id 控件的id
+     * @param key 返回的数据中作为值的属性名
+     * @private
+     */
+    _initAdvanceSelect: function (url, data, id, key) {
+        var _this = this;
+        $.get({
+            url: url,
+            data: data,
+            success: function (res) {
+                $('#estateEdit_wrapper #' + id).html('<option></option>');
+                $.each(res.data, function (index, item) {
+                    // 本项目中，这种情况下数据库都是存的id (用两个==，不判断类型)
+                    if (_this.estate && item.id == _this.estate[id]) {
+                        $('#estateEdit_wrapper #' + id).append('<option value="' + item.id + '" selected="">' + item[key] + '</option>');
+                    } else {
+                        $('#estateEdit_wrapper #' + id).append('<option value="' + item.id + '">' + item[key] + '</option>');
+                    }
+                });
+                layui.form.render('select');
+            }
+        });
+    },
+
+    /**
+     * 初始化多选
+     * @private
+     */
+    _initCheckbox: function () {
+        var _this = this;
+        // 物管设施
+        _this._initAdvanceCheckbox(_this.urlConfig.dictionary, {category: '物管设施'}, 'equipment');
+        // 建筑类别
+        _this._initAdvanceCheckbox(_this.urlConfig.dictionary, {category: '建筑类别'}, 'buildingCategory');
+        // 建筑类别
+        _this._initAdvanceCheckbox(_this.urlConfig.dictionary, {category: '住宅品质'}, 'quality');
+    },
+
+    /**
+     * 多选
+     * @param url
+     * @param data
+     * @param id
+     * @private
+     */
+    _initAdvanceCheckbox: function (url, data, id) {
+        var _this = this;
+        $.get({
+            url: url,
+            data: data,
+            success: function (res) {
+                $('#estateEdit_wrapper #' + id).html('');
+                $.each(res.data, function (index, item) {
+                    var checkbox;
+                    if (_this.estate && _this.estate[id] && _this.estate[id].split(',').indexOf(item.item + '') > -1) {
+                        checkbox = '<input type="checkbox" name="' + id + '" value="' + item.item + '" lay-skin="primary" title="' + item.item + '" checked=""">';
+                    } else {
+                        checkbox = '<input type="checkbox" name="' + id + '" value="' + item.item + '" lay-skin="primary" title="' + item.item + '">';
+                    }
+                    $('#estateEdit_wrapper #' + id).append(checkbox);
+                });
+                layui.form.render();
+            }
+        });
+    },
+
+    /**
+     * 获取checkbox的值
+     * @param name
+     * @returns {string}
+     * @private
+     */
+    _getCheckboxValue: function (name) {
+        var value = '';
+        $('input[name="' + name + '"]').each(function () {
+            if ($(this).prop("checked")) {
+                value = value + $(this).val() + ',';
+            }
+        });
+        return value;
+    }
+};
+
+estateEdit_obj.init();
+
+
+
+

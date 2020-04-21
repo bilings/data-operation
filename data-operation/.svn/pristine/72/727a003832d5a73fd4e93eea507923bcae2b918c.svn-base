@@ -1,0 +1,18 @@
+package com.hifo.dataoperation.service.estate;
+
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.entity.mongo.BuiltEstate;
+import com.hifo.dataoperation.pagination.Pagination;
+
+import java.util.List;
+
+public interface BuiltService {
+    Pagination<BuiltEstate> findByPage(BuiltEstate busEstate, Pagination pages);
+
+    ApiResult add(List<BusEstate> busEstate);
+
+    ApiResult delete(List<BuiltEstate> busEstate);
+
+    ApiResult merge(String[] fromIds, String toId);
+}

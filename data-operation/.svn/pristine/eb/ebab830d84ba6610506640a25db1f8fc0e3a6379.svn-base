@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="history.css" rel="stylesheet">
+    <title>历史</title>
+</head>
+<body>
+<div id="estateHistory_wrapper">
+    合并到该楼盘：
+    <table class="layui-table" id="mergeTable" lay-filter="mergeTable"></table>
+    <script type="text/html" id="mergeLineBar">
+        <a href="#" style="color: blue" lay-event="undoMerge">解除</a>
+    </script>
+
+    虚拟至其他楼盘：
+    <table class="layui-table" id="virtualTable1" lay-filter="virtualTable1"></table>
+
+    虚拟到该楼盘：
+    <table class="layui-table" id="virtualTable2" lay-filter="virtualTable2"></table>
+
+    <script type="text/html" id="virtualLineBar">
+        <a href="#" style="color: blue" lay-event="undoVirtual">解除</a>
+    </script>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="history.js"></script>
+</body>
+</html>

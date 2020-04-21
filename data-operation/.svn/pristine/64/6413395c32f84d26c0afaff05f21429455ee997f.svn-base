@@ -1,0 +1,127 @@
+package com.hifo.dataoperation.service.estate;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.BusBuilding;
+import com.hifo.dataoperation.entity.ExtEmployee;
+import com.hifo.dataoperation.entity.FillBuilding;
+import com.hifo.dataoperation.mapper.base.Sequence;
+import com.hifo.dataoperation.mapper.base.Table;
+import com.hifo.dataoperation.pagination.Pagination;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
+
+public interface BusBuildingService extends IService<BusBuilding> {
+    Pagination<BusBuilding> list(Pagination pages, BusBuilding busBuilding);
+
+    //List<BusBuilding> selectList(Query query);
+
+    void hideBuilding(String[] ids);
+
+    void showBuilding(String[] ids);
+
+    String transferBuilding(long estateId, String transferIds);
+
+    BusBuilding findById(Long id);
+
+
+
+
+    void fillSave(String[] colName, String fillIds, String id);
+
+    void delete(String[] ids);
+
+    void undelete(String[] ids);
+
+    String copy(BusBuilding busBuilding);
+
+    Query findByPage(Pagination pages,BusBuilding busBuilding);
+
+    /**
+     * 根据楼栋id查询楼栋信息
+     *
+     * @param entity
+     * @return
+     */
+    ApiResult qryBusBuildings(BusBuilding entity);
+
+    /**
+     * 根据楼栋id查询楼栋信息
+     *
+     * @param entity
+     * @return
+     */
+    BusBuilding qryBusBuilding(BusBuilding entity);
+
+    /**
+     * 编辑楼栋信息
+     *
+     * @param id
+     * @param entity
+     * @return
+     */
+    ApiResult updateBuilding(String id, BusBuilding entity);
+
+    String saveBuilding(BusBuilding entity);
+
+    String mergeBuilding(String[] fromIds, String toId);
+
+    /**
+     * 根据楼盘id查询map list
+     *
+     * @param estateId
+     * @return
+     */
+    List<Map<String, Object>> findMaps(long estateId);
+
+    /**
+     * 根据楼盘id查询 list
+     *
+     * @param estateId
+     * @return
+     */
+    List<BusBuilding> findLists(long estateId);
+
+    /**
+     * 楼栋信息导入
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    String importBuilding(MultipartFile file) throws Exception;
+
+    /**
+     * 添加楼栋
+     *
+     * @param busBuilding
+     * @param sequence
+     * @param table
+     * @param emp
+     * @return
+     */
+    BusBuilding addBuilding(BusBuilding busBuilding, Sequence sequence, Table table, ExtEmployee emp);
+
+    /**
+     * 根据id异步更新楼栋
+     *
+     * @param building
+     * @param emp
+     * @return
+     */
+    BusBuilding updateBuildingById(BusBuilding building, ExtEmployee emp);
+
+    /**
+     * 获取建筑类别
+     *
+     * @param building
+     * @param emp
+     * @return
+     */
+    BusBuilding getBuildingType(BusBuilding building, ExtEmployee emp);
+
+}

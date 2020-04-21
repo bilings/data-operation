@@ -1,0 +1,23 @@
+#全局配置
+spring:
+  profiles:
+    active: test
+  application:
+    name: hkb
+  jackson:
+    date-format: yyyy-MM-dd HH:mm:ss
+    time-zone: GMT+8
+
+  #不允许spring自动解析上传的文件
+  servlet:
+    multipart:
+      enabled: true
+      maxFileSize: 10MB
+      maxRequestSize: 100MB
+#路径
+server:
+  servlet:
+    context-path: /
+#logback
+logging:
+  config: classpath:logback.xml

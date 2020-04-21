@@ -1,0 +1,189 @@
+var avgcoeIndex_obj = {
+
+    urlConfig: {
+        // 列表
+        ztreeList: "/avg/list",
+        ztreeDelete: "/setting/delete",
+        ztreeShowTable: "/setting/table",
+    },
+    groupType: 'floorCoe',
+    /**
+     * 界面js入口
+     */
+    init: function () {
+        var _this = this;
+        _this._initZtree();
+        // 绑定添加分组
+        _this._addGroupBtn();
+        //切换tab
+        _this._queryCoe();
+
+        _this._getCoeType();
+    },
+
+    /**
+     *点击切换Tab
+     */
+    _queryCoe: function () {
+        var _this = this;
+        layui.use('element', function () {
+            var _element = layui.element;
+            _element.on('tab(tabCoe)', function () {
+                _this.groupType = this.getAttribute('lay-id');
+                console.log(_this.groupType)
+                _this._initZtree();
+                _this.init();
+            });
+            return false;
+        });
+    },
+    /**
+     * 添加分组
+     * @private
+     */
+    _addGroupBtn: function () {
+        var _this = this;
+        var coeType = _this._getCoeType();
+        $('#addGroup_' + _this.groupType).unbind().bind('click', function () {
+            layui.layer.open({
+                type: 2,
+                title: '添加分组',
+                content: 'addGroup.html?cityName=' + parent.homeIndex_obj.currentCity + "&cityId=" + parent.homeIndex_obj.currentCityMongoId + "&coeType=" + coeType,
+                content: 'addGroup.html?cityName=' + parent.homeIndex_obj.currentCity + "&cityId=" + parent.homeIndex_obj.currentCityAdministrativeId + "&groupType=" + _this.groupType,
+                area: ['77%', '77%']
+            });
+            return false;
+        })
+    },
+
+    /**
+     *
+     * @returns {*}
+     * @private
+     */
+    _getCoeType: function () {
+        var _this = this;
+        var coeType;
+        var cityId = parent.homeIndex_obj.currentCityAdministrativeId;
+        if (_this.groupType == 'floorCoe') {
+            coeType = 1;
+        } else if (_this.groupType == 'orientationCoe') {
+            coeType = 2;
+        } else if (_this.groupType == 'buildingStructureCoe') {
+            coeType = 3;
+        } else if (_this.groupType == 'AreaCoe') {
+            coeType = 4;
+        }
+        return coeType
+    },
+    /**
+     * 初始化ztree
+     */
+    _initZtree: function () {
+        //获取节点
+        var _this = this;
+        var cityId = parent.homeIndex_obj.currentCityMongoId;
+        var coeType = _this._getCoeType();
+        var setting = {
+            view: {
+                removeHoverDom: removeHoverDom,
+            },
+            edit: {
+                enable: true,
+                editNameSelectAll: false,
+                showRenameBtn: false,
+                showRemoveBtn: setRemoveBtn
+            },
+
+            data: {
+                simpleData: {
+                    enable: true
+                }
+            },
+            callback: {
+                beforeRemove: beforeRemove,
+                onClick: zTreeOnClick
+            }
+        };
+
+        //判断为顶级节点则不显示删除按钮
+        function setRemoveBtn(treeId, treeNode) {
+            if (treeNode.level == 0) {
+                return false;
+            } else {
+                return true;
+            }
+        }
+
+        function beforeRemove(treeId, treeNode) {
+            var zTree = $.fn.zTree.getZTreeObj("treeDemo");
+            //zTree.selectNode(treeNode);
+            if (confirm("确认删除 节点 -- " + treeNode.name + " 吗？")) {
+                $.ajax({
+                    type: 'delete',
+                    url: "/coe/structure/delete?id=" + treeNode.id,
+                    success: function (res) {
+                        // 刷新右边列表
+                        //initTabel()
+                    }
+                });
+                return true;
+            } else {
+                return false;
+            }
+        }
+
+        function removeHoverDom(treeId, treeNode) {
+            $("#addBtn_" + treeNode.tId).unbind().remove();
+        };
+
+        /**
+         * 展示右边列表
+         * @param event
+         * @param treeId
+         * @param treeNode
+         */
+        function initTabel(res) {
+            console.log(res)
+            $(".layui-show").find('div[name="coe-body"]').html("11111111111111111111111111111")
+        }
+
+        /**
+         * 点击节点展示右边列表
+         * @param event
+         * @param treeId
+         * @param treeNode
+         */
+        function zTreeOnClick(event, treeId, treeNode) {
+            $.ajax({
+                url: "/coe/structure/getTree",
+                data: {
+                    groupId: treeNode.id,
+                },
+                success: function (res) {
+                    initTabel(res);
+                }
+            });
+        };
+
+        function getTree() {
+            var tree;
+            $.ajax({
+                url: "/coe/group/getTree?coeType=" + coeType + "&cityId=" + cityId,
+                timeout: 30000, //超时时间：30秒
+                async: false,//false-同步（当这个ajax执行完后才会继续执行其他代码）；异步-与其他代码互不影响，一起运行。
+                success: function (res) {
+                    console.log(res.data);
+                    tree = res.data;
+                }, error: function (res) {
+                    console.log(res);
+                }
+            });
+            return tree;
+        }
+
+        //初始化ztree
+        $.fn.zTree.init($("#treeDemo_" + this.groupType), setting, getTree());
+    }
+}
+avgcoeIndex_obj.init();

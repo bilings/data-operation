@@ -1,0 +1,9 @@
+package com.hifo.dataoperation.entity.coe.floorCoeVO;
+
+import java.util.Map;
+
+public class hasLift {
+    private Map<String,Lift> lifts;
+    private int floor;
+    private int totalFloor;
+}

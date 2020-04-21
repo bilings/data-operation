@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="edit.css" rel="stylesheet">
+    <title>楼栋</title>
+</head>
+<body>
+<div id="buildingEdit_wrapper">
+    <label>
+        <span id="nameSpan"></span>&nbsp;&nbsp;&nbsp;
+        <span id="addrDetailSpan"></span>
+    </label>
+    <hr/>
+    <span class="layui-breadcrumb">
+        <a href="#"><cite style="color: blue;">楼栋信息</cite></a>
+        <a href="#" id="roomList">房号列表</a>
+        <a href="#">楼栋坐标</a>
+        <a href="#">图文数据</a>
+        <a href="#">合并信息</a>
+    </span>
+    <br><br>
+    <form class="layui-form" action="">
+        <input type="hidden" id="id" name="id"  class="layui-input"  data-name="label-value">
+        <input type="hidden" id="estateId" name="estateId"  class="layui-input"  data-name="label-value">
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">楼栋名称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" name="name" lay-verify="required" autocomplete="off" class="layui-input"  data-name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">单元数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="unitNo" name="unitNo"  class="layui-input" data-name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">标准层户数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="roomNoPerFloor" name="roomNoPerFloor" class="layui-input" data-name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label" name="label-key">楼栋别名:</label>
+                <div class="layui-input-inline" style="width: 77%!important;">
+                    <input type="text" id="alias" name="alias" autocomplete="off" class="layui-input" data-name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label" name="label-key">详细地址:</label>
+                <div class="layui-input-inline" style="width: 77%!important;">
+                    <input type="text" id="address" name="address" autocomplete="off" class="layui-input" data-name="label-value">
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">外墙装饰:</label>
+                <div class="layui-input-inline">
+                    <select id="wallDecoration" name="wallDecoration">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label"  name="label-key">公共装修档次:</label>
+                <div class="layui-input-inline">
+                    <select id="publicDecoration"  name="publicDecoration">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">竣工日期:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="builtDate" name="builtDate"  class="layui-input" data-name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">地上总楼层:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="floorOverGroundNo"  name="floorOverGroundNo" class="layui-input" data-name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">地下总楼层:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="floorUnderGroundNo" name="floorUnderGroundNo"  class="layui-input" data-name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">总楼层:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="floorTotalNo" name="floorTotalNo"  class="layui-input" data-name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">建筑结构:</label>
+                <div class="layui-input-inline">
+                    <select id="structure" name="structure">
+                        <option value="">请选择</option>
+                    </select>
+
+                </div>
+            </div>
+            <!--<div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">建筑类别:</label>
+                <div class="layui-input-inline">
+                    <select id="buildingType" name="buildingType">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>-->
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">有无电梯:</label>
+                <div class="layui-input-inline">
+                    <select id="haveLift"  name="haveLift">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">电梯数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="liftNo" name="liftNo" class="layui-input" data-name="label-value">
+                </div>
+            </div>
+           <!-- <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">价格系数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="priceCoe" name="priceCoe"  class="layui-input" data-name="label-value">
+                </div>
+            </div>-->
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">电梯品牌:</label>
+                <div class="layui-input-inline">
+                    <select id="liftBrand" name="liftBrand">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">主力户型面积:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="landArea" name="landArea" class="layui-input" data-name="label-value" >
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">是否完善:</label>
+                <div class="layui-input-inline">
+                    <select id="isPerfect" name="isPerfect">
+                        <option value="">请选择</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">价格系数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="avgPrice" name="avgPrice"  class="layui-input" data-name="label-value" >
+                </div>
+            </div>
+
+        </div>
+      
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label" name="label-key">非标准层说明:</label>
+                <div class="layui-input-inline" style="width: 77%!important;">
+                    <input type="text" id="nonStandDesc"  name="nonStandDesc"  class="layui-input" data-name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label" name="label-key">价格差异说明:</label>
+                <div class="layui-input-inline" style="width: 77%!important;">
+                    <input type="text" id="priceDesc"  name="priceDesc"  class="layui-input" data-name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">
+                    <button class="layui-btn layui-btn-fluid" lay-submit lay-filter="saveBtn" >保存</button>
+                </label>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="edit.js"></script>
+</body>
+</html>

@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="addGroup.css" rel="stylesheet">
+    <title>添加系数分组管理</title>
+</head>
+<body>
+<div id="addCoeGroupIndex_wrapper">
+    <br>
+    <form class="layui-form layui-form-pane" action="">
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">选择条件类型：</label>
+            <div class="layui-input-inline">
+                <select name="conditionType" lay-filter="conditionType" id="conditionType">
+                    <option value="">物业品质</option>
+                    <option value="">有无电梯</option>
+                    <option value="">建筑类别</option>
+                    <option value="">建成年代</option>
+                    <option value="">主力面积</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12" id="conditionTypeChange">
+                <label class="layui-form-label" name="label-key">住宅品质:</label>
+                <div class="layui-input-inline" name= "quality" style="width: 77%!important;" id="quality"></div>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" lay-filter="saveBtn">提交</button>
+        </div>
+    </form>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="/resource/js/jquery-ui.js"></script>
+<script type="text/javascript" src="addGroup.js"></script>
+</body>
+</html>

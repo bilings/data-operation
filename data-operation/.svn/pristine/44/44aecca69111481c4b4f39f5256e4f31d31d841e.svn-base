@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1" />
+    <link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+    <link href="/resource/css/layui.ext.css" rel="stylesheet">
+    <!-- layui拓展 -->
+    <link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+    <!--数据列表循环-->
+    <script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="index.css" rel="stylesheet">
+    <title>待建管理</title>
+</head>
+<body>
+<div id="builtIndex_wrapper">
+    <div class="layui-input-inline" id="districtDiv">
+        <select id="districtSelect" name="districtSelect" lay-search="">
+
+        </select>
+    </div>
+    <div class="layui-input-inline">
+        <input id="name" name="name" type="text" placeholder="楼盘名称或地址" class="layui-input"/>
+    </div>
+    <div class="layui-btn-group demoTable">
+        <button id="searchBtn" data-type="searchBtn"  class="layui-btn ">
+            <li class="layui-icon layui-icon-search"></li>
+        </button>
+        <button class="layui-btn" data-type="addBtnBatch">建为新楼盘</button>
+        <button class="layui-btn" data-type="deleteBtnBatch">删除代建楼盘</button>
+        <button class="layui-btn" data-type="mergeBtnBatch">批量合并楼盘</button>
+    </div>
+    <div id="estateTableDiv">
+
+        <table class="layui-hide" id="builtTable" lay-filter="builtTableFilter"></table>
+    </div>
+    <script type="text/html" id="lineBar">
+        <a href="#" style="color: blue" lay-event="addCommunity">新增</a>
+        <a href="#" style="color: blue" lay-event="mergeCommunity">合并</a>
+        <a href="#" style="color: blue" lay-event="deleteCommunity">删除</a>
+    </script>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+    layui.config({
+        base: '/resource/js/layui/extend/' //自定义插件路径
+    }).use('jquery',function(){
+        window.$=layui.$;
+        window.jQuery=layui.$;
+    });
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

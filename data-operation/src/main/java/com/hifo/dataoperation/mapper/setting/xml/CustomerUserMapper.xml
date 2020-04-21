@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.setting.CustomerUserMapper">
+
+    <!-- 根据orgId修改客户信息 -->
+    <update id="updateByOrgId">
+         update ext_customer_user set orgName=#{orgName},type=#{type},rank=#{rank}
+         where orgId=#{orgId}
+    </update>
+
+</mapper>

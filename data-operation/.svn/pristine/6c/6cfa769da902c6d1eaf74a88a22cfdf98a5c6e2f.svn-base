@@ -1,0 +1,25 @@
+#avgCoe_wrapper {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+}
+#addCityCoe{
+    width: 90px !important;
+    height: 30px !important;
+    color: #0C0C0C;
+    right: 0;
+    position: absolute;
+    font-size: 14px;
+}
+.layui-col-md2,.layui-col-md10 {
+    border: 1px solid #e7e7e7;
+}
+.controlBox{
+    float: right;
+    margin-left: 10px;
+}
+.coeTable td{font-size: 12px !important; padding: 1px 7px !important; height: 38px;text-align: center;}
+.coeTable td input{border-radius:3px;padding-left:5px !important; height: 24px !important; min-width: 38px; }
+.coeTable thead {font-weight: 700;}
+.coeTable tr td:first-child{width: 40px;word-break: keep-all; }

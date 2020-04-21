@@ -1,0 +1,342 @@
+var avgPriceIndex_obj = {
+    urlConfig: {
+        // 列表
+        avgList: "/avg/list",
+        avgDelete: "/avg/delete",
+        avgCheck: "/avg/check",
+        avgConfirm: "/avg/confirm",
+        districtOfCity: '/setting/districtOfCity',
+        blockOfCity:'/setting/blockOfCity',
+        dictionary: '/setting/dictionary',
+    },
+
+    /**
+     * 界面js入口
+     */
+    init: function () {
+        this._initTable();
+        // 绑定倒出按钮
+        this._initExportBtn()
+        // 下拉初始化
+        this._initSelect();
+    },
+    currentCityMongoId: '',
+    tableIns:'',
+    /**
+     * 下拉
+     * @private
+     */
+    _initSelect: function (){
+        var _this = this;
+        var cityMongoId = parent.homeIndex_obj.currentCityMongoId;
+        _this.currentCityMongoId = cityMongoId;
+        // 行政区
+        this._initBasicSelect(_this.urlConfig.districtOfCity, {parentId: cityMongoId}, 'districtSelect', 'districtId')
+
+
+
+    },
+
+    /**
+     * 区划下拉处理
+     * @param url
+     * @param data
+     * @param id
+     * @param areaId
+     * @private
+     */
+    _initBasicSelect: function (url, data, id, areaId,defult) {
+        var _this = this;
+        $.get({
+            url: url,
+            data: data,
+            success: function (res) {
+                $('#avgPriceIndex_wrapper #' + id).html('<option value="" selected="selected">行政区</option>');
+                $.each(res.data, function (index, item) {
+                    if (_this.estate && item.id === _this.estate[areaId]) {
+                        $('#avgPriceIndex_wrapper #' + id).append('<option value="' + item.id + '" selected="">' + item.name + '</option>');
+                    } else {
+                        $('#avgPriceIndex_wrapper #' + id).append('<option value="' + item.id + '">' + item.name + '</option>');
+                    }
+                });
+                layui.form.render('select');
+            }
+        });
+    },
+
+    /**
+     * 初始化导出按钮
+     * @private
+     */
+    _initExportBtn: function () {
+        $('#avgPriceIndex_wrapper #exportAvgPrice').on('click', function () {
+            layui.layer.open({
+                type: 2,
+                title: '导出条件',
+                content: 'export.html?cityName='+parent.homeIndex_obj.currentCity,
+                area: ['97%', '97%']
+            });
+            return false;
+        });
+    },
+
+    /**
+     * 初始化搜索按钮
+     * @private
+     */
+    _initSearch: function () {
+        var _this = this;
+        $('#avgPriceIndex_wrapper #searchBtn').on('click', function () {
+            var data = {
+                cityName: parent.homeIndex_obj.currentCity,
+                districtName: $('#avgPriceIndex_wrapper #districtName').val(),
+                blockName : $('#avgPriceIndex_wrapper #blockName ').val(),
+                estateName: $('#avgPriceIndex_wrapper #estateName').val(),
+                quality: $('#avgPriceIndex_wrapper #quality').val(),
+                visibility:$('#avgPriceIndex_wrapper #visibility').val(),
+                standAcreage: $('#avgPriceIndex_wrapper #standAcreage').val(),
+                monthOnMonth: $('#avgPriceIndex_wrapper #monthOnMonth').val(),
+                isAudit: $('#avgPriceIndex_wrapper #isAudit').val(),
+                buildingType: $('#avgPriceIndex_wrapper #buildingType').val(),
+                calDate:$('#avgPriceIndex_wrapper #calDate').val(),
+                caseNoMin: $('#avgPriceIndex_wrapper #caseNoMin').val(),
+                caseNoMax: $('#avgPriceIndex_wrapper #caseNoMax').val(),
+                avgPriceSysMin: $('#avgPriceIndex_wrapper #avgPriceSysMin').val(),
+                avgPriceSysMax: $('#avgPriceIndex_wrapper #avgPriceSysMax').val()
+            };
+            _this.tableIns.reload({
+                method:'post',
+                where: data
+            });
+        });
+    },
+
+    /**
+     * 根据res展示表格
+     * @param res
+     * @param keyword
+     * @private
+     */
+    _initTable: function () {
+        var _this = this;
+        var _table = layui.table;
+        // 刷新表格
+        _this.tableIns =  layui.table.render({
+            method:'post',
+            contentType:'application/json',
+            elem: '#avgPriceIndex_wrapper #avgPriceTable',
+            toolbar: '#avgPriceToolbar',
+            url: _this.urlConfig.avgList,
+            where: {
+                cityName: parent.homeIndex_obj.currentCity,
+                districtName: $('#avgPriceIndex_wrapper #district').val(),
+                blockName: $('#avgPriceIndex_wrapper #block').val(),
+                estateName: $('#avgPriceIndex_wrapper #estateName').val(),
+                quality: $('#avgPriceIndex_wrapper #quality').val(),
+                visibility:$('#avgPriceIndex_wrapper #visibility').val()
+            },
+            title: '均价数据表',
+            cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                //{field: 'id', title: 'ID', width: 100},
+                {field: 'estateName', title: '楼盘名称'},
+                {field: 'quality', title: '物业品质',templet: '#qualityTpl'},
+                {field: 'buildingType', title: '建筑类别',templet: '#buildingTypeTpl'},
+                {field: 'standAcreage', title: '标准房面积'},
+                {field: 'calDate', title: '日期'},
+                {field: 'monthOnMonth', title: '环比'},
+                {field: 'caseNo', title: '案例数'},
+                {field: 'avgPriceSys', title: '系统均价'},
+                {field: 'avgPriceCoe', title: '指数均价'},
+                {field: 'avgPriceManual', title: '人工均价',edit: 'number'},
+                {field: 'isAudit', title: '是否审核',templet: function (d) {
+                        return d.isAudit == '1' ? '已审核' : '未审核';
+                }},
+                {fixed: 'right', title: '操作', toolbar: '#avgPriceBar', width:150}
+            ]],
+            id: 'avgPriceTable',
+            page: true,
+            done: function () {
+                // 保留上次搜索关键词
+                $('#avgPriceIndex_wrapper #district').val($('#avgPriceIndex_wrapper #district').val());
+                $('#avgPriceIndex_wrapper #block').val($('#avgPriceIndex_wrapper #block').val());
+                $('#avgPriceIndex_wrapper #estateName').val($('#avgPriceIndex_wrapper #estateName').val());
+                $('#avgPriceIndex_wrapper #quality').val($('#avgPriceIndex_wrapper #quality').val());
+                $('#avgPriceIndex_wrapper #visibility').val($('#avgPriceIndex_wrapper #visibility').val());
+                // 绑定搜索按钮
+                _this._initSearch();
+                //初始化行政区
+                _this._initBasicSelect(_this.urlConfig.districtOfCity, {cityName: parent.homeIndex_obj.currentCity}, 'districtName','geo');
+                //初始化板块
+                _this._initBasicSelect(_this.urlConfig.blockOfCity, {cityName: parent.homeIndex_obj.currentCity}, 'blockName','geo');
+                // 品质
+                _this._initBasicSelect(_this.urlConfig.dictionary, {category: '住宅品质'}, 'quality','');
+                _this._initBasicSelect(_this.urlConfig.dictionary, {category: '建筑类别'}, 'buildingType','');
+
+                // 工具栏事件 表头按钮触发事件
+                _table.on('toolbar(avgPriceTable)', function(obj){
+                    var checkStatus = _table.checkStatus(obj.config.id);
+                    switch(obj.event){
+                        case 'batchCheck'://批量审核
+                            var data = checkStatus.data;
+                            if( data.length<=0){
+                                layer.msg('请选择楼盘均价');
+                                return false;
+                            }
+                            $.each(data,function(index,item){
+                                data[index]['isAudit']=1;
+                            })
+
+                            $.post({
+                                url: _this.urlConfig.avgCheck,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function (res) {
+                                    layer.msg(res.msg);
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                        case 'batchConfirm'://批量确定
+                            var data = checkStatus.data;
+                            if( data.length<=0){
+                                layer.msg('请选择楼盘均价');
+                                return false;
+                            }
+                            $.post({
+                                url: _this.urlConfig.avgConfirm,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function (res) {
+                                    layer.msg(res.msg);
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                        case 'batchDelete'://批量删除
+                            var data = checkStatus.data;
+                            if( data.length<=0){
+                                layer.msg('请选择楼盘均价');
+                                return false;
+                            }
+                            $.each(data,function(index,item){
+                                data[index]['visibility']=0;
+                            })
+                            $.post({
+                                url: _this.urlConfig.avgDelete,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function (res) {
+                                    layer.msg(res.msg);
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                        case 'batchUnDelete'://取消删除
+                            var data = checkStatus.data;
+                            if( data.length<=0){
+                                layer.msg('请选择楼盘均价');
+                                return false;
+                            }
+                            $.each(data,function(index,item){
+                                data[index]['visibility']=1;
+                            })
+                            $.post({
+                                url: _this.urlConfig.avgDelete,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function (res) {
+                                    layer.msg(res.msg);
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                    };
+
+                });
+
+                //监听单元格编辑(人工价格修改)
+                _table.on('edit(avgPriceTable)', function(obj){
+                    var list=new Array();//创建list集合
+                    list[0] = obj.data
+                    $.post({
+                        url: _this.urlConfig.avgConfirm,
+                        data: JSON.stringify(list),
+                        contentType: "application/json",
+                        success: function (res) {
+                            layer.msg(res.msg);
+                            _this._initTable();
+                        }
+                    });
+                });
+
+                /**
+                 * 行工具栏事件,绑定按钮
+                 */
+                _table.on('tool(avgPriceTable)', function (obj) {
+                    if (obj.event === 'check') { //审核
+                        var text = $(this).text();
+                        if(text ==="取消审核"){
+                            obj.data['isAudit']=0;
+                        }
+                        if(text ==="审核"){
+                            obj.data['isAudit']=1;
+                        }
+                        var list=new Array();//创建list集合
+                        list[0] = obj.data
+                        $.post({
+                            url: _this.urlConfig.avgCheck,
+                            data: JSON.stringify(list),
+                            contentType: "application/json",
+                            success: function (res) {
+                                layer.msg(res.msg);
+                                _this._initTable();
+                            }
+                        });
+                    } else if (obj.event === 'delete') { //删除
+                        var text = $(this).text();
+                        if(text ==="取消删除"){
+                            obj.data['visibility']=1;
+                        }
+                        if(text ==="删除"){
+                            obj.data['visibility']=0;
+                        }
+                        var list=new Array();//创建list集合
+                        list[0] = obj.data
+                        $.post({
+                            url: _this.urlConfig.avgDelete,
+                            data: JSON.stringify(list),
+                            contentType: "application/json",
+                            success: function (res) {
+                                layer.msg(res.msg);
+                                _this._initTable();
+                            }
+                        });
+                    }else if (obj.event === 'confirm') { //确认
+                        var list=new Array();//创建list集合
+                        list[0] = obj.data
+                        $.post({
+                            url: _this.urlConfig.avgConfirm,
+                            data: JSON.stringify(list),
+                            contentType: "application/json",
+                            success: function (res) {
+                                layer.msg(res.msg);
+                                _this._initTable();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+        //年月范围
+        layui.laydate.render({
+            elem: '#calDate'
+            ,type: 'month'
+            ,format: 'yyyyMM'
+            ,range: true
+        })
+    },
+
+};
+
+avgPriceIndex_obj.init();

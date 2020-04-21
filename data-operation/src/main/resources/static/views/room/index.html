@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1" />
+    <link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+    <link href="/resource/css/layui.ext.css" rel="stylesheet">
+    <!-- layui拓展 -->
+    <link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+    <!--数据列表循环-->
+    <script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="index.css" rel="stylesheet">
+    <title>房号信息</title>
+</head>
+<body>
+<div id="roomIndex_wrapper">
+
+    <!--隐藏控件 用于存放当前页面室号数量 当增加或者减少时 更新该值 用于下一次设置调用-->
+    <input type="text" id="roomNumId" style="display: none">
+    <!--隐藏控件 用于存放当前单元数-->
+    <input type="text" id="unitNum" style="display: none">
+    <!--隐藏控件 用于存放当前点击的第几个单元-->
+    <input type="text" id="unitNumCurrent" style="display: none">
+    <!--隐藏控件 楼层数-->
+    <input type="text" id="floorTotalNo" style="display: none">
+    <!--隐藏控件 数据库中是否有该楼栋下的数据 1 表示有， 0 表示无-->
+    <!--    <input type="text" id="isHaveData" style="display: block">-->
+
+    <div class="site-demo-button" style="margin-bottom: 0;" id="unitList">
+
+    </div>
+    <div class="layui-tab" lay-filter="room-filter">
+        <ul class="layui-tab-title">
+            <li class="layui-this" lay-id="roomNo">房号名称</li>
+            <li lay-id="buildArea">建筑面积</li>
+            <li lay-id="innerArea">套内面积</li>
+            <li lay-id="orientation">朝向</li>
+            <li lay-id="scenery">景观</li>
+            <li lay-id="structure">户型结构</li>
+            <li lay-id="initPrice">初始价格</li>
+            <li lay-id="priceCoe">价格系数</li>
+        </ul>
+        <div class="layui-tab-content layui-form" >
+            <div class="layui-tab-item layui-show" id="roomNo-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest" class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="create_room">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_roomNo" lay-filter="Lay_roomNo" data-></table>
+            </div>
+            <div class="layui-tab-item" id="buildArea-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest"  class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="create_room">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_buildArea" lay-filter="Lay_buildArea"></table>
+            </div>
+            <div class="layui-tab-item" id="innerArea-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest"  class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="create_room">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_innerArea" lay-filter="Lay_innerArea"></table>
+            </div>
+            <div class="layui-tab-item" id="orientation-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest"  class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="create_room">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_orientation" lay-filter="Lay_orientation"></table>
+            </div>
+            <div class="layui-tab-item" id="scenery-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest"  class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="create_room">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_scenery" lay-filter="Lay_scenery"></table>
+            </div>
+            <div class="layui-tab-item" id="structure-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest"  class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="create_room">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_structure" lay-filter="Lay_structure"></table>
+            </div>
+            <div class="layui-tab-item" id="initPrice-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest"  class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="create_room">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_initPrice" lay-filter="Lay_initPrice"></table>
+            </div>
+            <div class="layui-tab-item" id="priceCoe-tab">
+                <div class="roomTable">
+                    房号连接符：
+                    <div class="layui-inline">
+                        <select name="interest"  class="layui-input" lay-filter="aihao">
+                            <option value="-">-</option>
+                            <option value="0">0</option>
+                        </select>
+                    </div>
+                    <button class="layui-btn" data-type="reload">生成房号</button>
+                    <button class="layui-btn" data-type="save_room">保存</button>
+                </div>
+                <table class="layui-table" id="Lay_priceCoe" lay-filter="Lay_priceCoe"></table>
+            </div>
+        </div>
+    </div>
+
+    <!--表格中 所需标签 全在这里拉 -->
+    <div class="hidBox">
+        <table class="roomTable">
+            <thead>
+                <tr>
+                    <td>物理层</td>
+                    <td>
+                        <i class="layui-icon">&#xe616;</i>
+                        名义层
+                        <i class="layui-icon">&#xe61f;</i>
+                    </td>
+                </tr>
+            </thead>
+            <tbody></tbody>
+        </table>
+
+
+        <div class="roomOri">
+            <select>
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="roomScen">
+            <select>
+                <option value="">请选择</option>
+            </select>
+        </div>
+        <div class="roomStruct">
+            <select>
+                <option value="">请选择</option>
+            </select>
+        </div>
+
+    </div>
+</div>
+    <script src="/resource/js/layui/layui.all.js"></script>
+    <!-- layui拓展 -->
+    <script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+    <script src="/resource/js/layui/extend/verify/verify.js"></script>
+    <script src="/resource/js/layui/extend/util/util.js"></script>
+    <script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+    <script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+    <!-- ie 89支持媒体查询 -->
+    <script src="/resource/js/htm5extend/html5.min.js"></script>
+    <script src="/resource/js/htm5extend/respond.min.js"></script>
+
+    <script type="text/javascript">
+        layui.config({
+            base: '/resource/js/layui/extend/' //自定义插件路径
+        }).use('jquery',function(){
+            window.$=layui.$;
+            window.jQuery=layui.$;
+        });
+    </script>
+    <script src="/resource/js/jquery.nicescroll.min.js"></script>
+    <script type="text/javascript" src="/resource/js/underscore.min.js"></script>
+    <script type="text/javascript" src="index.js"></script>
+</body>
+</html>

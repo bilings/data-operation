@@ -1,0 +1,63 @@
+package com.hifo.dataoperation.service.estate.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.entity.ExtEmployee;
+import com.hifo.dataoperation.mapper.estate.BusMergeRelMapper;
+import com.hifo.dataoperation.entity.BusMergeRel;
+import com.hifo.dataoperation.service.estate.BusEstateService;
+import com.hifo.dataoperation.service.estate.BusMergeRelService;
+import com.hifo.dataoperation.base.MybatisPlusService;
+import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+/**
+ * 合并日志Service
+ *
+ * @author whc
+ * @date 2019/3/27 14:56
+ */
+@Service
+public class BusMergeRelServiceImpl extends MybatisPlusService<BusMergeRelMapper, BusMergeRel> implements BusMergeRelService {
+
+    @Autowired
+    private BusEstateService busEstateService;
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void log(BusEstate from, BusEstate to, ExtEmployee emp) {
+//        // 删除fromId
+//        delete(from.getId());
+//        // 保存新的fromId -> toId
+//        BusMergeRel mergeLog = new BusMergeRel();
+//        mergeLog.setFromEsId(from.getEsId());
+//        mergeLog.setToEsId(to.getEsId());
+//        mergeLog.setFromId(from.getId());
+//        mergeLog.setToId(to.getId());
+//        mergeLog.setCreateId(emp.getId().intValue());
+//        mergeLog.setCreateName(emp.getName());
+//        mergeLog.setOrganizationId(emp.getOrganizationId());
+//        save(mergeLog, emp);
+//        // 获取合并到fromId的楼盘Id
+//        var list = baseMapper.selectList(new QueryWrapper<BusMergeRel>().eq("toId", from.getId()));
+//        // 依次做递归操作
+//        for (BusMergeRel log : list) {
+//            log(busEstateService.getById(log.getFromId()), to, emp);
+//        }
+    }
+
+    @Override
+    public void delete(Long fromId) {
+        var list = baseMapper.selectList(new QueryWrapper<BusMergeRel>().eq("fromId", fromId));
+        list.stream().forEach(e -> baseMapper.deleteById(e.getId()));
+    }
+
+    @Override
+    public List<BusMergeRel> listByToId(Long toId) {
+        return baseMapper.selectList(new QueryWrapper<BusMergeRel>().eq("toId", toId));
+    }
+}

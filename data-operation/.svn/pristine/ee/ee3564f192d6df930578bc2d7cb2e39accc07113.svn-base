@@ -1,0 +1,1134 @@
+package com.hifo.dataoperation.service.estate.impl;
+
+import cn.afterturn.easypoi.excel.entity.ExportParams;
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.hifo.dataoperation.base.MybatisPlusService;
+import com.hifo.dataoperation.config.CommonThreadPool;
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.dao.BusBuildingDao;
+import com.hifo.dataoperation.dao.BusEstateDao;
+import com.hifo.dataoperation.mapper.estate.BusEstateMapper;
+import com.hifo.dataoperation.mapper.base.Sequence;
+import com.hifo.dataoperation.mapper.base.Table;
+import com.hifo.dataoperation.entity.*;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.base.BasicService;
+import com.hifo.dataoperation.service.estate.*;
+import com.hifo.dataoperation.service.setting.AdministrativeService;
+import com.hifo.dataoperation.service.setting.DictionaryService;
+import com.hifo.dataoperation.service.upload.UploadService;
+import com.hifo.dataoperation.util.*;
+import com.hifo.dataoperation.vo.*;
+import lombok.extern.java.Log;
+import lombok.var;
+import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.util.*;
+import java.util.concurrent.Future;
+import java.util.regex.Pattern;
+
+/**
+ * 楼盘Service接口实现类
+ *
+ * @author xmw
+ * @date 2019/4/25 16:21
+ */
+@Log
+@Service
+public class BusEstateServiceImpl extends MybatisPlusService<BusEstateMapper, BusEstate> implements BusEstateService {
+
+    public static final String collectName = "community";
+
+    @Autowired
+    private BasicService basicService;
+    @Autowired
+    private BusBuildingService busBuildingService;
+    @Autowired
+    private BusAvgPriceService avgPriceService;
+    @Autowired
+    private BusRoomService busRoomService;
+    @Autowired
+    private BusMergeRelService mergeRelService;
+    @Autowired
+    private BusVirtualRelService virtualRelService;
+    @Autowired
+    private DictionaryService dictionaryService;
+    @Autowired
+    private UploadService uploadService;
+    @Autowired
+    private AdministrativeService administrativeService;
+    @Autowired
+    private BusEstateAgentService busEstateAgentService;
+    @Autowired
+    private BusEstateDao busEstateDao;
+    @Autowired
+    private BusBuildingDao busBuildingDao;
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+    /**
+     * 导入成功的楼盘
+     */
+    private Vector<BusEstate> successList = null;
+
+    /**
+     * 导入错误的楼盘
+     */
+    private Vector<BusEstateFailVO> errorList = null;
+
+    //    @Transactional(value = "hifoTransactionManager", rollbackFor = Exception.class)
+    @Override
+    public ApiResult update(BusEstate busEstate) {
+//        var organizationId = basicService.getLoginEmployee().getOrganizationId();
+        //新增
+        if (StringUtil.isNull(busEstate.getId())) {
+            //检查楼盘是否存在
+            Map<String, Object> params = new HashMap<>();
+            params.put("cityName", busEstate.getCityName());
+            params.put("districtName", busEstate.getDistrictName());
+            params.put("name", busEstate.getName());
+            params.put("visibility", EntityConstants.PUBLIC);
+            List<BusEstate> list = busEstateDao.selectByCondition(params, null, null);
+            if (CollectionUtils.isNotEmpty(list)) {
+                return ApiResult.failed("新建失败：重复楼盘");
+            }
+            // 添加楼盘信息
+            busEstate.setUpdateTime(new Date());
+            busEstate.setCreateDate(new Date());
+            busEstateDao.insert(busEstate);
+            // 生成均价
+//            avgPriceService.updateQuality(busEstate);
+        } else {
+            BusEstate busEstate1 = busEstateDao.selectById(busEstate.getId(), BusEstate.class);
+//            var count = baseMapper.selectCount(new QueryWrapper<BusEstate>().eq("organizationId", organizationId).eq("cityName", busEstate.getCityName()).eq("districtName", busEstate.getDistrictName()).eq("name", busEstate.getName()).ne("visibility", EntityConstants.DELETE).ne("id", busEstate.getId()));
+            if (busEstate1 == null) {
+                return ApiResult.failed("更新失败：楼盘已存在");
+            }
+
+            // 更新楼盘信息
+            busEstate.setUpdateTime(new Date());
+            busEstateDao.updateById(busEstate1.getId(), busEstate);
+//            updateById(busEstate);
+        }
+        return ApiResult.success(busEstate);
+    }
+
+
+    @Override
+    public ApiResult delete(String[] ids) {
+        var length = ids.length;
+//        for (var i = 0; i < length; i++) {
+//            var obj = baseMapper.selectById(ids[i]);
+//            if (obj != null) {
+//                obj.setVisibility(EntityConstants.DELETE);
+//                updateById(obj);
+//            }
+//        }
+        return ApiResult.success("删除成功，共删除" + length + "条数据。");
+    }
+
+    @Override
+    public ApiResult visibility(String[] ids, String visibility) {
+        var length = ids.length;
+        for (var i = 0; i < length; i++) {
+            Map<String, Object> maps = new HashMap<>();
+            maps.put("visibility", visibility);
+            busEstateDao.updateByParams(ids[i], maps);
+        }
+        return ApiResult.success("设置成功，共设置" + length + "条数据。");
+    }
+
+    /**
+     * @param fromId 待合并楼盘id
+     * @param to     目标楼盘
+     * @param emp
+     */
+    @Async
+    public void asyncMerge(String fromId, BusEstate to, ExtEmployee emp) {
+//         new 删除合并推荐
+//        var agent = busEstateAgentService.getOne(new QueryWrapper<BusEstateAgentVO>().eq("fromId", fromId).eq("toId", to.getId()));
+//        if (agent != null) {
+//            agent.setIsDelete(true);
+//            busEstateAgentService.updateByIdAsync(agent, emp);
+//        }
+
+        // 2. 合并属性，以to为准，to为空的属性用from的
+//        var from = baseMapper.selectById(fromId);
+        var from = busEstateDao.selectById(fromId, BusEstate.class);
+//        // 为待建楼盘设为正式楼盘
+//        if (from.getIsAgent()) {
+//            from.setIsAgent(false);
+//            updateById(to);
+//        }
+        to = HkbUtil.copyPropertiesIfNull(from, to);
+        // 被合并的楼盘名设置到合并到的楼盘别名
+//        to.setAlias(StringUtil.isNotEmpty(to.getAlias()) ? (to.getAlias() + "," + from.getName()) : from.getName());
+//        if (StringUtil.isNotEmpty(to.getAddrRef()) && StringUtil.isNotEmpty(from.getAddrRef()) && !to.getAddrRef().equals(from.getAddrRef())) {
+//            to.setAddrRef(to.getAddrRef() + "," + from.getAddrRef());
+//        }
+//        if (StringUtil.isNotEmpty(to.getAddrDetail()) && StringUtil.isNotEmpty(from.getAddrDetail())) {
+//            try {
+//                List<AddrDetailDTO> toDto = JSONObject.parseArray(to.getAddrDetail(), AddrDetailDTO.class);
+//                List<AddrDetailDTO> fromDto = JSONObject.parseArray(from.getAddrDetail(), AddrDetailDTO.class);
+//                if (toDto.size() == 1 && StringUtil.isEmpty(toDto.get(0).getRoad()) && StringUtil.isEmpty(toDto.get(0).getNumber())) {
+//                    toDto.clear();
+//                }
+//                List<AddrDetailDTO> finalToDto = toDto;
+//                fromDto.stream().forEach(e -> {
+//                    if (!finalToDto.contains(e)) {
+//                        finalToDto.add(e);
+//                    }
+//                });
+//                to.setAddrDetail(JSONObject.toJSONString(finalToDto));
+//            } catch (Exception e) {
+//            }
+//        }
+//        updateById(to, emp);
+        //更新目标楼盘
+        busEstateDao.updateById(to.getId(), to);
+
+        // 3. 楼栋，从from复制一份到to，相同的楼栋（名称相同）不复制
+//        this.mergeBuilding(from, to, emp);
+        // 5. 案例，把关联从from修改到to
+
+        // 6. 修改from的状态为merge（visibility=3）
+        from.setVisibility(EntityConstants.MERGED);
+        from.setIsMerged(true);
+        from.setMergeId(to.getId());
+        busEstateDao.updateById(fromId, from);
+
+        Map<String, Object> map = new HashMap<>();
+        map.put("id", to.getId());
+        map.put("visibility", EntityConstants.PUBLIC);
+        Long buildingNoNum = busEstateDao.countByCondition(map);
+        to.setTotalNumberOfBuildings(String.valueOf(buildingNoNum));
+        // 7. 更新楼栋数
+//        to.setBuildingNo(busBuildingService.count(new QueryWrapper<BusBuilding>().eq("estateId", to.getId()).eq("visibility", EntityConstants.PUBLIC)));
+//        updateById(to, emp);
+        busEstateDao.updateById(to.getId(), to);
+        // 8.合并均价
+//        this.mergeAvgPrice(from, to, emp);
+        // 9. 合并记录
+        mergeRelService.log(from, to, emp);
+    }
+
+    @Override
+    public void mergeBuilding(BusEstate from, BusEstate to, ExtEmployee emp) {
+//        var buildingListOfFrom = busBuildingService.list(new QueryWrapper<BusBuilding>().eq("estateId", from.getId()));
+//        var buildingListOfTo = busBuildingService.list(new QueryWrapper<BusBuilding>().eq("estateId", to.getId()));
+//        // 目标楼盘的楼栋标准名称Map
+//        Map<String, BusBuilding> nameMapOfTo = new HashMap<>(buildingListOfTo.size());
+//        for (BusBuilding building : buildingListOfTo) {
+//            nameMapOfTo.put(HkbUtil.stdBuildingName(building.getName()), building);
+//        }
+//
+//        // 遍历源楼盘楼栋
+//        for (BusBuilding fromBuilding : buildingListOfFrom) {
+//            // 复制楼栋信息
+//            BusBuilding newBuilding = new BusBuilding();
+//            newBuilding = HkbUtil.copyPropertiesIfNull(fromBuilding, newBuilding);
+//            // 格式化建筑类型
+//            newBuilding = busBuildingService.getBuildingType(newBuilding, emp);
+//            // 指向新楼盘
+////            newBuilding.setEstateId(to.getId());
+//            // 如果名称已经在目标楼栋中,根据合并规则，隐藏相应的楼栋
+//            var toBuilding = nameMapOfTo.get(HkbUtil.stdBuildingName(fromBuilding.getName()));
+//            // 获取该被合并楼盘楼栋下所有房号
+//            List<BusRoomVO> fromRoomList = busRoomService.list(new QueryWrapper<BusRoomVO>().eq("buildingId", fromBuilding.getId()));
+//            if (toBuilding != null) {
+//                // 获取该合并楼盘楼栋下所有房号
+//                int toRoomCount = busRoomService.count(new QueryWrapper<BusRoomVO>().eq("buildingId", toBuilding.getId()));
+//                // 都有房号进入后面的合并规则
+//                if ((fromRoomList.size() == 0 && toRoomCount > 0) || (fromRoomList.size() > 0 && toRoomCount == 0)) {
+//                    // 规则1.重复楼栋不是都有房号的情况下
+//                    // 重复楼栋有房号的显示，没有的隐藏
+//                    if (fromRoomList.size() > 0) {
+//                        toBuilding.setVisibility(EntityConstants.PRIVATE);
+//                        busBuildingService.updateBuildingById(toBuilding, emp);
+//                    } else {
+//                        newBuilding.setVisibility(EntityConstants.PRIVATE);
+//                    }
+//                } else {
+//                    // 重复楼栋都有房号或都没有房号
+//                    // 格式化建筑类型
+//                    toBuilding = busBuildingService.getBuildingType(toBuilding, emp);
+//                    // 规则2.重复楼栋都有房号,以有建筑类别的为主
+//                    if (!(toBuilding.getBuildingType() != null && newBuilding.getBuildingType() != null)) {
+//                        if (newBuilding.getBuildingType() == null) {
+//                            toBuilding.setVisibility(EntityConstants.PRIVATE);
+//                            busBuildingService.updateBuildingById(toBuilding, emp);
+//                        } else {
+//                            newBuilding.setVisibility(EntityConstants.PRIVATE);
+//                        }
+//                    } else {
+//                        // 建筑类别都不为空
+//                        // 规则3 优先以有地上总楼层，再才以有总楼层为打底
+//                        if (toBuilding.getFloorOverGroundNo() == null) {
+//                            toBuilding.setFloorOverGroundNo(0);
+//                        }
+//                        if (newBuilding.getFloorOverGroundNo() == null) {
+//                            newBuilding.setFloorOverGroundNo(0);
+//                        }
+//                        if ((toBuilding.getFloorOverGroundNo() > 0 && newBuilding.getFloorOverGroundNo() == 0) || (toBuilding.getFloorOverGroundNo() == 0 && newBuilding.getFloorOverGroundNo() > 0)) {
+//                            // 地上总楼层比较
+//                            if (newBuilding.getFloorOverGroundNo() > 0) {
+//                                toBuilding.setVisibility(EntityConstants.PRIVATE);
+//                                busBuildingService.updateBuildingById(toBuilding, emp);
+//                            } else {
+//                                newBuilding.setVisibility(EntityConstants.PRIVATE);
+//                            }
+//                        } else {
+//                            // 总楼层比较
+//                            if (toBuilding.getFloorTotalNo() == null) {
+//                                toBuilding.setFloorTotalNo(0);
+//                            }
+//                            if (newBuilding.getFloorTotalNo() == null) {
+//                                newBuilding.setFloorTotalNo(0);
+//                            }
+//                            if ((toBuilding.getFloorTotalNo() > 0 && newBuilding.getFloorTotalNo() == 0) || (toBuilding.getFloorTotalNo() == 0 && newBuilding.getFloorTotalNo() > 0)) {
+//                                if (newBuilding.getFloorTotalNo() > 0) {
+//                                    toBuilding.setVisibility(EntityConstants.PRIVATE);
+//                                    busBuildingService.updateBuildingById(toBuilding, emp);
+//                                } else {
+//                                    newBuilding.setVisibility(EntityConstants.PRIVATE);
+//                                }
+//                            } else {
+//                                newBuilding.setVisibility(EntityConstants.PRIVATE);
+//                            }
+//                        }
+//                    }
+//                }
+//            }
+//            // 去掉序列号，说明是新增
+//            newBuilding.setId(null);
+//            // 保存楼栋
+//            newBuilding = busBuildingService.addBuilding(newBuilding, Sequence.seq_bus_building, Table.bus_building, emp);
+//            // 4. 楼栋对应的房号，从from复制一份到to
+//            for (BusRoomVO room : fromRoomList) {
+//                // 复制房号信息
+//                BusRoomVO newRoom = new BusRoomVO();
+//                newRoom = HkbUtil.copyPropertiesIfNull(room, newRoom);
+//                // 指向新楼栋
+//                newRoom.setBuildingId(newBuilding.getId());
+//                // 去掉序列号，说明是新增
+//                newRoom.setId(null);
+//                // 保存房号
+//                busRoomService.save(newRoom, Sequence.seq_bus_room, Table.bus_room, emp);
+//            }
+//        }
+    }
+
+    /**
+     * 合并楼盘均价
+     *
+     * @param from
+     * @param to
+     * @param emp
+     */
+    @Override
+    public void mergeAvgPrice(BusEstate from, BusEstate to, ExtEmployee emp) {
+//        int toCount = avgPriceService.count(new QueryWrapper<BusEstateAvgPriceExtend>().eq("estateId", to.getId()).ne("visibility", 0));
+//        // 当被合并楼盘均价数据为空，则合并均价
+//        if (toCount == 0) {
+//            int fromCount = avgPriceService.count(new QueryWrapper<BusEstateAvgPriceExtend>().eq("estateId", from.getId()).ne("visibility", 0));
+//            if (fromCount > 0) {
+//                Pagination page = new Pagination();
+//                page.setPages(1);
+//                page.setLimit(1);
+//                page.setDesc("calDate");
+//                var date = ((BusEstateAvgPriceExtend) avgPriceService.page(page, new QueryWrapper<BusEstateAvgPriceExtend>().eq("estateId", from.getId()).isNotNull("calDate").ne("visibility", 0)).getRecords().get(0)).getCalDate();
+//                var list = avgPriceService.list(new QueryWrapper<BusEstateAvgPriceExtend>().eq("estateId", from.getId()).eq("calDate", date).ne("visibility", 0));
+//                list.stream().forEach(e -> {
+//                    e.setEstateId(to.getId());
+//                    e.setId(null);
+//                    avgPriceService.save(e, Sequence.seq_bus_estate_avg_price, Table.bus_estate_avg_price, emp);
+//                });
+//            }
+//        }
+    }
+
+
+    /**
+     * 合并楼盘
+     *
+     * @param fromIds
+     * @param toId
+     * @return
+     */
+    @Override
+    public ApiResult merge(String[] fromIds, String toId) {
+        var emp = basicService.getLoginEmployee();
+        // 1. 获取源楼盘, 目标楼盘
+//        var to = baseMapper.selectById(toId);
+        var to = busEstateDao.selectById(toId, BusEstate.class);
+        if (to == null) {
+            return ApiResult.failed("请选择目标楼盘。");
+        }
+        // 为待建楼盘设为正式楼盘
+//        if (to.getIsAgent()) {
+//            to.setIsAgent(false);
+//            updateById(to);
+//        }
+
+        for (int i = 0, len = fromIds.length; i < len; i++) {
+            //不能合并自身楼盘
+            if (fromIds[i].equals(toId)) {
+                continue;
+            }
+            // 异步合并楼盘
+            if (emp != null) {
+                asyncMerge(fromIds[i], to, emp);
+            }
+        }
+        try {
+            return ApiResult.success("合并成功。");
+        } catch (Exception e) {
+            log.warning(e.getMessage());
+            return ApiResult.success("合并失败。");
+        }
+    }
+
+    /**
+     * 遍历数组
+     */
+    public static int printArray(String[] array, String value) {
+        for (int i = 0; i < array.length; i++) {
+            if (value.equalsIgnoreCase(array[i])) {
+                return i;
+            }
+        }
+        //当if条件不成立时，默认返回一个负数值-1
+        return -1;
+    }
+
+    @Transactional(value = "hifoTransactionManager", rollbackFor = Exception.class)
+    @Override
+    public ApiResult undoMerge(String fromId, String toId) {
+//        // 1. 案例，把关联从to修改到from
+//
+//        // new 去除合并推荐删除
+//        var agent = busEstateAgentService.getOne(new QueryWrapper<BusEstateAgentVO>().eq("fromId", fromId).eq("toId", toId));
+//        if (agent != null) {
+//            agent.setIsDelete(false);
+//            busEstateAgentService.updateById(agent);
+//        }
+//
+//        // 2. 修改from的状态为正常（visibility=2）
+//        var from = baseMapper.selectById(fromId);
+//        from.setVisibility(EntityConstants.PUBLIC);
+//        updateById(from);
+//        // 3. 更新楼栋数
+//        var to = baseMapper.selectById(toId);
+//        // 取消合并的别名
+//        var alias = to.getAlias();
+//        if (alias.indexOf(",") == -1) {
+//            alias = to.getAlias().replace(from.getName(), "");
+//        } else {
+//            String[] arr = StringUtils.split(alias, ",");
+//            int index = printArray(arr, from.getName());
+//            if (index != -1) {
+//                // 把最后一个元素替代指定的元素
+//                arr[index] = arr[arr.length - 1];
+//                // 数组缩容
+//                arr = Arrays.copyOf(arr, arr.length - 1);
+//                alias = StringUtils.join(arr, ",");
+//            }
+//        }
+//        to.setAlias(alias);
+//        // 取消合并的地址详情
+//        var addrRef = to.getAddrRef();
+//        if (addrRef.indexOf(",") == -1) {
+//            if (StringUtil.isNotEmpty(to.getAddrRef())) {
+//                addrRef = to.getAddrRef().replace(from.getAddrRef(), "");
+//            }
+//        } else {
+//            String[] arr = StringUtils.split(addrRef, ",");
+//            int index = printArray(arr, from.getAddrRef());
+//            if (index != -1) {
+//                // 把最后一个元素替代指定的元素
+//                arr[index] = arr[arr.length - 1];
+//                // 数组缩容
+//                arr = Arrays.copyOf(arr, arr.length - 1);
+//                addrRef = StringUtils.join(arr, ",");
+//            }
+//        }
+//        to.setAddrRef(addrRef);
+//
+//        to.setBuildingNo(busBuildingService.count(new QueryWrapper<BusBuilding>().eq("estateId", toId).eq("visibility", EntityConstants.PUBLIC)));
+//        updateById(to);
+//        // 4. 删除合并记录
+//        mergeRelService.delete(Long.parseLong(fromId));
+        return ApiResult.success("取消合并成功。");
+    }
+
+    @Transactional(value = "hifoTransactionManager", rollbackFor = Exception.class)
+    @Override
+    public ApiResult virtual(String[] fromIds, String toId) {
+        var length = fromIds.length;
+        // 1. 获取源楼盘, 目标楼盘
+        var to = busEstateDao.selectById(toId, BusEstate.class);
+        // 2. to的状态改为：虚拟
+        to.setVisibility(EntityConstants.PUBLIC);
+//        to.setIsVirtual(true);
+        busEstateDao.updateById(toId, to);
+        for (var i = 0; i < length; i++) {
+            // 3. 虚拟记录
+            virtualRelService.log(fromIds[i], toId);
+        }
+        return ApiResult.success("虚拟化成功，共设置" + length + "条数据。");
+    }
+
+
+    @Override
+    public ApiResult undoVirtual(String fromId) {
+        var list = virtualRelService.listByFromId(fromId);
+        if (CollectionUtils.isNotEmpty(list) && list.size() == 1) {
+            // 1. 修改to的状态为正常
+            var from = busEstateDao.selectById(list.get(0).getToId(), BusEstate.class);
+            if (EntityConstants.PRIVATE.equals(from.getVisibility())) {
+                from.setVisibility(EntityConstants.PUBLIC);
+            }
+            from.setIsVirtual("0");
+            busEstateDao.updateById(from.getId(), from);
+        }
+        // 2. 删除虚拟记录
+        virtualRelService.delete(fromId);
+        return ApiResult.success("取消虚拟化成功。");
+    }
+
+    @Transactional(value = "hifoTransactionManager", rollbackFor = Exception.class)
+    @Override
+    public ApiResult evaluate(String[] ids, String canEvaluate) {
+        var length = ids.length;
+//        for (var i = 0; i < length; i++) {
+//            var obj = baseMapper.selectById(ids[i]);
+//            obj.setCanEvaluate(canEvaluate);
+//            updateById(obj);
+//        }
+        return ApiResult.success("设置成功，共设置" + length + "条数据。");
+    }
+
+    @Override
+    public Pagination<BusEstate> findByPage(BusEstate busEstate, Pagination page) {
+        var map = administrativeService.getMapByParentId(busEstate.getCityId());
+        var employee = basicService.getLoginEmployee();
+        Query query = findListQuery(busEstate, employee, page);
+        Pagination<BusEstate> busEstatesList = busEstateDao.getPageLists(page.getPage(), page.getLimit(), query);
+
+
+//        var pages = baseMapper.selectPage(page, query);
+        busEstatesList.getRecords().stream().forEach(e -> {
+//            e.getUpdateDate(DateUtil.defaultStr(e.getUpdateDate()));
+//            if (StringUtil.isNotEmpty(e.getAddrDetail())) {
+//                try {
+//                    e.setAddrDetail(StringUtil.formatAddrJson2String(e.getAddrDetail()));
+//                } catch (Exception ex) {
+//                    e.setAddrDetail("");
+//                }
+//            }
+            if (StringUtil.isEmpty(e.getCityId())) {
+                e.setCityName(map.get(e.getCityId()));
+            }
+            if (StringUtil.isEmpty(e.getDistrictId())) {
+                e.setDistrictName(map.get(e.getDistrictId()));
+            }
+//            if (StringUtil.isEmpty(e.getMainCategory())) {
+//                e.setMainCategory("");
+//            }
+//            if (StringUtil.isEmpty(e.getMainQuality())) {
+//                e.setMainQuality("");
+//            }
+//            if (StringUtil.isEmpty(e.getPropertyRight())) {
+//                e.setPropertyRight("");
+//            }
+        });
+
+        return busEstatesList;
+    }
+
+    /**
+     * 格式化列表查询条件
+     *
+     * @param busEstate
+     * @param employee
+     * @param page
+     * @return
+     */
+    public static Query findListQuery(BusEstate busEstate, ExtEmployee employee, Pagination page) {
+//        var query = new HashMap<String,String>();
+//        // 设置机构
+//        query.eq("organizationId", employee.getOrganizationId());
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        if (StringUtil.isNotEmpty(busEstate.getCityId())) {
+            criteria.and("cityId").is(busEstate.getCityId());
+        }
+        if (StringUtil.isNotEmpty(busEstate.getDistrictId())) {
+            criteria.and("districtId").is(busEstate.getDistrictId());
+        }
+        if (StringUtil.isNotEmpty(busEstate.getDistrictName())) {
+            criteria.and("districtName").is(busEstate.getDistrictName());
+        }
+        if (StringUtil.isNotEmpty(busEstate.getCommunityName())) {
+//            query.and(wrapper -> wrapper.like("name", busEstate.getName().trim()).or().like("alias", busEstate.getName().trim()).or().like("addrDetail", busEstate.getName().trim()));
+            Pattern pattern = Pattern.compile("^.*" + busEstate.getCommunityName() + ".*$", Pattern.CASE_INSENSITIVE);
+            criteria.orOperator(Criteria.where("name").regex(pattern),
+                    Criteria.where("otherName").regex(pattern)
+            );
+        }
+        if (StringUtil.isNotEmpty(busEstate.getIsSpecial())) {
+            criteria.and("isSpecial").is(busEstate.getIsSpecial());
+        }
+        if (StringUtil.isNotEmpty(busEstate.getVisibility())) {
+            criteria.and("visibility").is(busEstate.getVisibility());
+        }
+        if (StringUtil.isNotEmpty(busEstate.getIsVirtual())) {
+            criteria.and("isVirtual").is(busEstate.getIsVirtual());
+        }
+        // 是否是代建楼盘
+//        if (busEstate.getIsAgent() == null) {
+//            query.eq("isAgent", 0);
+//        } else {
+//            query.eq("isAgent", busEstate.getIsAgent());
+//        }
+        query.addCriteria(criteria);
+        if (StringUtil.isEmpty(page.ascs()) && StringUtil.isEmpty(page.descs())) {
+            query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "updateTime")));
+        }
+        return query;
+    }
+
+    /**
+     * 获取楼盘合并记录
+     *
+     * @param id
+     * @return
+     */
+    @Override
+    public ApiResult<List<BusEstate>> getMergeListByToId(String id) {
+        List<BusMergeRel> mergelogList = mergeRelService.listByToId(id);
+        var size = mergelogList.size();
+        if (size == 0) {
+            return ApiResult.success(new ArrayList<>());
+        }
+        String[] idArr = new String[size];
+        for (var i = 0; i < size; i++) {
+            idArr[i] = mergelogList.get(i).getFromId();
+        }
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.in(idArr);
+        query.addCriteria(criteria);
+        List<BusEstate> list = mongoTemplate.find(query, BusEstate.class);
+        return ApiResult.success(list);
+    }
+
+    @Override
+    public ApiResult<List<BusEstate>> getVirtualListByFromId(String id) {
+        List<BusVirtualRel> virtualLogList = virtualRelService.listByFromId(id);
+        var size = virtualLogList.size();
+        if (size == 0) {
+            return ApiResult.success(new ArrayList<>());
+        }
+        String[] idArr = new String[size];
+        for (var i = 0; i < size; i++) {
+            idArr[i] = virtualLogList.get(i).getFromId();
+        }
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.in(idArr);
+        query.addCriteria(criteria);
+        List<BusEstate> list = mongoTemplate.find(query, BusEstate.class);
+        return ApiResult.success(list);
+//        return ApiResult.success(formatEstateAddrDetail(baseMapper.selectList(new QueryWrapper<BusEstate>().in("id", idArr))));
+    }
+
+    @Override
+    public ApiResult<List<BusEstate>> getVirtualListByToId(String id) {
+        List<BusVirtualRel> virtualLogList = virtualRelService.listByToId(id);
+        var size = virtualLogList.size();
+        if (size == 0) {
+            return ApiResult.success(new ArrayList<>());
+        }
+        String[] idArr = new String[size];
+        for (var i = 0; i < size; i++) {
+            idArr[i] = virtualLogList.get(i).getFromId();
+        }
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        criteria.in(idArr);
+        query.addCriteria(criteria);
+        List<BusEstate> list = mongoTemplate.find(query, BusEstate.class);
+        return ApiResult.success(list);
+//        return ApiResult.success(formatEstateAddrDetail(baseMapper.selectList(new QueryWrapper<BusEstate>().in("id", idArr))));
+    }
+
+    /**
+     * 格式化地址信息
+     *
+     * @param list
+     * @return
+     */
+    public List<BusEstate> formatEstateAddrDetail(List<BusEstate> list) {
+//        list.stream().forEach(e -> {
+//            if (StringUtil.isNotEmpty(e.getAddrDetail())) {
+//                try {
+//                    e.setAddrDetail(StringUtil.formatAddrJson2String(e.getAddrDetail()));
+//                } catch (Exception ex) {
+//                    e.setAddrDetail("");
+//                }
+//            }
+//        });
+        return list;
+    }
+
+    /**
+     * 更新已建楼栋
+     *
+     * @param id 楼盘id
+     */
+    @Override
+    public void updateBuildingNo(String id) {
+        Document document = new Document("_id",new ObjectId(id));
+        Document d =mongoTemplate.getCollection("community").find(document).first();
+
+        if (d!=null){
+            Query query = new Query();
+            Criteria criteria = new Criteria();
+            criteria.and("communityId").is(id);
+            criteria.and("isDeleted").ne(1);
+            criteria.and("visibility").ne("0");
+            query.addCriteria(criteria);
+
+            Long count=mongoTemplate.count(query,BusBuilding.class);
+            d.append("totalNumberOfBuildings",count.toString());
+
+            mongoTemplate.getCollection("community").updateOne(document,new Document("$set",d));
+
+        }
+    }
+
+    /**
+     * 更新已建房号数
+     *
+     * @param id 楼盘id
+     */
+    @Override
+    public void updateRoomNo(String id) {
+        var obj = baseMapper.selectById(id);
+//        obj.setRoomNo(busRoomService.count(new QueryWrapper<BusRoomVO>().eq("esId", id)));
+        updateById(obj);
+    }
+
+    @Override
+    public List<BusEstate> queryByParam(BusEstate busEstate) {
+        QueryWrapper<BusEstate> queryWrapper = new QueryWrapper<BusEstate>();
+//        queryWrapper.eq("name", busEstate.getName());
+        queryWrapper.eq("cityName", busEstate.getCityName());
+        queryWrapper.eq("districtName", busEstate.getDistrictName());
+//        queryWrapper.eq("organizationId", busEstate.getOrganizationId());
+        return baseMapper.selectList(queryWrapper);
+    }
+
+    @Override
+    public IPage findListsByPage(Pagination page, BusEstate busEstate) {
+//        var map = administrativeService.getMapByParentId(busEstate.getCityId());
+//        var employee = basicService.getLoginEmployee();
+//        var pageLists = baseMapper.selectPage(page, findListQuery(busEstate, employee, page));
+//        var list = pageLists.getRecords();
+//        var size = list.size();
+//        if (size > 0) {
+//            // 字典map
+//            var dictMap = new HashMap<Integer, String>(50);
+//            var maps = dictionaryService.listMaps(new QueryWrapper<>());
+//            for (var i = 0; i < maps.size(); i++) {
+//                dictMap.put((Integer) maps.get(i).get("id"), (String) maps.get(i).get("item"));
+//            }
+////            // 数据字典类型数据转换
+////            for (var i = 0; i < size; i++) {
+////                BusEstate m = (BusEstate) list.get(i);
+////                // 物管设施
+////                var equipment = m.getEquipment();
+////                if (StringUtil.isNotEmpty(equipment)) {
+////                    m.setEquipment(formatDictByIds(dictMap, equipment));
+////                }
+////                // 建筑类别
+////                var buildingCategory = m.getBuildingCategory();
+////                if (StringUtil.isNotEmpty(buildingCategory)) {
+////                    m.setBuildingCategory(formatDictByIds(dictMap, buildingCategory));
+////                }
+////                // 住宅品质
+////                var quality = m.getQuality();
+////                if (StringUtil.isNotEmpty(quality)) {
+////                    m.setQuality(formatDictByIds(dictMap, quality));
+////                }
+////                if (StringUtil.isNotEmpty(m.getAddrDetail())) {
+////                    try {
+////                        m.setAddrDetail(StringUtil.formatAddrJson2String(m.getAddrDetail()));
+////                    } catch (Exception ex) {
+////                        m.setAddrDetail("");
+////                    }
+////                }
+////                if (StringUtil.isEmpty(m.getCityId())) {
+////                    m.setCityName(map.get(m.getCityId()));
+////                }
+////                if (StringUtil.isEmpty(m.getDistrictId())) {
+////                    m.setDistrictName(map.get(m.getDistrictId()));
+////                }
+////                m.setUpdateTime(DateUtil.defaultStr(m.getUpdateTime()));
+////            }
+//        }
+//        return pageLists;
+
+        return null;
+    }
+
+    @Override
+    public IPage findMapsByPage(Pagination page, BusEstate busEstate) {
+//        var map = administrativeService.getMapByParentId(busEstate.getCityId());
+//        var employee = basicService.getLoginEmployee();
+//        var pageMaps = baseMapper.selectMapsPage(page, findListQuery(busEstate, employee, page));
+//        var res = pageMaps.getRecords();
+//        var size = res.size();
+//        if (size > 0) {
+//            // 字典map
+//            var dictMap = new HashMap<Integer, String>(50);
+//            var maps = dictionaryService.listMaps(new QueryWrapper<>());
+//            for (var i = 0; i < maps.size(); i++) {
+//                dictMap.put((Integer) maps.get(i).get("id"), (String) maps.get(i).get("item"));
+//            }
+//            // 数据字典类型数据转换
+//            for (var i = 0; i < size; i++) {
+//                Map<String, Object> m = (Map<String, Object>) res.get(i);
+//                // 物管设施
+//                var equipment = (String) m.get("equipment");
+//                if (StringUtil.isNotEmpty(equipment)) {
+//                    m.put("equipment", formatDictByIds(dictMap, equipment));
+//                }
+//                // 建筑类别
+//                var buildingCategory = (String) m.get("buildingCategory");
+//                if (StringUtil.isNotEmpty(buildingCategory)) {
+//                    m.put("buildingCategory", formatDictByIds(dictMap, buildingCategory));
+//                }
+//                // 住宅品质
+//                var quality = (String) m.get("quality");
+//                if (StringUtil.isNotEmpty(quality)) {
+//                    m.put("quality", formatDictByIds(dictMap, quality));
+//                }
+//                // 产权形式
+//                var propertyRight = (String) m.get("propertyRight");
+//                if (StringUtil.isNotEmpty(propertyRight)) {
+//                    m.put("propertyRight", dictMap.get(propertyRight));
+//                }
+//                if (StringUtil.isEmpty(m.get("propertyRight"))) {
+//                    m.put("propertyRight", "");
+//                }
+//                // 主力类别
+//                var mainCategory = (String) m.get("mainCategory");
+//                if (StringUtil.isNotEmpty(mainCategory)) {
+//                    m.put("mainCategory", dictMap.get(mainCategory));
+//                }
+//                if (StringUtil.isEmpty(m.get("mainCategory"))) {
+//                    m.put("mainCategory", "");
+//                }
+//                // 主力品质
+//                var mainQuality = (String) m.get("mainQuality");
+//                if (StringUtil.isNotEmpty(mainQuality)) {
+//                    m.put("mainQuality", dictMap.get(mainQuality));
+//                }
+//                if (StringUtil.isEmpty(m.get("mainQuality"))) {
+//                    m.put("mainQuality", "");
+//                }
+//                var addrDetail = (String) m.get("addrDetail");
+//                if (StringUtil.isNotEmpty(addrDetail)) {
+//                    try {
+//                        m.put("addrDetail", StringUtil.formatAddrJson2String(addrDetail));
+//                    } catch (Exception ex) {
+//                        m.put("addrDetail", "");
+//                    }
+//                }
+//                var cityId = (String) m.get("cityId");
+//                if (StringUtil.isNotEmpty(cityId) && map.get(cityId) != null) {
+//                    m.put("cityName", map.get(cityId));
+//                }
+//                var districtId = (String) m.get("districtId");
+//                if (StringUtil.isNotEmpty(districtId) && map.get(districtId) != null) {
+//                    m.put("districtName", map.get(districtId));
+//                }
+//                m.put("updateTime", DateUtil.defaultStr(m.get("updateTime") + ""));
+//            }
+//        }
+        return null;
+    }
+
+    /**
+     * 判断是否为正确楼盘（用于导入判断）
+     *
+     * @param busEstate 楼盘
+     * @return 返回空表示没有错误信息没
+     */
+    public String getErrMsgByImport(BusEstate busEstate, ExtEmployee emp) {
+        // 判断数据有效性
+        if (busEstate == null) {
+            return "空楼盘";
+        }
+        if (StringUtil.isNull(busEstate.getCityName())) {
+            return "缺少必要信息：城市";
+        }
+        if (StringUtil.isNull(busEstate.getDistrictName())) {
+            return "缺少必要信息：行政区";
+        }
+//        if (StringUtil.isNull(busEstate.getName())) {
+//            return "缺少必要信息：楼盘名";
+//        }
+        long count;
+        // 有ID，那么必须存在
+//        if (!StringUtil.isNull(busEstate.getId())) {
+//            // 通过ID，判断楼盘是否存在
+//            count = baseMapper.selectCount(new QueryWrapper<BusEstate>().eq("id", busEstate.getId()).eq("organizationId", emp.getOrganizationId()).eq("isAgent", 0));
+//            if (count == 0) {
+//                return "根据ID未找到匹配楼盘";
+//            }
+//        }
+        return null;
+    }
+
+    @Async
+    public void executeAsyncByBusEstate(Map<String, Integer> dictMap, BusEstate m, ExtEmployee emp) {
+        BusEstateFailVO f = new BusEstateFailVO();
+//        try {
+//            // 数据验证
+//            String errMsg = getErrMsgByImport(m, emp);
+//            if (errMsg == null) {
+//                // 物管设施
+//                var equipment = m.getEquipment();
+//                if (StringUtil.isNotEmpty(equipment)) {
+//                    try {
+//                        m.setEquipment(formatDictByItems(dictMap, equipment));
+//                    } catch (Exception e) {
+//                        throw new Exception("物管设施匹配失败。");
+//                    }
+//                }
+//                // 建筑类别
+//                var buildingCategory = m.getBuildingCategory();
+//                if (StringUtil.isNotEmpty(buildingCategory)) {
+//                    try {
+//                        m.setBuildingCategory(formatDictByItems(dictMap, buildingCategory));
+//                    } catch (Exception e) {
+//                        throw new Exception("建筑类别匹配失败。");
+//                    }
+//                }
+//                // 住宅品质
+//                var quality = m.getQuality();
+//                if (StringUtil.isNotEmpty(quality)) {
+//                    try {
+//                        m.setQuality(formatDictByItems(dictMap, quality));
+//                    } catch (Exception e) {
+//                        throw new Exception("住宅品质匹配失败。");
+//                    }
+//                }
+//                if (m.getCityName() != null) {
+//                    var city = administrativeService.getOne(new QueryWrapper<BusAdministrative>().eq("name", m.getCityName()).eq("type", "城市").eq("organizationId", emp.getOrganizationId()));
+//                    if (city != null) {
+//                        m.setCityId(city.getMongoId());
+//                    }
+//                }
+//                if (m.getDistrictName() != null) {
+//                    var district = administrativeService.getOne(new QueryWrapper<BusAdministrative>().eq("name", m.getDistrictName()).eq("type", "行政区").eq("organizationId", emp.getOrganizationId()));
+//                    if (district != null) {
+//                        m.setDistrictId(district.getMongoId());
+//                    }
+//                }
+//                if (m.getTownName() != null) {
+//                    var town = administrativeService.getOne(new QueryWrapper<BusAdministrative>().eq("name", m.getTownName()).eq("type", "街道").eq("organizationId", emp.getOrganizationId()));
+//                    if (town != null) {
+//                        m.setTownId(town.getMongoId());
+//                    }
+//                }
+//                // 楼盘地址格式化
+//                var addr = m.getAddrDetail();
+//                if (StringUtil.isNotEmpty(addr)) {
+//                    List<AddrDetailVO> addrList = new ArrayList<>();
+//                    String[] details = StringUtils.split(addr, ",");
+//                    for (var i = 0; i < details.length; i++) {
+//                        var vo = new AddrDetailVO(details[i]);
+//                        addrList.add(vo);
+//                    }
+//                    m.setAddrDetail(JSONArray.toJSONString(addrList));
+//                }
+//
+//                // 修改操作
+//                if (m.getId() == null) {
+//                    // 城市 行政区 楼盘名 做完全匹配 否则进入代建任务
+//                    var obj = baseMapper.selectOne(new QueryWrapper<BusEstate>().eq("cityName", m.getCityName()).eq("districtName", m.getDistrictName()).eq("name", m.getName()).eq("organizationId", emp.getOrganizationId()).eq("isAgent", 0).ne("visibility", EntityConstants.DELETE));
+//                    if (obj != null) {
+//                        m.setId(obj.getId());
+//                        updateById(m, emp);
+//                    } else {
+//                        // 设置为代建楼盘
+//                        m.setIsAgent(true);
+//                        // 添加楼盘信息 此时不生成楼盘均价
+//                        successList.add(m);
+//                        //TODO 生成楼盘合并推荐分后续添加
+//                    }
+//                } else {
+//                    updateById(m, emp);
+//                }
+//            } else {
+//                m.setReason(errMsg);
+//                f = new BusEstateFailVO();
+//                EntityUtils.copyProperties(m, f);
+//                if (f.getPropertyRight() == null) {
+//                    f.setPropertyRight("");
+//                }
+//                if (f.getMainCategory() == null) {
+//                    f.setMainCategory("");
+//                }
+//                if (f.getMainQuality() == null) {
+//                    f.setMainQuality("");
+//                }
+//                errorList.add(f);
+//            }
+//        } catch (Exception e) {
+//            m.setReason(e.getMessage());
+//            EntityUtils.copyProperties(m, f);
+//            if (f.getPropertyRight() == null) {
+//                f.setPropertyRight("");
+//            }
+//            if (f.getMainCategory() == null) {
+//                f.setMainCategory("");
+//            }
+//            if (f.getMainQuality() == null) {
+//                f.setMainQuality("");
+//            }
+//            errorList.add(f);
+//            log.warning(e.getMessage());
+//        }
+    }
+
+    @Override
+    public String importEstate(MultipartFile file) throws Exception {
+        // excel转list
+        List<BusEstate> list = ExcelUtil.importExcel(file, 1, 1, BusEstate.class);
+        var size = list.size();
+        if (size == 0) {
+            return "空文件";
+        }
+
+        // 字典map
+        var dictMap = new HashMap<String, Integer>(50);
+//        var maps = dictionaryService.listMaps(new QueryWrapper<>());
+//        for (var i = 0; i < maps.size(); i++) {
+//            dictMap.put((String) maps.get(i).get("item"), (Integer) maps.get(i).get("id"));
+//        }
+        var emp = basicService.getLoginEmployee();
+        // 重新设置
+        successList = new Vector<>();
+        errorList = new Vector<>();
+        // 楼盘数据入库
+        List<Future> futureList = new ArrayList<>();
+        if (emp != null) {
+            for (var i = 0; i < size; i++) {
+                int finalI = i;
+                Future future = CommonThreadPool.submit(() -> {
+                    executeAsyncByBusEstate(dictMap, list.get(finalI), emp);
+                });
+                futureList.add(future);
+            }
+            for (Future f : futureList) {
+                f.get();
+            }
+        }
+        // 批量插入楼盘
+        if (successList.size() > 0) {
+            insertBatch(successList, Sequence.seq_bus_estate, Table.bus_estate);
+        }
+        // 下载导入的错误数据excel
+        var errorSize = errorList.size();
+        File failedFile = uploadService.downloadFailedFile(new ExportParams("导入错误楼盘信息", "失败数据"), BusEstateFailVO.class, errorList);
+        // 记录上传日志
+        uploadService.save(file.getOriginalFilename(), size - errorSize, errorSize, failedFile.getAbsolutePath(), "楼盘");
+        return failedFile.getAbsolutePath();
+    }
+
+    /**
+     * 数据字典数据转换
+     *
+     * @param map
+     * @param ids
+     * @return
+     */
+    public static String formatDictByIds(Map<Integer, String> map, String ids) {
+        var s = StringUtils.split(ids, ",");
+        for (var i = 0; i < s.length; i++) {
+            if (StringUtil.isNull(s[i])) {
+                s[i] = "";
+            } else {
+                s[i] = map.get(Integer.parseInt(s[i]));
+            }
+        }
+        return StringUtils.join(s, ",");
+    }
+
+    /**
+     * 数据字典数据转换
+     *
+     * @param map
+     * @param items
+     * @return
+     */
+    public static String formatDictByItems(Map<String, Integer> map, String items) {
+        var s = StringUtils.split(items, ",");
+        for (var i = 0; i < s.length; i++) {
+            if (Double.isNaN(map.get(s[i]))) {
+                s[i] = "";
+            } else {
+                s[i] = map.get(s[i]) + "";
+            }
+        }
+        return StringUtils.join(s, ",");
+    }
+
+    @Transactional(value = "hifoTransactionManager", rollbackFor = Exception.class)
+    @Override
+    public ApiResult agent(String[] ids) {
+        var length = ids.length;
+//        for (var i = 0; i < length; i++) {
+//            var obj = baseMapper.selectById(ids[i]);
+//            if (obj != null) {
+//                obj.setIsAgent(false);
+//                updateById(obj);
+//                // 生成均价
+//                avgPriceService.updateQuality(obj);
+//            }
+//        }
+        return ApiResult.success("新建成功，共新建" + length + "个楼盘。");
+    }
+
+    @Override
+    public BusEstate getDetailById(String id) {
+        BusEstate busEstate = busEstateDao.selectById(id, BusEstate.class);
+//        var obj = getById(id);
+//        // 没权限查该楼盘
+//        if (obj.getOrganizationId().intValue() != basicService.getLoginEmployee().getOrganizationId().intValue()) {
+//            return null;
+//        }
+        return busEstate;
+    }
+
+}
+

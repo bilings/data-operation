@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.setting.BusAdministrativeMapper">
+
+    <!-- 查询 -->
+    <select id="query" resultType="com.hifo.dataoperation.entity.BusAdministrative">
+        select *
+        from bus_administrative
+        where organizationId = #{busAdministrative.organizationId} 
+        and regionId like '${busAdministrative.regionId}%' 
+        <if test=" busAdministrative.parentId != null">
+               and parentId =  #{busAdministrative.parentId}
+        </if>
+       
+ 		<if test="busAdministrative.name != null">
+               and name like '%${busAdministrative.name}%' 
+        </if>
+        
+
+    </select>
+
+
+
+</mapper>

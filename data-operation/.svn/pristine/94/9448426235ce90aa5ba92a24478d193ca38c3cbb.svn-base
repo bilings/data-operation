@@ -1,0 +1,75 @@
+package com.hifo.dataoperation.service.setting;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hifo.dataoperation.entity.HfDictionary;
+import com.hifo.dataoperation.vo.DictVO;
+import com.hifo.dataoperation.vo.HfDictionaryVO;
+
+import java.util.List;
+
+/**
+ * 字典操作Service
+ *
+ * @author xmw
+ * @date 2019/4/28 18:04
+ */
+public interface DictionaryService extends IService<HfDictionaryVO> {
+
+    /**
+     * 根据分类查询字典数据
+     *
+     * @param id       分类id
+     * @param category 分类
+     * @return List
+     */
+    List<HfDictionary> query(Long id, String category);
+
+    /**
+     * 特定分类下的字典数据-用于别名取用
+     *
+     * @param id       分类id
+     * @param category 分类
+     * @return List
+     */
+    List<HfDictionaryVO> queryTitle(Long id, String category);
+
+    /**
+     * 查询字典表所有数据
+     *
+     * @return List
+     */
+    List<HfDictionary> query();
+
+    /**
+     * 把id转换成对应的text
+     *
+     * @param id 输入id
+     * @return String
+     */
+    String id2Text(String id);
+
+    /**
+     * 把id转换成对应的text
+     *
+     * @param ids 输入ids
+     * @return String
+     */
+    String ids2Text(String ids);
+
+    /**
+     * 把text转换成对应的id
+     *
+     * @param texts    输入text
+     * @param category
+     * @return id
+     * @throws Exception 错误的text
+     */
+    String texts2Id(String texts, String category) throws Exception;
+
+    /**
+     * 所有字典数据,字典项字符串
+     *
+     * @return
+     */
+    List<DictVO> dictItemsList();
+}

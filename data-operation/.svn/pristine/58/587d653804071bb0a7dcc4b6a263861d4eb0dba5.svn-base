@@ -1,0 +1,164 @@
+var estateHistory_obj = {
+
+    urlConfig: {
+        mergeHistory: '/estate/mergeHistory',
+        undoMerge: '/estate/undoMerge',
+        virtualHistory1: '/estate/virtualHistory1',
+        virtualHistory2: '/estate/virtualHistory2',
+        undoVirtual: '/estate/undoVirtual'
+    },
+
+    init: function () {
+        this._initMergeHistoryTable();
+        this._initVirtualHistoryTable(this.urlConfig.virtualHistory1, 'virtualTable1');
+        this._initVirtualHistoryTable(this.urlConfig.virtualHistory2, 'virtualTable2');
+    },
+
+    mergeTable: null,
+
+    /**
+     * 合并历史
+     * @private
+     */
+    _initMergeHistoryTable: function () {
+        var _this = this;
+        $.get({
+            url: _this.urlConfig.mergeHistory,
+            data: {id: layui.util.urlParam('id')},
+            success: function (res) {
+                // 填充表格
+                _this.mergeTable = layui.table.render({
+                    elem: '#estateHistory_wrapper #mergeTable',
+                    title: '合并历史',
+                    data: res.data,
+                    cols: [[
+                        {field: 'name', title: '名称'},
+                        {field: 'districtName', title: '行政区'},
+                        {
+                            field: 'addrDetail', title: '地址',
+                            templet: function (d) {
+                                try {
+                                    var addrDetail = JSON.parse(d.addrDetail);
+                                    var str = addrDetail.road + addrDetail.number;
+                                    if (addrDetail.number) {
+                                        str = str + '号';
+                                    }
+                                    return str;
+                                } catch (e) {
+                                    return '';
+                                }
+                            }
+                        },
+                        {fixed: 'right', title: '', toolbar: '#mergeLineBar', width: 100}
+                    ]],
+                    id: 'mergeTable',
+                    page: false
+                });
+                // 行工具条
+                _this._initMergeLineBar();
+            }
+        });
+    },
+
+    /**
+     * 解除合并
+     * @private
+     */
+    _initMergeLineBar: function () {
+        var _this = this;
+        layui.table.on('tool(mergeTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'undoMerge') {
+                $.ajax({
+                    url: _this.urlConfig.undoMerge,
+                    type: "PUT",
+                    data: {fromId: data.id, toId: layui.util.urlParam('id')},
+                    success: function () {
+                        _this._initMergeHistoryTable();
+                    }
+                });
+            }
+        });
+    },
+
+    /**
+     * 虚拟历史
+     * @private
+     */
+    _initVirtualHistoryTable: function (url, virtualTable) {
+        var _this = this;
+        $.get({
+            url: url,
+            data: {id: layui.util.urlParam('id')},
+            success: function (res) {
+                // 填充表格
+                layui.table.render({
+                    elem: '#estateHistory_wrapper #' + virtualTable,
+                    title: '虚拟历史',
+                    data: res.data,
+                    cols: [[
+                        {field: 'name', title: '名称'},
+                        {field: 'districtName', title: '行政区'},
+                        {
+                            field: 'addrDetail', title: '地址',
+                            templet: function (d) {
+                                try {
+                                    var addrDetail = JSON.parse(d.addrDetail);
+                                    var str = addrDetail.road + addrDetail.number;
+                                    if (addrDetail.number) {
+                                        str = str + '号';
+                                    }
+                                    return str;
+                                } catch (e) {
+                                    return '';
+                                }
+                            }
+                        },
+                        {fixed: 'right', title: '', toolbar: '#virtualLineBar', width: 100}
+                    ]],
+                    id: virtualTable,
+                    page: false
+                });
+                // 行工具条
+                _this._initVirtualLineBar();
+            }
+        });
+    },
+
+    /**
+     * 解除虚拟
+     * @private
+     */
+    _initVirtualLineBar: function () {
+        var _this = this;
+        layui.table.on('tool(virtualTable1)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'undoVirtual') {
+                $.ajax({
+                    url: _this.urlConfig.undoVirtual,
+                    type: "PUT",
+                    data: {fromId: layui.util.urlParam('id')},
+                    success: function () {
+                        _this._initVirtualHistoryTable(_this.urlConfig.virtualHistory1, 'virtualTable1');
+                    }
+                });
+            }
+        });
+
+        layui.table.on('tool(virtualTable2)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'undoVirtual') {
+                $.ajax({
+                    url: _this.urlConfig.undoVirtual,
+                    type: "PUT",
+                    data: {fromId: data.id},
+                    success: function () {
+                        _this._initVirtualHistoryTable(_this.urlConfig.virtualHistory2, 'virtualTable2');
+                    }
+                });
+            }
+        });
+    }
+};
+
+estateHistory_obj.init();

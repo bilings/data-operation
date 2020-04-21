@@ -1,0 +1,60 @@
+var $ = layui.jquery;
+
+layui.use(['element', 'table'], function(){
+
+    var table = layui.table;
+    var element = layui.element;
+
+    //获取hash来切换选项卡，假设当前地址的hash为lay-id对应的值
+    var layid = location.hash.replace(/^#test1=/, '');
+    element.tabChange('room-filter', layid); //假设当前地址为：http://a.com#test1=222，那么选项卡会自动切换到“发送消息”这一项
+
+    //监听Tab切换，以改变地址hash值
+    element.on('tab(room-filter)', function(){
+
+       var  lay_id = this.getAttribute('lay-id');
+        var lay_id_tab = $("#"+lay_id+'-tab');
+        alert(lay_id_tab);
+        //封装房号
+        var colss = [[
+            {field:'communityName', title: '物理层', width:80, sort: true, fixed: true}
+            ,{field:'buildingName', title: '名义层', width:80}
+            ,{field:'roomName', title: '性别', width:80, sort: true}
+            ,{field:'cityName', title: '城市', width:80}
+            ,{field:'innerArea', title: '签名'}
+        ]];
+        //方法级渲染
+        table.render({
+            elem: '#Lay_table_room'
+            ,url: '/room/roomList?buildingId=1111111&util=1'
+            ,cols: colss
+            ,id: 'roomReload'
+            ,page: true
+            ,height: 310
+        });
+
+        var $ = layui.$, active = {
+            reload: function(){
+                var roomReload = $('#roomReload');
+                //执行重载
+                table.reload('testReload', {
+                    page: {
+                        curr: 1 //重新从第 1 页开始
+                    }
+                    ,where: {
+                        key: {
+                            id: roomReload.val()
+                        }
+                    }
+                }, 'data');
+            }
+        };
+
+        $('.roomTable .layui-btn').on('click', function(){
+            var type = $(this).data('type');
+            active[type] ? active[type].call(this) : '';
+        });
+        /******************列表渲染结束*********************/
+    });
+
+});

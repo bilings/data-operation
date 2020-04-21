@@ -1,0 +1,297 @@
+var RoomIndex_obj = {
+
+    urlConfig:{
+        unitList:'/room/unitList',
+        roomList:'/room/roomList',
+    },
+
+    buildingId:'',
+    lay_id:'',
+    btn:'',
+    init: function () {
+        var _this = this;
+        // 获取楼栋ID
+        buildingId =layui.util.getQueryString("buildingId");
+        // 初始化单元
+        _this._initUnit();
+        //切换Tab初始化房号表单
+        _this._initChangeTabsTable();
+        // 初始化房号表单
+        _this._initRoomsTable();
+        // 切换单元
+       _this._initChangeUnitButton();
+    },
+
+    /**
+     * 初始化单元
+     * @private
+     */
+    _initUnit:function(){
+        var _this = this;
+        $.ajax({
+            url: _this.urlConfig.unitList+"?buildingId="+buildingId,
+            type: 'get',
+            contentType: 'application/json;',
+            dataType: "json",
+            success: function (res) {
+                if (res.code === 0) {
+                    var html='';
+                    var flag = true;
+                    for (var re  in res.data) {
+                        if(flag){
+                            flag = false;
+                            _this.btn = res.data[re]
+                        }
+                        html+='<button class="layui-btn site-demo-active" data-type="util1">'+res.data[re]+'</button>'
+                    }
+                     $("#unitList").append( html) ;
+                }
+                // // 初始化房号表单
+                  _this._initRoomsTable();
+                // // 切换单元
+                 _this._initChangeUnitButton();
+            }
+        });
+
+    },
+
+    /**
+     * 切换单元按钮
+     * @private
+     */
+    _initChangeUnitButton: function () {
+        var _this= this;
+        $('#roomIndex_wrapper .site-demo-active').on('click', function (res) {
+            var btn = $(this).text();
+            _this.btn=btn;
+            $.ajax({
+                url: _this.urlConfig.roomList+"?buildingId="+buildingId+"&util="+btn,
+                type: 'get',
+                dataType: "json",
+                success: function (res) {
+                    _this._initRoomsTable();
+                }
+            });
+        });
+    },
+    /**
+     * 初始化房号表单
+     * @private
+     */
+    _initRoomsTable: function() {
+        var _this = this;
+        layui.use(['element', 'table'], function(){
+            var table = layui.table;
+            if( _this.lay_id==''){
+                lay_id ='roomNo'
+            }else{
+                lay_id =_this.lay_id;
+            }
+            //封装房号
+            table.render({
+                elem:  '#Lay_'+lay_id
+                ,url: _this.urlConfig.roomList+"?buildingId="+buildingId+"&util="+_this.btn
+                ,cols: [[]]
+                ,id: 'testReload'
+                ,done: function(res, curr, count){
+                    var ob = [
+                        {field:'key', title: '物理层' }
+                        ,{field:'key', title: '名义层'}
+                    ]
+                    for (var key in res.data[0]) {
+                        if(key=="roomSize"){
+                            var addrDetail = res.data[0][key];
+                            for (var i=0;i<addrDetail;i++) {
+                                var j = i+1;
+                                var object = { field: i, title: j + '室号',edit: 'text',
+                                    templet: function (d) {
+                                        try {
+                                            for (var key in d) {
+                                                var addrDetail = d[key];
+                                                for (var j in addrDetail) {
+                                                    if (j++ === this.field) ;
+                                                    {
+                                                        if("roomNo"==lay_id){
+                                                            return typeof(addrDetail[this.field].roomNo) == "undefined"?"":addrDetail[this.field].roomNo;
+                                                        }else if("buildArea"==lay_id){
+                                                            return addrDetail[this.field].buildArea;
+                                                            return typeof(addrDetail[this.field].buildArea) == "undefined"?"":addrDetail[this.field].buildArea;
+                                                        }else if("innerArea"==lay_id){
+                                                            return typeof(addrDetail[this.field].innerArea) == "undefined"?"":addrDetail[this.field].innerArea;
+                                                        }else if("orientation"==lay_id){
+                                                            return typeof(addrDetail[this.field].orientation) == "undefined"?"":addrDetail[this.field].orientation;
+                                                        }else if("scenery"==lay_id){
+                                                            return typeof(addrDetail[this.field].scenery) == "undefined"?"":addrDetail[this.field].scenery;
+                                                        }else if("structure"==lay_id){
+                                                            return typeof(addrDetail[this.field].structure) == "undefined"?"":addrDetail[this.field].structure;
+                                                        }else if("initPrice"==lay_id){
+                                                            return typeof(addrDetail[this.field].initPrice) == "undefined"?"":addrDetail[this.field].initPrice;
+                                                        }else if("priceCoe"==lay_id){
+                                                            return typeof(addrDetail[this.field].priceCoe) == "undefined"?"":addrDetail[this.field].priceCoe;
+                                                        }else{
+                                                            return '';
+                                                        }
+                                                    }
+                                                }
+                                            }
+                                        } catch (e) {
+                                            return '';
+                                        }
+                                    }
+                                }
+                                ob.push(object)
+                            }
+                        }
+                    }
+                    table.init('Lay_'+lay_id,{
+                        cols:[ob]
+                        ,data:res.data
+                        ,limit:50
+                    });
+                    //监听单元格编辑
+                    table.on('edit(Lay_'+lay_id+')', function(obj){
+                        var value = obj.value //得到修改后的值
+                            ,data = obj.data //得到所在行所有键值
+                            ,field = obj.field; //得到字段
+                        layer.alert('[ID: '+JSON.stringify(data)+'] ' + field + ' 字段更改为：'+ value);
+                    });
+                }
+            })
+
+            var $ = layui.$, active = {
+                reload: function(){
+                    var roomReload = $('#roomReload');
+                    //执行重载
+                    table.reload('testReload', {
+                        page: {
+                            curr: 1 //重新从第 1 页开始
+                        }
+                        ,where: {
+                            key: {
+                                id: roomReload.val()
+                            }
+                        }
+                    }, 'data');
+                }
+            };
+            $('.roomTable .layui-btn').on('click', function(){
+                var type = $(this).data('type');
+                active[type] ? active[type].call(this) : '';
+            });
+            /******************列表渲染结束*********************/
+
+        });
+    },
+
+    /**
+     *切换Tab展示表单
+     * @private
+     */
+    _initChangeTabsTable: function() {
+        var _this= this;
+        layui.use(['element', 'table'], function(){
+            var table = layui.table;
+            var element = layui.element;
+            element.on('tab(room-filter)', function(){
+                _this.lay_id = this.getAttribute('lay-id');
+                var lay_id = this.getAttribute('lay-id')
+                //封装房号
+                table.render({
+                    elem:  '#Lay_'+lay_id
+                    ,url: _this.urlConfig.roomList+"?buildingId="+buildingId+"&util="+_this.btn
+                    ,cols: [[]]
+                    ,done: function(res, curr, count){
+                        var ob = [
+                            {field:'key', title: '物理层' }
+                            ,{field:'key', title: '名义层'}
+                        ]
+                        for (var key in res.data[0]) {
+                            if(key=="roomSize"){
+                                var addrDetail = res.data[0][key];
+                                for (var i=0;i<addrDetail;i++) {
+                                    var j = i+1;
+                                    var object = { field: i, title: j + '室号',edit: 'text',
+                                        templet: function (d) {
+                                            try {
+                                                for (var key in d) {
+                                                    var addrDetail = d[key];
+                                                    for (var j in addrDetail) {
+                                                        if (j++ === this.field) ;
+                                                        {
+                                                            if("roomNo"==lay_id){
+                                                                return typeof(addrDetail[this.field].roomNo) == "undefined"?"":addrDetail[this.field].roomNo;
+                                                            }else if("buildArea"==lay_id){
+                                                                return addrDetail[this.field].buildArea;
+                                                                return typeof(addrDetail[this.field].buildArea) == "undefined"?"":addrDetail[this.field].buildArea;
+                                                            }else if("innerArea"==lay_id){
+                                                                return typeof(addrDetail[this.field].innerArea) == "undefined"?"":addrDetail[this.field].innerArea;
+                                                            }else if("orientation"==lay_id){
+                                                                return typeof(addrDetail[this.field].orientation) == "undefined"?"":addrDetail[this.field].orientation;
+                                                            }else if("scenery"==lay_id){
+                                                                return typeof(addrDetail[this.field].scenery) == "undefined"?"":addrDetail[this.field].scenery;
+                                                            }else if("structure"==lay_id){
+                                                                return typeof(addrDetail[this.field].structure) == "undefined"?"":addrDetail[this.field].structure;
+                                                            }else if("initPrice"==lay_id){
+                                                                return typeof(addrDetail[this.field].initPrice) == "undefined"?"":addrDetail[this.field].initPrice;
+                                                            }else if("priceCoe"==lay_id){
+                                                                return typeof(addrDetail[this.field].priceCoe) == "undefined"?"":addrDetail[this.field].priceCoe;
+                                                            }else{
+                                                                return '';
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } catch (e) {
+                                                return '';
+                                            }
+                                        }
+                                    }
+                                    ob.push(object)
+                                }
+                            }
+                        }
+                        table.init('Lay_'+lay_id,{
+                            cols:[ob]
+                            ,data:res.data
+                            ,limit:50
+                        });
+                        //监听单元格编辑
+                        table.on('edit(Lay_'+lay_id+')', function(obj){
+                            var value = obj.value //得到修改后的值
+                                ,data = obj.data //得到所在行所有键值
+                                ,field = obj.field; //得到字段
+                            layer.msg('[ID: '+ JSON.stringify(data) +'] ' + field + ' 字段更改为：'+ value);
+                        });
+                    }
+                })
+
+                var $ = layui.$, active = {
+                    reload: function(){
+                        var roomReload = $('#roomReload');
+                        //执行重载
+                        table.reload('testReload', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                            ,where: {
+                                key: {
+                                    id: roomReload.val()
+                                }
+                            }
+                        }, 'data');
+                    }
+                };
+                $('.roomTable .layui-btn').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+                /******************列表渲染结束*********************/
+            });
+
+        });
+    }
+}
+
+$(function () {
+    RoomIndex_obj.init();
+});

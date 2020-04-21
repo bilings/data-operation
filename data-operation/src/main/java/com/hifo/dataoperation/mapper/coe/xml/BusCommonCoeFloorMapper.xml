@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.coe.BusCommonCoeFloorMapper">
+
+	<select id="getParentFloorCoe" resultType="com.hifo.dataoperation.entity.coe.BusCommonCoeFloor">
+		select c.* from bus_coe_group g,bus_coe_structure s,bus_common_coe_floor c
+			where g.id=s.groupid and s.id=c.coeStructureId and s.conditionType = 1   and s.groupid=#{parentGroupId}
+	</select>
+
+	<select id="getFloorCoeByGroup" resultType="com.hifo.dataoperation.entity.coe.BusCommonCoeFloor">
+		select c.* from bus_coe_structure s,bus_common_coe_floor c
+			where s.id=c.coeStructureId and s.groupid=#{groupId}
+	</select>
+
+</mapper>

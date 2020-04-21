@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+@@include('../base/header.html')
+<link href="index.css" rel="stylesheet">
+<title>表视图</title>
+</head>
+<body>
+<div id="tableViewIndex_wrapper">
+
+	<div class="layui-container-fluid">
+		<table id="tt" lay-filter="tt"></table>
+	</div>
+	
+	<script type="text/html" id="ttToolbar">
+	</script>
+
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

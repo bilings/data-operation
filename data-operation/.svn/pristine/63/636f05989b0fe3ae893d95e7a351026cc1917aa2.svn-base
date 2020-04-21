@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.setting.FieldMapper">
+
+    <!--  -->
+    <select id="listAllCategoryDictionary" resultType="com.hifo.dataoperation.entity.CategoryDictionary">
+        SELECT hc.id cid,hc.description description,hd.id did,hd.categoryId,hd.item
+        FROM hf_category AS hc
+        LEFT JOIN hf_dictionary AS hd
+        ON hc.id=hd.categoryId
+    </select>
+
+
+
+</mapper>

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.coe.BusCoeItemMapper">
+
+<delete id="deleteByStruectureId">
+	delete from bus_coe_item where coeStructureId=#{struectureId}
+</delete>
+
+<select id="getBusCoeItemList" resultType="com.hifo.dataoperation.entity.coe.BusCoeItem">
+	SELECT
+		*
+	FROM
+		bus_coe_item
+	WHERE
+		coeStructureId IN (
+			SELECT
+				id
+			FROM
+				bus_coe_structure
+			WHERE
+				groupid = #{groupId}
+		)
+</select>
+
+</mapper>

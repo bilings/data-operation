@@ -1,0 +1,76 @@
+package com.hifo.dataoperation.service.estate.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.BusBuilding;
+import com.hifo.dataoperation.service.estate.BusRoomService;
+import com.hifo.dataoperation.vo.BusRoomVO;
+import com.mongodb.client.FindIterable;
+import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+
+/**
+ * 房号
+ *
+ * @author jinzhichen
+ * @date 2019/4/23 15:22
+ */
+
+@Service
+public class BusRoomServiceImpl implements BusRoomService {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    @Override
+    public ApiResult queryList(String buildingId,String util) {
+        Document document = new Document("buildingId","58f56158e087110d9c88ce74");
+        FindIterable<Document> roomList =  mongoTemplate.getCollection("warehouse_room_service").find(document);
+        List<Map<String,List<Object>>> listRoom = new ArrayList<>();
+        Map<String,List<Object>> mapRooms = new HashMap<>();
+        for(Document room:roomList){
+            int physicsFloor = room.getInteger("physicsFloor");
+            if(mapRooms.containsKey(physicsFloor+"")){
+                List<Object> o= (List<Object>) mapRooms.get(physicsFloor+"");
+                o.add((Map)room);
+            }else {
+                List<Object> o= new ArrayList<>();
+                o.add((Map)room);
+                mapRooms.put(physicsFloor+"",o);
+            }
+        }
+        for (String s : mapRooms.keySet()) {
+            Map map = new HashMap();
+            map.put("roomSize",mapRooms.get(s).size());
+            map.put("key",s);
+            map.put(s,mapRooms.get(s));
+            listRoom.add(map);
+        }
+        System.out.println(listRoom);
+        return ApiResult.success(listRoom);
+    }
+
+    @Override
+    public List<BusRoomVO> list(QueryWrapper<BusRoomVO> queryWrapper) {
+        return null;
+    }
+
+    @Override
+    public void save(BusRoomVO room) {
+
+    }
+
+    @Override
+    public void updateByBuilding(BusBuilding busBuilding) {
+
+    }
+}
+
+
+

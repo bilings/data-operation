@@ -1,0 +1,41 @@
+#customerUserIndex_wrapper {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 100%;
+}
+
+#customerUserIndex_wrapper #customerUserIndexTableDiv {
+    position: absolute;
+    top: 30px;
+    width: 100%;
+    max-width: 1640px;
+}
+
+#customerUserIndex_wrapper #toolbarDiv button {
+    width: 68px;
+}
+
+#customerUserIndex_wrapper #btnDiv {
+    width: 400px;
+}
+
+.layui-layer-iframe .layui-layer-ico {
+    background-repeat: repeat !important;
+    background-position-x: 210px !important;
+    background-position-y: 20px !important;
+}
+
+/*全局设定，输入框的大小*/
+.layui-form-label {
+    padding: 5px 15px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    line-height: 30px;
+}
+
+.layui-form-select dl dd, .layui-form-select dl dt {
+    line-height: 30px;
+}

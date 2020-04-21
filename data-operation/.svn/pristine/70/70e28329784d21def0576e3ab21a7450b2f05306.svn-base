@@ -1,0 +1,330 @@
+package com.hifo.dataoperation.controller;
+
+import com.hifo.dataoperation.base.BasicController;
+import com.hifo.dataoperation.intercept.RequiredPermission;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.estate.BusEstateService;
+import com.hifo.dataoperation.util.ExcelUtil;
+import com.hifo.dataoperation.util.RequestUtil;
+import com.mongodb.client.FindIterable;
+import io.swagger.annotations.*;
+import lombok.var;
+import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+import java.util.List;
+
+/**
+ * 楼盘控制器，包含楼盘管理的方法
+ *
+ * @author xmw
+ * @date 2019/4/25 16:20
+ */
+@Api(tags = "楼盘管理")
+@RestController
+@RequestMapping("/estate")
+public class BusEstateController extends BasicController {
+
+    @Autowired
+    private BusEstateService busEstateService;
+
+    /**
+     * 新增或更新楼盘
+     */
+    @ApiOperation(value = "新增更新楼盘")
+    @PutMapping("/update")
+    @RequiredPermission("100")
+    public ApiResult update(@ApiParam(name = "楼盘信息", value = "json", required = true) @RequestBody @Validated BusEstate busEstate) {
+        return busEstateService.update(busEstate);
+    }
+
+    /**
+     * 更新楼盘坐标
+     */
+    @ApiOperation(value = "新增更新楼盘")
+    @PutMapping("/updatePosition")
+    @RequiredPermission("100")
+    public ApiResult updatePosition(@ApiParam(name = "楼盘信息", value = "json", required = true) @RequestBody @Validated BusEstate busEstate) {
+        return busEstateService.updatePosition(busEstate);
+    }
+
+    /**
+     * 设置删除
+     *
+     * @param ids id集合，以英文逗号,分隔
+     * @return ApiResult
+     */
+    @ApiOperation(value = "设置删除")
+    @ApiImplicitParam(name = "ids", value = "楼盘编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true)
+    @PutMapping("/delete")
+    @RequiredPermission("100")
+    public ApiResult delete(String[] ids) {
+        return busEstateService.delete(ids);
+    }
+
+    /**
+     * 楼盘详细信息
+     *
+     * @param id 楼盘编号
+     * @return ApiResult
+     */
+    @ApiOperation(value = "根据ID获取楼盘详细信息")
+    @ApiImplicitParam(name = "id", value = "楼盘编号", paramType = "path", dataType = "String", example = "1", required = true)
+    @GetMapping("detail/{id}")
+    @RequiredPermission("100")
+    public ApiResult<BusEstate> detailUrl(@PathVariable("id") String id) {
+        BusEstate busEstate = busEstateService.getDetailById(id);
+        return ApiResult.success(busEstate);
+    }
+
+    /**
+     * 楼盘详细信息
+     *
+     * @param id 楼盘编号
+     * @return ApiResult
+     */
+    @ApiOperation(value = "根据ID获取楼盘详细信息")
+    @ApiImplicitParam(name = "id", value = "楼盘编号", paramType = "query", dataType = "String", example = "1", required = true)
+    @GetMapping("detail")
+    @RequiredPermission("100")
+    public ApiResult<BusEstate> detail(String id) {
+        BusEstate busEstate = busEstateService.getDetailById(id);
+        return ApiResult.success(busEstate);
+    }
+
+    /**
+     * 设置可见性
+     *
+     * @param ids        id集合，以英文逗号,分隔
+     * @param visibility 可见性
+     * @return ApiResult
+     */
+    @ApiOperation(value = "设置可见性")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "visibility", value = "可见性(0=前后端都不可见，1=仅后端可见，2=前后端都可见，3=已合并至其它楼盘)", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("/visibility")
+    @RequiredPermission("100")
+    public ApiResult visibility(String[] ids, String visibility) {
+        return busEstateService.visibility(ids, visibility);
+    }
+
+    /**
+     * 合并楼盘
+     *
+     * @param fromIds 被合并楼盘的id集合，以英文逗号,分隔
+     * @param toId    合并至楼盘的id
+     * @return ApiResult
+     */
+    @ApiOperation(value = "合并楼盘")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fromIds", value = "被合并楼盘的id集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "toId", value = "合并至楼盘的id", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("/merge")
+    @RequiredPermission("100")
+    public ApiResult merge(String[] fromIds, String toId) {
+        return busEstateService.merge(fromIds, toId);
+    }
+
+    /**
+     * 取消合并楼盘
+     *
+     * @param fromId 被合并楼盘id
+     * @param toId   合并至楼盘id
+     * @return ApiResult
+     */
+    @ApiOperation(value = "取消合并楼盘")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fromId", value = "被合并楼盘id", paramType = "query", dataType = "String", example = "1", required = true),
+            @ApiImplicitParam(name = "toId", value = "合并至楼盘id", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("/undoMerge")
+    @RequiredPermission("100")
+    public ApiResult undoMerge(String fromId, String toId) {
+        return busEstateService.undoMerge(fromId, toId);
+    }
+
+    /**
+     * 虚拟化楼盘
+     *
+     * @param fromIds 虚拟楼盘的id集合，以英文逗号,分隔
+     * @param toId    虚拟至楼盘的id
+     * @return ApiResult
+     */
+    @ApiOperation(value = "虚拟化楼盘")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fromIds", value = "虚拟楼盘的id集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "toId", value = "虚拟至楼盘的id", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("/virtual")
+    @RequiredPermission("100")
+    public ApiResult virtual(String[] fromIds, String toId) {
+        return busEstateService.virtual(fromIds, toId);
+    }
+
+    /**
+     * 取消虚拟化楼盘
+     *
+     * @param fromId 被虚拟化楼盘id
+     * @return ApiResult
+     */
+    @ApiOperation(value = "取消虚拟化楼盘")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fromId", value = "被虚拟化楼盘id", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("/undoVirtual")
+    @RequiredPermission("100")
+    public ApiResult undoVirtual(String fromId) {
+        return busEstateService.undoVirtual(fromId);
+    }
+
+    /**
+     * 设置是否可估
+     *
+     * @param ids 楼盘的集合，以英文逗号,分隔
+     * @return ApiResult
+     */
+    @ApiOperation(value = "设置是否可估")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘的id集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "canEvaluate", value = "是否可估", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("/evaluate")
+    @RequiredPermission("100")
+    public ApiResult evaluate(String[] ids, String canEvaluate) {
+        return busEstateService.evaluate(ids, canEvaluate);
+    }
+
+    /**
+     * 查询楼盘列表
+     *
+     * @param busEstate 查询条件
+     * @return JSON String
+     */
+    @ApiOperation(value = "查询楼盘列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cityId", value = "城市id", paramType = "query", dataType = "String", example = "2"),
+            @ApiImplicitParam(name = "cityName", value = "城市名称", paramType = "query", dataType = "String", example = "重庆市"),
+            @ApiImplicitParam(name = "districtId", value = "行政区id", paramType = "query", dataType = "String", example = "3"),
+            @ApiImplicitParam(name = "name", value = "楼盘名称或地址", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "createName", value = "维护人", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "visibility", value = "楼盘状态", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "当前页数", paramType = "query", dataType = "int", example = "1", required = true),
+            @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "query", dataType = "int", example = "5", required = true)
+    })
+    @GetMapping("/list")
+    @RequiredPermission("100")
+    public String list(Pagination pages, @ApiIgnore BusEstate busEstate) {
+        // 分页数据
+        var page = busEstateService.findByPage(busEstate, pages);
+        // 保存查询条件用于导出
+        RequestUtil.session("filter", busEstate);
+        return pageData(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 合并至该楼盘的记录列表
+     *
+     * @param id 楼盘id
+     * @return JSON String
+     */
+    @ApiOperation(value = "合并至该楼盘的记录列表")
+    @ApiImplicitParam(name = "id", value = "楼盘id", paramType = "query", dataType = "String", example = "1", required = true)
+    @GetMapping("/mergeHistory")
+    @RequiredPermission("100")
+    public ApiResult<List<Document>> mergeHistory(String id) {
+        return busEstateService.getMergeListByToId(id);
+    }
+
+    /**
+     * 楼盘虚拟记录：
+     * 1. 虚拟至该楼盘的
+     * 2. 虚拟到其他楼盘的
+     *
+     * @param id 楼盘id
+     * @return JSON String
+     */
+    @ApiOperation(value = "楼盘虚拟记录虚拟到其他楼盘的")
+    @ApiImplicitParam(name = "id", value = "楼盘id", paramType = "query", dataType = "String", example = "1", required = true)
+    @GetMapping("/virtualHistory1")
+    @RequiredPermission("100")
+    public ApiResult<List<BusEstate>> virtualHistory1(String id) {
+        return busEstateService.getVirtualListByFromId(id);
+    }
+
+    /**
+     * 楼盘虚拟记录：
+     * 1. 虚拟至该楼盘的
+     * 2. 虚拟到其他楼盘的
+     *
+     * @param id 楼盘id
+     * @return JSON String
+     */
+    @ApiOperation(value = "楼盘虚拟记录虚拟至该楼盘的")
+    @ApiImplicitParam(name = "id", value = "楼盘id", paramType = "query", dataType = "String", example = "1", required = true)
+    @GetMapping("/virtualHistory2")
+    @RequiredPermission("100")
+    public ApiResult<List<BusEstate>> virtualHistory2(String id) {
+        return busEstateService.getVirtualListByToId(id);
+    }
+
+    /**
+     * 下载楼盘模板
+     *
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "下载楼盘模板")
+    @GetMapping("downloadEstateTemplate")
+    @RequiredPermission("200")
+    public void downloadEstateTemplate(HttpServletResponse response) {
+        ExcelUtil.exportExcel(new ArrayList<>(), "楼盘信息", "楼盘", BusEstate.class, "楼盘模板.xls", response);
+    }
+
+//    /**
+//     * 下载楼盘信息数据
+//     */
+//    @ApiOperation(value = "下载楼盘信息数据", produces = "application/octet-stream")
+//    @ApiImplicitParam(name = "columns", value = "楼盘信息表头", example = "城市名称_cityName,行政区名称_districtName,街道_townName,楼盘名称_name", paramType = "query", dataType = "String")
+//    @GetMapping("downloadEstate")
+//    @RequiredPermission("100")
+//    public void downloadEstate(String[] columns, HttpServletResponse response) {
+//        BusEstate busEstate = (BusEstate) RequestUtil.session("filter");
+//        // 最多一次查50000条
+//        Pagination page = new Pagination();
+//        page.setLimit(50000);
+//        if (columns != null && columns.length > 0) {
+//            // 内容动态导出
+//            var listMaps = busEstateService.findMapsByPage(page, busEstate).getRecords();
+//            ExcelUtil.exportExcel(listMaps, "楼盘信息", "楼盘", columns, "楼盘信息.xls", response);
+//        } else {
+//            // 内容全部导出
+//            var list = busEstateService.findListsByPage(page, busEstate).getRecords();
+//            ExcelUtil.exportExcel(list, "楼盘信息", "楼盘", BusEstate.class, "楼盘信息.xls", response);
+//        }
+//    }
+
+    /**
+     * 导入楼盘信息数据
+     */
+    @ApiOperation(value = "导入楼盘信息数据")
+    @PostMapping(value = "importEstate", consumes = "multipart/*", headers = "content-type=multipart/form-data")
+    @RequiredPermission("200")
+    public ApiResult importEstate(@ApiParam(name = "file", value = "上传的文件", required = true) MultipartFile file) {
+        try {
+            return ApiResult.success(busEstateService.importEstate(file));
+        } catch (Exception e) {
+            return ApiResult.failed(e.getMessage());
+        }
+    }
+
+}

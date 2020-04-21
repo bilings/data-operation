@@ -1,0 +1,343 @@
+var buildingIndex_obj = {
+
+    urlConfig: {
+        // 列表
+        buildingList: "/building/list",
+        buildingHide: "/building/hide",
+        buildingShow: "/building/show",
+        buildingDelete: "/building/delete",
+        buildingUnDelete: "/building/undelete",
+        buildingFindById: "/building/findById",
+        buildingCopy: "/building/copy",
+    },
+    communityId: layui.util.urlParam('estateId'),
+    tableIns: '',
+    /**
+     * 界面js入口
+     */
+    init: function () {
+        var _this = this;
+        _this._initTable();
+        // 绑定倒出按钮
+        _this._initExportBtn()
+        // 绑定搜索按钮
+        _this._initSearch();
+    },
+
+    /**
+     * 初始化表格
+     * @private
+     */
+    _initTable: function () {
+        var _this = this;
+        _this._displayTable();
+        /*$.post({
+            url: _this.urlConfig.buildingList,
+            contentType: "application/json",
+            data: JSON.stringify({
+                estateId:_this.communityId
+                ,name:null
+                ,address:null
+                ,quality:null
+                ,visibility:null
+            }),
+            success: function (res) {
+                _this._displayTable(res, '','','','');
+            }
+        });*/
+    },
+
+    /**
+     * 初始化导出按钮
+     * @private
+     */
+    _initExportBtn: function () {
+        var _this = this;
+        $('#buildingIndex_wrapper #exportBuilding').on('click', function () {
+            layui.layer.open({
+                type: 2,
+                title: '导出条件',
+                content: 'export.html?estateId=' + _this.communityId,
+                area: ['97%', '97%']
+            });
+            return false;
+        });
+    },
+
+    /**
+     * 初始化搜索按钮
+     * @private
+     */
+    _initSearch: function () {
+        var _this = this;
+        $('#buildingIndex_wrapper #searchBtn').on('click', function () {
+            var name = $('#buildingIndex_wrapper #name').val();
+            var address = $('#buildingIndex_wrapper #address').val();
+            var quality = $('#buildingIndex_wrapper #quality').val();
+            var visibility = $('#buildingIndex_wrapper #visibility').val();
+            _this.tableIns.reload({
+                where: {
+                    estateId: _this.communityId
+                    , name: name
+                    , address: address
+                    , quality: quality
+                    , visibility: visibility
+                }
+            });
+        });
+
+
+        /*  $('#buildingIndex_wrapper #searchBtn').on('click', function () {
+              var name = $('#buildingIndex_wrapper #name').val();
+              var address = $('#buildingIndex_wrapper #address').val();
+              var quality = $('#buildingIndex_wrapper #quality').val();
+              var visibility = $('#buildingIndex_wrapper #visibility').val();
+              $.post({
+                  url: _this.urlConfig.buildingList,
+                  contentType: "application/json",
+                  data: JSON.stringify({
+                      estateId: _this.communityId
+                      ,name:name
+                      ,address:address
+                      ,quality:quality
+                      ,visibility:visibility
+                  }),
+                  success: function (res) {
+                      _this._displayTable(res, name,address,quality,visibility);
+                  }
+              });
+          });*/
+
+    },
+
+    /**
+     * 根据res展示表格
+     * @param res
+     * @param keyword
+     * @private
+     */
+    _displayTable: function (res, name, address, quality, visibility) {
+        var _this = this;
+        var _table = layui.table;
+        // 刷新表格
+        _this.tableIns = layui.table.render({
+            elem: '#buildingIndex_wrapper #buildingTable',
+            toolbar: '#buildingToolbar',
+            title: '楼栋数据表',
+            url: _this.urlConfig.buildingList,
+            method: 'GET',
+            where: {
+                estateId: _this.communityId
+                , name: null
+                , address: null
+                , quality: null
+                , visibility: null
+            },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {
+                    field: 'buildingName', title: '楼栋名称', templet: function (d) {
+                        return '<a href="javascript:;" style="color: blue;" onclick="buildingIndex_obj._gotoDetail(' + d.id + ',\'' + d.buildingName + '\')">' + d.buildingName + '</a>'
+                    }
+                },
+                {
+                    field: 'totalFloor', title: '楼层（地上/总）', templet: function (d) {
+                        return d.overGroundFloor+"/"+d.totalFloor
+                    }
+                },
+
+                {field: 'address', title: '详细地址'},
+                {field: 'quality', title: '物业品质', templet: '#qualityTpl'},
+                {field: 'priceCoe', title: '价格系数'},
+                {
+                    field: 'roomNo', title: '房号总数', templet: function (d) {//roomNoPerFloor
+                        if (d.buildingNo) {
+                            return '<a href="#" style="color: blue;" onclick="buildingIndex_obj._gotoRoom(' + d.id + ',\'' + d.unitNo + '\',\'' + d.roomNoPerFloor + '\',\'' + d.name + '\')"> ' + d.roomNo + '</a>'
+                        } else {
+                            return '<a href="#" style="color: blue;" onclick="buildingIndex_obj._gotoRoom(' + d.id + ',\'' + d.unitNo + '\',\'' + d.roomNoPerFloor + '\',\'' + d.name + '\')">0</a>'
+                        }
+
+                    }
+                },
+                {field: 'builtDate', title: '竣工日期'},
+                {field: 'canEvaluate', title: '可估状态', templet: '#canEvaluateTpl'},
+                {fixed: 'right', title: '操作', toolbar: '#buildingBar'}
+            ]],
+            id: 'buildingTable',
+            page: true,
+            done: function () {
+
+                // 工具栏事件 表头按钮触发事件
+                layui.table.on('toolbar(buildingTable)', function (obj) {
+                    var checkStatus = layui.table.checkStatus(obj.config.id);
+                    switch (obj.event) {
+                        case 'newbuilding'://新增楼栋
+                            _this._gotoDetail("newId", "新增楼栋", _this.communityId);
+                            break;
+                        case 'batchhidebuilding'://批量隐藏
+                            var data = checkStatus.data;
+                            if (data.length <= 0) {
+                                layer.msg('请选择楼栋');
+                                return false;
+                            }
+                            $.post({
+                                url: _this.urlConfig.buildingHide,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function () {
+                                    layer.msg('隐藏成功');
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                        case 'batchshowbuilding'://批量取消隐藏
+                            var data = checkStatus.data;
+                            if (data.length <= 0) {
+                                layer.msg('请选择楼栋');
+                                return false;
+                            }
+                            $.post({
+                                url: _this.urlConfig.buildingShow,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function () {
+                                    layer.msg('取消隐藏成功');
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                        case 'batchtransferbuilding'://批量转移
+                            var data = checkStatus.data;
+                            if (data.length <= 0) {
+                                layer.msg("请选择楼栋")
+                                return false;
+                            }
+                            var dataIds = [];
+                            for (var i = 0; i < data.length; i++) {
+                                dataIds.push(data[i].id)
+                            }
+                            layer.open({
+                                type: 2,
+                                title: '楼栋详情',
+                                content: 'searchEstate.html?datas=' + dataIds,
+                                area: ['90%', '90%'],
+                            });
+                            break;
+                        case 'fillbuilding'://填充
+                            var data = checkStatus.data;
+                            if (data.length <= 0) {
+                                layer.msg("请选择楼栋")
+                                return false;
+                            }
+                            var dataNames = [];
+                            var dataIds = [];
+                            for (var i = 0; i < data.length; i++) {
+                                dataNames.push(data[i].name);
+                                dataIds.push(data[i].id);
+                            }
+                            layer.open({
+                                type: 2,
+                                title: '楼栋详情',
+                                content: 'fill.html?buildingNames=' + dataNames + "&dataIds=" + dataIds + "&esId=" + data[0].estateId,
+                                area: ['90%', '90%'],
+                            });
+                            break;
+                        case 'deletebuilding'://批量删除
+                            var data = checkStatus.data;
+                            if (data.length <= 0) {
+                                layer.msg('请选择楼栋');
+                                return false;
+                            }
+                            $.post({
+                                url: _this.urlConfig.buildingDelete,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function () {
+                                    layer.msg('批量删除成功');
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                        case 'undeletebuilding'://批量取消删除
+                            var data = checkStatus.data;
+                            if (data.length <= 0) {
+                                layer.msg('请选择楼栋');
+                                return false;
+                            }
+                            $.post({
+                                url: _this.urlConfig.buildingUnDelete,
+                                data: JSON.stringify(data),
+                                contentType: "application/json",
+                                success: function () {
+                                    layer.msg('批量删除成功');
+                                    _this._initTable();
+                                }
+                            });
+                            break;
+                    }
+                    ;
+                });
+
+                /**
+                 * 行工具栏事件,绑定隐藏按钮
+                 */
+                _table.on('tool(buildingTable)', function (obj) {
+                    if (obj.event === 'copybuilding') {
+                        $.post({
+                            url: _this.urlConfig.buildingCopy,
+                            data: JSON.stringify(obj.data),
+                            contentType: "application/json",
+                            success: function () {
+                                layer.msg('复制成功');
+                                _this._initTable();
+                            }
+                        });
+                    } else if (obj.event === 'islookbuilding') {//隐藏
+                        var list = new Array();//创建list集合
+                        var url = '';
+                        if ($(this).find('i').attr('class').indexOf('layui-icon-ok-circle') > -1) {
+                            url = _this.urlConfig.buildingHide
+                        } else {
+                            url = _this.urlConfig.buildingShow
+                        }
+                        list[0] = obj.data;//给集合赋值
+                        $.post({
+                            url: url,
+                            data: JSON.stringify(list),
+                            contentType: "application/json",
+                            success: function () {
+                                _this._initTable();
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    },
+    /**
+     * 跳转到楼栋详情
+     * @param id
+     * @param name
+     * @private
+     */
+    _gotoDetail: function (id, name, esId) {
+        parent.homeIndex_obj._addTab(name, '../building/edit.html?id=' + id + "&estateId=" + esId, false, '');
+    },
+    /**
+     * 跳转到房号
+     * @param id
+     * @private
+     */
+    _gotoRoom: function (id, unit, roomNoPerFloor, name) {
+        // 新增一个Tab项
+        parent.layui.element.tabAdd('tabs', {
+            title: '房号管理',
+            content: '<iframe id="房号管理" src="../room/index.html?buildId=' + id + '&unit=' + unit + '&roomNoPerFloor=' + roomNoPerFloor + '"></iframe>',
+            id: '房号管理'
+        });
+        // 切换到新增的Tab
+        parent.layui.element.tabChange('tabs', '房号管理');
+    },
+};
+
+buildingIndex_obj.init();

@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="history.css" rel="stylesheet">
+    <title>历史</title>
+</head>
+<body>
+<div id="estateHistory_wrapper">
+    合并到该楼盘：
+    <table class="layui-table" id="mergeTable" lay-filter="mergeTable"></table>
+    <script type="text/html" id="mergeLineBar">
+        <a href="#" style="color: blue" lay-event="undoMerge">解除</a>
+    </script>
+
+    虚拟至其他楼盘：
+    <table class="layui-table" id="virtualTable1" lay-filter="virtualTable1"></table>
+
+    虚拟到该楼盘：
+    <table class="layui-table" id="virtualTable2" lay-filter="virtualTable2"></table>
+
+    <script type="text/html" id="virtualLineBar">
+        <a href="#" style="color: blue" lay-event="undoVirtual">解除</a>
+    </script>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="history.js"></script>
+</body>
+</html>

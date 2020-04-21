@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="export.css" rel="stylesheet">
+    <title>导出楼盘</title>
+</head>
+<body>
+<div id="estateExport_wrapper">
+
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">导出属性</label>
+            <input type="checkbox" lay-skin="primary" id="c_all" lay-filter="c_all" title="全选">
+            <div class="layui-input-block" id="column">
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="城市" value="cityName" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="行政区" value="districtName" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="片区板块" value="blockName" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="街道办/乡镇" value="townName" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="楼盘名" value="name" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="楼盘别名" value="alias" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="总栋数" value="buildingNo" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="总户数" value="roomNo" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="建筑面积" value="buildingAcreage" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="占地面积" value="usedAcreage" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="容积率" value="capacity" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="绿化率" value="greenRatio" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="停车位数量" value="parkNo" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="建成年代（起）" value="buildYearStart" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="建成年代（止）" value="buildYearEnd" lay-filter="column"><br>
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="坐标（高德）" value="location" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="详细地址" value="addrDetail" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="参考地址" value="addrRef" lay-filter="column"><br>
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="开发商" value="developerDesc" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="开发商品牌" value="developerBrand" lay-filter="column"><br>
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="物管设施" value="equipment" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="产权性质" value="propertyRight" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="建筑类别" value="buildingCategory" lay-filter="column"><br>
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="住宅品质" value="quality" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="主力品质" value="mainQuality" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="主力面积" value="mainAcreage" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="主力品质的建筑类别" value="mainCategory" lay-filter="column"><br>
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="特殊说明" value="priceDesc" lay-filter="column">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="reset" class="layui-btn layui-btn-sm layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-sm" id="export" lay-filter="save">导出</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="export.js"></script>
+</body>
+</html>

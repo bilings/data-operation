@@ -1,0 +1,23 @@
+package com.hifo.dataoperation.dto;
+
+import com.hifo.dataoperation.entity.mongo.BusEstateAvgPriceEty;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 楼盘均价页面传出后台对象
+ * @author weisibin
+ * @date 2020年4月8日15:51:17
+ */
+@Data
+@EqualsAndHashCode(callSuper = true)
+public class BusEstateAvgPriceEtyDto extends BusEstateAvgPriceEty {
+	private static final long serialVersionUID = -8504316602995039749L;
+    private Integer caseNoMin;//案例最小值
+    private Integer caseNoMax;//案例最大值
+    private String calDateStart;//价格开始时间
+    private String calDateEnd;//价格结束时间
+    private String monthGainMin;//环比最小值
+    private String monthGainMax;//环比最大值
+}

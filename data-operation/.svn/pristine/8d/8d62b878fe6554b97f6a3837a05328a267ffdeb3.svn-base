@@ -1,0 +1,52 @@
+ #端口
+server:
+  port: 8099
+#数据源
+spring:
+
+  data:
+    mongodb:
+      uri: mongodb://192.168.4.106:27017/basic
+#  mvc:
+#    static-path-pattern: /**
+#  resources:
+#    static-locations: classpath\:/META-INF/resources/,classpath\:/resources/,classpath\:/static/,classpath\:/public/,file\:${web.web-path}classpath:/static/,classpath:/public/,file:${web.web-path}
+
+  datasource:
+    #连接池
+    druid:
+      url: jdbc:mysql://192.168.4.108:3306/hkb_2?characterEncoding=utf8&autoReconnect=true&zeroDateTimeBehavior=convertToNull&useSSL=false&allowMultiQueries=true&useUnicode=true
+#    url: jdbc:mysql://192.168.4.105:3306/hkb_2?useUnicode=true&characterEncoding=UTF-8&useSSL=false
+      username: root
+      password: hifo123456
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      initial-size: 5
+      min-idle: 5
+      max-active: 20
+      max-wait: 60000
+      time-between-eviction-runs-millis: 10000
+      min-evictable-idle-time-millis: 300000
+      validation-query: SELECT 1 FROM DUAL
+      test-while-idle: true
+      test-on-borrow: false
+      test-on-return: false
+      pool-prepared-statements: true
+      max-pool-prepared-statement-per-connection-size: 20
+      connection-properties: druid.stat.mergeSql=true;druid.stat.slowSqlMillis=5000
+
+web:
+  #前端文件存放绝对路径
+  web-path: C:/hkb
+  #文件存放绝对路径
+  upload-path: C:/hkb/upload/
+  #文件访问相对路径
+  rel-path: ../../../upload/
+weixin:
+  token: hifo1996
+  getCode: https://open.weixin.qq.com/connect/oauth2/authorize?appid=%s&redirect_uri=%s&response_type=code&scope=%s&state=STATE#wechat_redirect
+  webAccessTokenhttps: https://api.weixin.qq.com/sns/oauth2/access_token?appid=%s&secret=%s&code=%s&grant_type=authorization_code
+  scope: snsapi_userinfo
+  loginUrl: http://def92f63.ngrok.io/loginAutoWx
+  message: 当前公众号尚未完成配置，暂不可使用获客宝估价服务，详情请咨询400-8650-833
+
+

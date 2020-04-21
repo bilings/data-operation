@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @@include('../base/header.html')
+    <link href="login.css" rel="stylesheet">
+    <title>登录获客宝</title>
+</head>
+<body>
+<div id="homeLogin_wrapper">
+    <div class="login-main">
+        <header class="layui-elip">大数据数据维护系统</header>
+        <form class="layui-form">
+            <div class="layui-input-inline">
+                <input type="text" name="username" required lay-verify="required" placeholder="用户名" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <div class="layui-input-inline">
+                <input type="password" name="password" required lay-verify="required" placeholder="密码" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <div class="layui-input-inline login-btn">
+                <button lay-submit lay-filter="login" class="layui-btn">登录</button>
+            </div>
+            <hr/>
+            <p><a href="#" class="fl">立即注册</a><a href="#" class="fr">忘记密码？</a></p>
+        </form>
+    </div>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="login.js"></script>
+</body>
+</html>

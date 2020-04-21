@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="export.css" rel="stylesheet">
+    <title>导出楼栋</title>
+</head>
+<body>
+<div id="avgPriceExport_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">导出属性</label>
+            <input type="checkbox" lay-skin="primary" id="c_all" lay-filter="c_all" title="全选">
+            <div class="layui-input-block" id="column">
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="楼盘名称" value="estateName" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="城市" value="cityName" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="行政区" value="districtName" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="板块" value="blockName" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="物业品质" value="quality" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="建筑类别" value="buildingType" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="标准房面积" value="standAcreage" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="计算日期" value="calDate" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="环比" value="monthOnMonth" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="计算案例" value="caseNo" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="系统均价" value="avgPriceSys" lay-filter="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="指数均价" value="avgPriceCoe" lay-filter="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" lay-skin="primary" name="column" title="人工均价" value="avgPriceManual" lay-filter="column">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button type="reset" class="layui-btn layui-btn-sm layui-btn-primary">重置</button>
+                <button type="button" class="layui-btn layui-btn-sm" id="export" lay-filter="save">导出</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="export.js"></script>
+</body>
+</html>

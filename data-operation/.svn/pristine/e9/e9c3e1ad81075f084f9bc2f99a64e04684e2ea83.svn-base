@@ -1,0 +1,66 @@
+package com.hifo.dataoperation.service.estate.impl;
+
+import com.hifo.dataoperation.mapper.estate.BusVirtualRelMapper;
+import com.hifo.dataoperation.mapper.base.Field;
+import com.hifo.dataoperation.mapper.base.Table;
+import com.hifo.dataoperation.entity.BusVirtualRel;
+import com.hifo.dataoperation.service.base.BasicService;
+import com.hifo.dataoperation.service.estate.BusVirtualRelService;
+import com.hifo.dataoperation.base.MybatisPlusService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+/**
+ * 合并日志Service
+ *
+ * @author whc
+ * @date 2019/3/27 14:56
+ */
+@Service
+public class BusVirtualRelServiceImpl extends MybatisPlusService<BusVirtualRelMapper, BusVirtualRel> implements BusVirtualRelService {
+
+    @Autowired
+    private BasicService basicService;
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public void log(String fromId, String toId) {
+        // 删除fromId
+        delete(fromId);
+        // 保存新的fromId -> toId
+        BusVirtualRel virtualLog = new BusVirtualRel();
+        virtualLog.setFromId(Long.parseLong(fromId));
+        virtualLog.setToId(Long.parseLong(toId));
+        virtualLog.setCreateId(basicService.getLoginEmployee().getId().intValue());
+        virtualLog.setCreateName(basicService.getLoginEmployee().getName());
+        virtualLog.setOrganizationId(basicService.getLoginEmployee().getOrganizationId());
+        basicService.update(Table.bus_virtual_rel, virtualLog);
+        // 获取虚拟到fromId的楼盘Id
+        List<BusVirtualRel> list = basicService.query2JavaWithAnd(Table.bus_virtual_rel, BusVirtualRel.class, new Field("toId", fromId));
+        // 依次做递归操作
+        for (BusVirtualRel log : list) {
+            log(log.getFromId().toString(), toId);
+        }
+    }
+
+    @Override
+    public void delete(String fromId) {
+        List<BusVirtualRel> list = basicService.query2JavaWithAnd(Table.bus_virtual_rel, BusVirtualRel.class, new Field("fromId", fromId));
+        if (list.size() > 0) {
+            basicService.delete(Table.bus_virtual_rel, Field.pk(list.get(0).getId()));
+        }
+    }
+
+    @Override
+    public List<BusVirtualRel> listByFromId(String estateId) {
+        return basicService.query2JavaWithAnd(Table.bus_virtual_rel, BusVirtualRel.class, new Field("fromId", estateId));
+    }
+
+    @Override
+    public List<BusVirtualRel> listByToId(String estateId) {
+        return basicService.query2JavaWithAnd(Table.bus_virtual_rel, BusVirtualRel.class, new Field("toId", estateId));
+    }
+}

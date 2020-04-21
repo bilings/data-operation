@@ -1,0 +1,312 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="edit.css" rel="stylesheet">
+    <title>编辑楼盘</title>
+</head>
+<body>
+<div id="estateEdit_wrapper">
+    <label>
+        <span id="nameSpan"></span>&nbsp;&nbsp;&nbsp;
+        <span id="addrDetailSpan"></span>
+    </label>
+    <hr/>
+    <span class="layui-breadcrumb" id="crumbForEdit">
+        <a href="#"><cite style="color: blue;">楼盘信息</cite></a>
+        <a href="#" id="buildingList">楼栋列表</a>
+        <a href="#" id="history">合并虚拟信息</a>
+    </span>
+    <br><br>
+    <form class="layui-form" action="">
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">*城市:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="cityName" lay-verify="required" autocomplete="off" class="layui-input"
+                           readonly
+                           name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">*行政区:</label>
+                <div class="layui-input-inline">
+                    <select id="districtSelect" lay-verify="required" lay-filter="districtSelect"></select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">街道办/乡镇:</label>
+                <div class="layui-input-inline">
+                    <select id="townSelect"></select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">*楼盘名称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" lay-verify="required" autocomplete="off" class="layui-input"
+                           name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">片区板块:</label>
+                <div class="layui-input-inline">
+                    <select id="blockSelect"></select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">产权形式:</label>
+                <div class="layui-input-inline">
+                    <select id="propertyRight"></select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">详细地址(路):</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="road" autocomplete="off" class="layui-input"
+                           name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">详细地址(号):</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="number" autocomplete="off" class="layui-input"
+                           lay-verify="numberOrEmpty" name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label" name="label-key">参考地址:</label>
+                <div class="layui-input-inline" style="width: 77%!important;">
+                    <input type="text" id="addrRef" autocomplete="off" class="layui-input"
+                           name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label" name="label-key">楼盘别名:</label>
+                <div class="layui-input-inline" style="width: 77%!important;">
+                    <input type="text" id="alias" autocomplete="off" class="layui-input"
+                           name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">总户数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="totalRoomNo" autocomplete="off" class="layui-input"
+                           lay-verify="numberOrEmpty" name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">*楼栋总数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="totalBuildingNo" lay-verify="required" autocomplete="off" class="layui-input"
+                           lay-verify="numberOrEmpty" name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">车位数:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="parkNo" autocomplete="off" class="layui-input"
+                           lay-verify="numberOrEmpty" name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">总占地面积:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="totalArea" autocomplete="off" class="layui-input"
+                           lay-verify="floatOrEmpty" name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">总建筑面积:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="landArea" autocomplete="off" class="layui-input"
+                           lay-verify="floatOrEmpty" name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">绿化率:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="greenRatio" autocomplete="off" class="layui-input"
+                           lay-verify="floatOrEmpty" name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">容积率:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="capacity" autocomplete="off" class="layui-input"
+                           lay-verify="floatOrEmpty" name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">开发商品牌:</label>
+                <div class="layui-input-inline">
+                    <select id="developerBrand"></select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">开发商:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="developerDesc" autocomplete="off" class="layui-input"
+                           name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">主力面积:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="mainArea" autocomplete="off" class="layui-input"
+                           lay-verify="floatOrEmpty" name="label-value">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">建成年代(起):</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="buildYearStart" autocomplete="off" class="layui-input"
+                           lay-verify="numberOrEmpty" name="label-value" placeholder="只需填写年份">
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">建成年代(止):</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="buildYearEnd" autocomplete="off" class="layui-input"
+                           lay-verify="numberOrEmpty" name="label-value" placeholder="只需填写年份">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">主力类别:</label>
+                <div class="layui-input-inline">
+                    <select id="mainCategory"></select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">是否可估:</label>
+                <div class="layui-input-inline">
+                    <select id="canEvaluate"> </select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">是否完善:</label>
+                <div class="layui-input-inline">
+                    <select id="isPerfect"> </select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">主力品质:</label>
+                <div class="layui-input-inline">
+                    <select id="mainQuality"></select>
+                </div>
+            </div>
+            <div class="layui-col-xs3">
+                <label class="layui-form-label" name="label-key">有无电梯:</label>
+                <div class="layui-input-inline">
+                    <select id="haveLift"></select>
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs6">
+                <label class="layui-form-label" name="label-key">价格差异说明:</label>
+                <div class="layui-input-inline" style="width: 77%!important;">
+                    <input type="text" id="priceDesc" autocomplete="off" class="layui-input"
+                           name="label-value">
+                </div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">物管设施:</label>
+                <div class="layui-input-inline" style="width: 77%!important;" id="equipment"></div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">建筑类别:</label>
+                <div class="layui-input-inline" style="width: 77%!important;" id="buildingCategory"></div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">住宅品质:</label>
+                <div class="layui-input-inline" style="width: 77%!important;" id="quality"></div>
+            </div>
+        </div>
+        <br>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">
+                    <button id="updateBtn" lay-filter="updateBtn" lay-submit="" class="layui-btn layui-btn-normal">保存
+                    </button>
+                </label>
+            </div>
+        </div>
+
+    </form>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="edit.js"></script>
+</body>
+</html>

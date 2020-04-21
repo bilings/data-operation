@@ -1,0 +1,253 @@
+package com.hifo.dataoperation.service.base.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.hifo.dataoperation.base.Entity;
+import com.hifo.dataoperation.mapper.basic.BasicMapper;
+import com.hifo.dataoperation.mapper.setting.ModuleMapper;
+import com.hifo.dataoperation.mapper.base.Field;
+import com.hifo.dataoperation.mapper.base.Sequence;
+import com.hifo.dataoperation.mapper.base.Table;
+import com.hifo.dataoperation.entity.Module;
+import com.hifo.dataoperation.entity.*;
+import com.hifo.dataoperation.service.base.BasicService;
+import com.hifo.dataoperation.service.setting.CustomerUserService;
+import com.hifo.dataoperation.util.HkbUtil;
+import com.hifo.dataoperation.util.RequestUtil;
+import com.hifo.dataoperation.util.JSONUtil;
+import com.hifo.dataoperation.util.ReflexUtil;
+import com.hifo.dataoperation.util.StringUtil;
+import lombok.var;
+import org.apache.poi.ss.formula.functions.T;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import javax.servlet.http.HttpServletRequest;
+import java.util.*;
+
+/**
+ * 通用Service，包含：日志、获取序列号
+ *
+ * @author whc
+ * @date 2019/3/15 14:44
+ */
+@Service
+public class BasicServiceImpl extends ServiceImpl<BasicMapper, T> implements BasicService {
+
+    @Autowired
+    public ModuleMapper moduleMapper;
+
+    @Autowired
+    public CustomerUserService customerUserService;
+
+    @Override
+    public ExtEmployee getLoginEmployee() {
+        return (ExtEmployee) RequestUtil.session(RequestUtil.LOGIN_EMPLOYEE);
+    }
+
+    @Override
+    public CustomerUser getLoginCustomerUserByOpenid(HttpServletRequest request) {
+        String openid = request.getHeader("openid");
+        CustomerUser c = new CustomerUser();
+        c.setOpenid(openid);
+        return customerUserService.listByOpenid(c);
+    }
+
+    @Override
+    public List getLoginPermission() {
+        ExtEmployee extEmployee = getLoginEmployee();
+        if (extEmployee == null || StringUtil.isNull(extEmployee.getModuleCodes())) {
+            return new ArrayList<>();
+        }
+        //  return JSONUtil.str2List(extEmployee.getModuleCodes());
+        String[] str = extEmployee.getModuleCodes().split(",");
+        return  Arrays.asList(str);
+    }
+
+    @Override
+    public Map<Module, Set<Module>> getModules() {
+        // 获取全部模块
+        var moduleList = moduleMapper.selectList(new QueryWrapper<>());
+        // 从全部模块中筛选出顶层模块
+        Map<Module, Set<Module>> topModules = new HashMap<>(5);
+        for (Module module : moduleList) {
+            if (module.getParentId() == null) {
+                topModules.put(module, new HashSet<>());
+            }
+        }
+        // 遍历顶层模块
+        for (Map.Entry<Module, Set<Module>> entry : topModules.entrySet()) {
+            String parentId = entry.getKey().getId() + "";
+            // 根据parentId获取该顶层模块的底层模块
+            for (Module module : moduleList) {
+                if (parentId.equals(module.getParentId())) {
+                    entry.getValue().add(module);
+                }
+            }
+        }
+        return topModules;
+    }
+
+    @Override
+    public void updateLog(Table table, Field pk, Object object) {
+        updateLog(table, pk, object, getLoginEmployee());
+    }
+
+    @Override
+    public void updateLogEmployee(Table table, Field pk, Object object, ExtEmployee emp) {
+        updateLog(table, pk, object, emp);
+    }
+
+    /**
+     * 记录操作日志
+     * 备注：
+     * 新增时只记录序号，不记录具体内容
+     * 更新时只记录更新的列，不变的列不记录
+     *
+     * @param table           更新的表
+     * @param pk              主键
+     * @param object          本次更新对象
+     * @param operateEmployee 操作人
+     */
+    public void updateLog(Table table, Field pk, Object object, ExtEmployee operateEmployee) {
+        if (operateEmployee == null) {
+            return;
+        }
+        // 获取保存前和保存后的Map
+        Map<String, Object> oldMap = baseMapper.load(table, pk);
+        Map<String, Object> newMap = JSONUtil.java2Map(object);
+        // 只保留真正修改的属性
+        Map<String, Object> savedOldMap = new HashMap<>(1);
+        Map<String, Object> savedNewMap = new HashMap<>(1);
+        for (Map.Entry<String, Object> entry : newMap.entrySet()) {
+            String key = entry.getKey();
+            Object value = entry.getValue();
+            // 排除null属性
+            if (StringUtil.isNull(value) && StringUtil.isNull(oldMap.get(key))) {
+                continue;
+            }
+            if (value == null) {
+                continue;
+            }
+            // 值不一样，记录
+            if (oldMap.get(key) == null || !value.toString().equals(oldMap.get(key).toString())) {
+                savedOldMap.put(key, oldMap.get(key));
+                savedNewMap.put(key, value);
+            }
+        }
+        // 打造日志对象
+        if (savedNewMap.size() > 0) {
+            HfOperationLog log = new HfOperationLog();
+            log.setTableName(table.name());
+            log.setSeqId(Long.parseLong(pk.getValue()));
+            log.setType(HfOperationLog.UPDATE);
+            log.setOldValue(JSONUtil.obj2Str(savedOldMap));
+            log.setNewValue(JSONUtil.obj2Str(savedNewMap));
+            log.setOperateId(operateEmployee.getId().intValue());
+            log.setOperateName(operateEmployee.getName());
+            // 保存
+            baseMapper.insert(Table.hf_operation_log, HkbUtil.obj2FieldArray(log));
+        }
+    }
+
+    @Override
+    public long nextVal(Sequence sequence) {
+        final String nameCol = "seq_name";
+        // 获取序列号（唯一）
+        List<Map<String, Object>> mapList = baseMapper.queryWithAnd(Table.hf_sequence, new Field(nameCol, sequence.name()));
+        if (mapList.size() != 1) {
+            return -1;
+        }
+        // 转换成Java对象
+        HfSequence hfSequence = JSONUtil.map2Java(mapList.get(0), HfSequence.class);
+        // 获取当前值并加上步长
+        long curr = hfSequence.getSeqCurr();
+        curr = curr + hfSequence.getSeqIncrement();
+        // 保存新的值
+        baseMapper.update(Table.hf_sequence, Field.pk(hfSequence.getId()), new Field("seq_curr", curr + ""));
+        // 返回
+        return curr;
+    }
+
+    @Override
+    public long nextVal(Table table, Sequence sequence) {
+        long id = nextVal(sequence);
+        // 如果该id已经存在，则获取下一个
+        if (baseMapper.countWithAnd(table, Field.pk(id)) > 0) {
+            return nextVal(table, sequence);
+        }
+        return id;
+    }
+
+    @Override
+    public Map<String, Object> load2Map(Table table, Field pk) {
+        return baseMapper.load(table, pk);
+    }
+
+    @Override
+    public <T> T load2Java(Table table, Field pk, Class<T> clazz) {
+        Map<String, Object> map = baseMapper.load(table, pk);
+        return JSONUtil.map2Java(map, clazz);
+    }
+
+    @Override
+    public <T> List<T> query2JavaWithOr(Table table, Class<T> clazz, Field... fields) {
+        List<Map<String, Object>> mapList = baseMapper.queryWithOr(table, fields);
+        return JSONUtil.mapList2JavaList(mapList, clazz);
+    }
+
+    @Override
+    public <T> List<T> query2JavaWithAnd(Table table, Class<T> clazz, Field... fields) {
+        List<Map<String, Object>> mapList = baseMapper.queryWithAnd(table, fields);
+        return JSONUtil.mapList2JavaList(mapList, clazz);
+    }
+
+    @Override
+    public Long update(Table table, Entity entity) {
+        return update(table, entity, null);
+    }
+
+    @Transactional(rollbackFor = Exception.class)
+    @Override
+    public Long update(Table table, Entity entity, Sequence sequence) {
+        // 如果有updateTime属性，设置为空，数据库会自动更新
+        ReflexUtil.callMethod(entity, "setUpdateTime", "");
+        // 如果有updateId和updateName属性，则设置为当前人
+        ReflexUtil.callMethod(entity, "setUpdateId", getLoginEmployee().getId().intValue());
+        ReflexUtil.callMethod(entity, "setUpdateName", getLoginEmployee().getName());
+        // id为空，为新增，否则为更新
+        if (StringUtil.isNull(entity.getId())) {
+            // 使用指定的序列号
+            if (sequence != null) {
+                long id = nextVal(table, sequence);
+                entity.setId(id);
+            }
+            // 新增
+            baseMapper.insert(table, HkbUtil.obj2FieldArray(entity));
+        } else {
+            // 主键
+            Field pk = Field.pk(entity.getId());
+            // 日志（使用了事务，日志和更新的先后顺序没关系，先记录日志更方便）
+            updateLog(table, pk, entity);
+            // 更新
+            baseMapper.update(table, pk, HkbUtil.obj2FieldArray(entity));
+        }
+        return entity.getId();
+    }
+
+    @Override
+    public long countWithAnd(Table tableName, Field... fields) {
+        return baseMapper.countWithAnd(tableName, fields);
+    }
+
+    @Override
+    public long countWithOr(Table tableName, Field... fields) {
+        return baseMapper.countWithOr(tableName, fields);
+    }
+
+    @Override
+    public int delete(Table tableName, Field pk) {
+        return baseMapper.delete(tableName, pk);
+    }
+}

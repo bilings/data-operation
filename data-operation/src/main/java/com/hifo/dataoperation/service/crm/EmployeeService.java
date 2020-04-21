@@ -1,0 +1,89 @@
+package com.hifo.dataoperation.service.crm;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.BusAdministrative;
+import com.hifo.dataoperation.entity.BusOrganizationCity;
+import com.hifo.dataoperation.entity.ExtEmployee;
+import com.hifo.dataoperation.pagination.Pagination;
+import org.bson.Document;
+
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 维护机构员工
+ *
+ * @author xmw
+ * @date 2019/4/29 15:55
+ */
+public interface EmployeeService extends IService<ExtEmployee> {
+
+    /**
+     * 根据用户名密码查询
+     *
+     * @param username 用户名
+     * @param password 密码
+     * @return 多条或者没有结果都返回null
+     */
+    ExtEmployee getEmployee(String username, String password);
+
+    /**
+     * 获取当前组织机构的用户
+     *
+     * @param organizationId
+     * @param keyword
+     * @param pages
+     * @return
+     */
+    IPage getEmployeeList(int organizationId, String keyword, Pagination pages);
+
+    /**
+     * 获取机构拥有的城市
+     *
+     * @param id id
+     * @return List
+     */
+    List<Document> getCityListByOrganization(String id);
+
+    /**
+     * 根据id获取employee
+     *
+     * @param id id
+     * @return ExtEmployee
+     */
+    Map findById(String id);
+
+    /**
+     * 保存/更新用户
+     *
+     * @param extEmployee ExtEmployee
+     */
+    void update(ExtEmployee extEmployee);
+
+    /**
+     * 删除账号
+     *
+     * @param id id
+     */
+    void delete(String id);
+
+    /**
+     * 修改当前机构默认城市
+     * @param id
+     * @return
+     */
+    ApiResult updateCityById(Long id);
+
+    /**
+     * 用户修改密码
+     *
+     * @param id
+     * @param password
+     * @param pwd
+     * @return
+     */
+    ApiResult resetPassword(String id, String password, String pwd);
+
+}

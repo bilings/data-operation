@@ -1,0 +1,570 @@
+//查询数据库中是否存在房号数据
+var allRooms = new Array();
+
+//从上一个页面传过来的参数
+var buildId_ = GetUrlParam("buildId");
+//楼栋数据
+var building;
+//初始化需要查询的list模板
+var sys_template = "";
+var sys_template_2 = "";
+$(document).ready(function () {
+    sys_template = Handlebars.compile($("#sys-template").html());
+    sys_template_2 = Handlebars.compile($("#sys-template_2").html());
+    Handlebars.registerHelper("compare",function(v1,v2,options){
+        // console.log(v1+":"+v2);
+        if(v1>$("#floorTotalNo").val()){
+            //不满足条件执行{{else}}部分
+            return options.inverse(this);
+        }else{
+            //满足添加继续执行
+            return options.fn(this);
+        }
+    });
+});
+var roomIndex_obj = {
+
+    urlConfig: {
+        qryBuilding: "/busRoom/qryBuilding",
+        saveBusRoom: "/busRoom/busRoomBatchSave",
+        busRoomList: "/busRoom/busRoomList",
+        queryDictionary: "/busRoom/queryDictionary"
+    },
+
+    /**
+     * 界面js入口
+     */
+    init: function () {
+        this._initTable();
+        this._initSubmit();
+        sys_template = Handlebars.compile($("#sys-template").html());
+        sys_template_2 = Handlebars.compile($("#sys-template_2").html());
+    },
+
+    /**
+     * 初始化数据
+     * @private
+     */
+    _initTable: function () {
+        var unitTabArry = new Array();//房号切换数组 对应数据库字段名称 数据库字段更新 需更新这里
+        var unitTabArry_2 = new Array();
+        var obj1 = new Object();
+        var obj2 = new Object();
+        var obj3 = new Object();
+        var obj4 = new Object();
+        var obj5 = new Object();
+        var obj6 = new Object();
+        var obj7 = new Object();
+        var obj8 = new Object();
+        var obj9 = new Object();
+        var obj10 = new Object();
+        var obj11 = new Object();
+        var obj12 = new Object();
+
+        obj1.name = "房号名称";
+        obj2.name = "建筑面积";
+        obj3.name = "套内面积";
+        obj4.name = "实得面积";
+        obj5.name = "朝向";
+        obj6.name = "景观";
+        obj7.name = "户型结构";
+        obj8.name = "户型";
+        obj9.name = "初始价格";
+        obj10.name = "价格系数";
+        obj11.name = "所在层";
+        obj12.name = "证载用途";
+        unitTabArry[0] = obj1;
+        unitTabArry[1] = obj2;
+        unitTabArry[2] = obj3;
+        unitTabArry[3] = obj4;
+        unitTabArry[4] = obj5;
+        unitTabArry[5] = obj6;
+        unitTabArry[6] = obj7;
+        unitTabArry[7] = obj8;
+        unitTabArry[8] = obj9;
+        unitTabArry[9] = obj10;
+        unitTabArry[10] = obj11;
+        unitTabArry[11] = obj12;
+
+        var _this = this;
+        var $ = layui.jquery, form = layui.form;
+
+
+        //查询数据库中是否存在房号数据
+        // $.get({
+        //     url: _this.urlConfig.busRoomList,
+        //     data: {buildingId: GetUrlParam("buildId")},
+        //     success: function (res) {
+        //         allRooms = res.data;
+        //     }
+        // });
+
+        //查询房号列表信息
+        qryExistRooms();
+        $.get({
+            url: _this.urlConfig.qryBuilding,
+            data: {id: GetUrlParam("buildId")},
+            success: function (res) {
+                building = res.data;
+                var syslist = new Array();
+                var syslist_2 = new Array();
+                var syslist_3 = new Array();
+                syslist = res.data.unitName.split(',');
+                $("#floorTotalNo").val(res.data.floorTotalNo);
+                var unitTabArryObj;
+                var unitTabArryObj_2;
+                unitTabArry_2 = createTotalNo(res.data);
+                for (var i = 0; i < syslist.length; i++) {
+
+                    for (var j = 0; j < 1; j++) {
+                        unitTabArryObj_2 = new Object();
+                        // unitTabArryObj_2.name= unitTabArry[j];
+                        unitTabArryObj_2 = unitTabArry_2;
+                        unitTabArry[j].list = unitTabArryObj_2;
+                        unitTabArry[j].parentIndex = j;
+                    }
+
+                    unitTabArryObj = new Object();
+                    unitTabArryObj.name = syslist[i];
+                    unitTabArryObj.list = unitTabArry;
+                    unitTabArryObj.unitNo = i + 1;//单元数
+                    syslist_2[i] = unitTabArryObj;
+
+                }
+                // console.log(syslist_2)
+                var context = {
+                    syslist: syslist,
+                    syslist_2: syslist_2
+                };
+                $("#sysListId").html(sys_template(context));//单元tab切换
+                $("#sysListId_2").html(sys_template_2(context));//单元内容切换 房号tab切换
+                appendRoomHtml(res.data, unitTabArry);
+                form.render(); //更新全部
+            }
+        });
+
+    },
+
+    /**
+     * 提交按钮
+     * @private
+     */
+    _initSubmit: function () {
+        var _this = this;
+        // console.log("buildId_" + buildId_);
+
+        layui.form.on('submit(save)', function () {
+            var currentUnit = $("#unitNumCurrent").val();
+            if(currentUnit == ""){
+                currentUnit = 0;
+            }
+
+
+            //组装保存的房号数据
+            var listRoom = new Array();
+            if (allRooms.length > 0) {
+                for (var j = 1; j < Number($("#unitNum").val()) + 1; j++) {
+                    if(currentUnit >= 0 && (Number(currentUnit)+1) == j){
+                    // console.log(j);
+                    var tb = document.getElementById(j + "_table_id");    //获取table对像
+                    var rows = tb.rows;
+                    for (var i = 0; i < rows.length; i++) {    //--循环所有的行
+                        var cells = rows[i].cells;
+                        for (var k = 2; k < cells.length - 1; k++) {   //--循环所有的列
+                            var obj = new Object();
+                            obj.physicsFloor = cells[0].children[0].value;//物理层
+                            obj.nominalFloor = cells[1].children[0].value;//名义层
+                            obj.roomNo = cells[k].children[0].value;//房号
+                            obj.id = cells[k].children[1].value;//id
+                            obj.buildingId = building.id;//楼栋id
+                            obj.unit = j;
+                            listRoom.push(obj);
+                        }
+                    }
+                    }
+
+                }
+            }else{
+                for (var j = 1; j < Number($("#unitNum").val()) + 1; j++) {
+                    // if(currentUnit >= 0 && (Number(currentUnit)+1) == j){
+                    // console.log(j);
+                    var tb = document.getElementById(j + "_table_id");    //获取table对像
+                    var rows = tb.rows;
+                    for (var i = 0; i < rows.length; i++) {    //--循环所有的行
+                        var cells = rows[i].cells;
+                        for (var k = 2; k < cells.length - 1; k++) {   //--循环所有的列
+                            var obj = new Object();
+                            obj.physicsFloor = cells[0].children[0].value;//物理层
+                            obj.nominalFloor = cells[1].children[0].value;//名义层
+                            obj.roomNo = cells[k].children[0].value;//房号
+                            obj.buildingId = building.id;//楼栋id
+                            obj.unit = j;
+                            listRoom.push(obj);
+                        }
+                    }
+                    // }
+
+                }
+            }
+
+            console.log(listRoom);
+            $.post({
+                url: _this.urlConfig.saveBusRoom,
+                data: JSON.stringify(listRoom),
+                contentType: "application/json",
+                success: function (res) {
+                    roomIndex_obj._initTable();
+                    layer.msg(res.msg);
+                }
+            });
+            return false;
+        });
+    }
+};
+
+//根据房号总数,拼接房号html
+function appendRoomHtml(data, unitTabArry) {
+    //单元数
+    var unitNo = data.unitNo;
+    //数据库字段数组
+    var dataFileds = unitTabArry;
+    //总楼层
+    var floorTotalNo = data.floorTotalNo;
+    //房号数组
+    var roomArray = createTotalNo(data);
+
+    for (var i = 1; i < unitNo + 1; i++) {
+        for (var j = 0; j < 1; j++) {
+            for (var k = 1; k < Number(floorTotalNo)*unitNo + 1; k++) {
+                if(roomArray[k] != undefined){
+                    for (var m = 0; m < roomArray[k].roomNoUnits.length; m++) {
+                        var n = m + 1;
+                        //循环房号标题 只在循环中执行一次
+                        if (m < roomArray[1].roomNoUnits.length && k == 1) {
+                            var nominalFloorTitleId = "#nominalFloor_" + i + "_title_hiden";
+                            if (m + 1 == roomArray[1].roomNoUnits.length) {
+                                $("<th width=\"10%\"><span style=\"cursor: pointer\" onclick='delRoom()'>㊀&nbsp;</span>室号" + n + "&nbsp;<span style=\"cursor: pointer\" onclick='addRoom()'>㊉</span></th>").insertBefore(nominalFloorTitleId);
+                            } else {
+                                $("<th width=\"10%\">室号" + n + "</th>").insertBefore(nominalFloorTitleId);
+                            }
+                        }
+
+                        var roomValue;
+                        if (allRooms.length > 0) {
+                            var nominalFloorId = "#nominalFloor_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo))  + "_cell_hiden";
+                            if(Number(roomArray[k].unit)==i){
+                                roomValue = roomArray[k].roomNoUnits[m];
+                                var idValue = roomArray[k].ids[m];
+                                var listBuildArea = roomArray[k].listBuildArea[m];
+                                var listInnerArea = roomArray[k].listInnerArea[m];
+                                var listRealArea = roomArray[k].listRealArea[m];
+                                var listOrientation = roomArray[k].listOrientation[m];
+                                var listScenery = roomArray[k].listScenery[m];
+                                var listStructure = roomArray[k].listStructure[m];
+                                var listHouseType = roomArray[k].listHouseType[m];
+                                var listInitPrice = roomArray[k].listInitPrice[m];
+                                var listPriceCoe = roomArray[k].listPriceCoe[m];
+                                var listFloor = roomArray[k].listFloor[m];
+                                var listCertificationPurpose = roomArray[k].listCertificationPurpose[m];
+
+                                $("<td style=\"text-align: left\" class=\"data-cell\" id=\"roomNoUnit_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "_cell\">" +
+                                    "<input type=\"text\" style=\"width:65%\" class=\"roomNoUnit\" id=\"roomNoUnit_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "\" value=\"" + roomValue + "\">" +
+                                    "<input type=\"text\" style=\"width:5%;display: none\" id=\"roomId_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "\" value=\"" + idValue + "\">" +
+                                    "<input type=\"text\" class=\"listBuildArea\" id=\"listBuildArea_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "\" value=\"" + listBuildArea + "\">" +
+                                    "<input type=\"text\" class=\"listInnerArea\" id=\"listInnerArea_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "\" value=\"" + listInnerArea + "\">" +
+                                    "<input type=\"text\" class=\"listRealArea\" id=\"listRealArea_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "\" value=\"" + listRealArea + "\">" +
+                                    "<input type=\"text\" class=\"listOrientation\" id=\"listOrientation_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "\" value=\"" + listOrientation + "\">" +
+                                    "<select id=\"condition\" class=\"condition\" style=\"display: none\" name=\"condition\" loadData=\"condition\" defaultValue=\"0\" lay-ignore></select>"+
+                                    "</td>\n").insertBefore(nominalFloorId);
+
+
+
+                                // console.log(nominalFloorId);
+                                // console.log(roomValue);
+                                // console.log("<td style=\"text-align: left\" class=\"data-cell\" id=\"roomNoUnit_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "_cell\"><input type=\"text\" style=\"width:65%\" id=\"roomNoUnit_" + i + "_" + j + "_" + (k - (i-1)*Number(floorTotalNo)) + "_" + n + "\" value=\"" + roomValue + "\"></td>\n")
+                            }
+                        }else {
+                            var nominalFloorId = "#nominalFloor_" + i + "_" + j + "_" + k  + "_cell_hiden";
+                            roomValue = roomArray[k].roomNoUnits[m];
+                            $("<td style=\"text-align: left\" class=\"data-cell\" id=\"roomNoUnit_" + i + "_" + j + "_" + k + "_" + n + "_cell\"><input type=\"text\" style=\"width:25%\" id=\"roomNoUnit_" + i + "_" + j + "_" + k + "_" + n + "\" value=\"" + roomValue + "\"></td>\n").insertBefore(nominalFloorId);
+                        }
+                    }
+                }
+
+            }
+        }
+    }
+    //查询朝向数据字典
+    qryOrientation();
+
+
+
+}
+
+//生成房号
+function createTotalNo(data) {
+    var roomList = new Array();
+    var roomObject;
+    var floorTotalNo = data.floorTotalNo;//总楼层数量
+    var floorOverGroundNo = data.floorOverGroundNo;//地上总楼层
+    var floorUnderGroundNo = data.floorUnderGroundNo;//地下总楼层
+    var roomNoPerFloor = data.roomNoPerFloor;//标准层室号数
+    var roomNo = data.roomNo;//房号总数
+    var unitNo = data.roomNo;//单元数
+    var roomNoUnit;//房号
+    if ($("#unitNum").val() == '') {
+        $("#unitNum").val(unitNo);
+    }
+    if ($("#roomNumId").val() == '') {
+        $("#roomNumId").val(roomNoPerFloor);
+    } else {
+        roomNoPerFloor = Number($("#roomNumId").val());
+    }
+    //数据库中已经存在房号数据 如果存在 对数据进行组装成初始化的数据格式
+    if (allRooms.length > 0) {
+        var resRooms = new Array();
+        for (var i = 0; i < allRooms.length; i++) {
+            var listRooms;
+            var listId;
+            var buildArea;//建筑面积
+            var innerArea;//套内面积
+            var realArea;//实得面积
+            var orientation;//朝向
+            var scenery;//景观
+            var structure;//户型结构
+            var houseType;//户型
+            var initPrice;//初始价格
+            var priceCoe;//价格系数
+            var floor;//所在层
+            var certificationPurpose;//证载用途
+
+            var roomObj;
+            if ((i + 1) <= (allRooms.length)) {
+                if (((i != 0 && allRooms[i].physicsFloor != allRooms[i - 1].physicsFloor) || i == 0)) {
+                    listRooms = new Array();
+                    listId = new Array();
+                    listBuildArea = new Array();
+                    listInnerArea = new Array();
+                    listRealArea = new Array();
+                    listOrientation = new Array();
+                    listScenery = new Array();
+                    listStructure = new Array();
+                    listHouseType = new Array();
+                    listInitPrice = new Array();
+                    listPriceCoe = new Array();
+                    listFloor = new Array();
+                    listCertificationPurpose = new Array();
+                    roomObj = new Object();
+                    if (i == 0) {
+                        resRooms[1] = roomObj;
+                    } else {
+                        resRooms.push(roomObj);
+                    }
+
+                }
+                roomObj.nominalFloor = allRooms[i].nominalFloor;
+                roomObj.physicsFloor = allRooms[i].physicsFloor;
+                roomObj.unit = allRooms[i].unit;
+                roomObj.id =allRooms[i].id;
+                roomObj.buildArea = allRooms[i].buildArea;
+                listRooms.push(allRooms[i].roomNo);
+                listId.push(allRooms[i].id);
+                listBuildArea.push(allRooms[i].buildArea);
+                listInnerArea.push(allRooms[i].innerArea);
+                listRealArea.push(allRooms[i].realArea);
+                listOrientation.push(allRooms[i].orientation);
+                listScenery.push(allRooms[i].scenery);
+                listStructure.push(allRooms[i].structure);
+                listHouseType.push(allRooms[i].houseType);
+                listInitPrice.push(allRooms[i].initPrice);
+                listPriceCoe.push(allRooms[i].priceCoe);
+                listFloor.push(allRooms[i].floor);
+                listCertificationPurpose.push(allRooms[i].certificationPurpose);
+                roomObj.roomNoUnits = listRooms;
+                roomObj.ids = listId;
+                roomObj.listBuildArea = listBuildArea;
+                roomObj.listInnerArea = listInnerArea;
+                roomObj.listRealArea = listRealArea;
+                roomObj.listOrientation = listOrientation;
+                roomObj.listScenery = listScenery;
+                roomObj.listStructure = listStructure;
+                roomObj.listHouseType = listHouseType;
+                roomObj.listInitPrice = listInitPrice;
+                roomObj.listPriceCoe = listPriceCoe;
+                roomObj.listFloor = listFloor;
+                roomObj.listCertificationPurpose = listCertificationPurpose;
+            }
+        }
+        // console.log(resRooms);
+        return resRooms;
+
+    }
+    for (var i = 1; i < floorTotalNo + 1; i++) {
+        roomObject = new Array();
+        roomObject.physicsFloor = i;//物理层
+        if (i <= floorUnderGroundNo) {
+            roomObject.nominalFloor = i - (floorUnderGroundNo + 1);//名义层
+        } else {
+            roomObject.nominalFloor = i - (floorUnderGroundNo);//名义层
+        }
+        //根据室号数循环
+        var listRooms = new Array();
+        for (var j = 1; j < roomNoPerFloor + 1; j++) {
+            var room = new Object();
+            room = roomObject.nominalFloor + '-' + j;//房号
+            listRooms.push(room);
+            roomObject.roomNoPerFloorAsc = j;//房号顺序 从1开始
+        }
+        roomObject.roomNoUnits = listRooms;
+        roomList[i] = roomObject;
+    }
+    // console.log(roomList);
+    return roomList;
+
+
+}
+//查询房号列表信息
+function qryExistRooms() {
+    var params = {buildingId: GetUrlParam("buildId")};
+    $.ajax({
+        url: '/busRoom/busRoomList',
+        type: "get",
+        dataType: "json",
+        timeout: 8000,//等待时间,
+        data: params,
+        async: false,
+        success: function (res) {
+            allRooms = res.data;
+        }
+    });
+}
+
+//查询朝向数据字典
+function qryOrientation() {
+    $.each($("select[loadData]"),function(name,value){
+        var params = {category: '朝向'};
+        var sel = $(value);
+        var defaultValue = sel.attr("defaultValue");//默认值
+        $.ajax({
+            url: '/busRoom/queryDictionary',
+            type: "get",
+            dataType: "json",
+            timeout: 8000,//等待时间,
+            data: params,
+            async: false,
+            success: function (res) {
+                var result = res.data;
+                for (var i=0; i<result.length; i++){
+                    if(defaultValue && defaultValue == result[i].id){
+                        sel.append("<option value="+result[i].id+" selected>"+result[i].item);
+                    }else{
+                        sel.append("<option value="+result[i].id+">"+result[i].item);
+                    }
+                }
+            }
+        });
+    });
+}
+
+//查询字段下的数据
+function qryItem(type,name) {
+    if(name == '房号名称'){
+        $(".roomNoUnit").css('display','block');
+        $(".listBuildArea").css('display','none');
+        $(".listInnerArea").css('display','none');
+        $(".listRealArea").css('display','none');
+        $(".listOrientation").css('display','none');
+        $(".condition").css('display','none');
+    }
+    if(name == '建筑面积'){
+        $(".roomNoUnit").css('display','none');
+        $(".listBuildArea").css('display','block');
+        $(".listInnerArea").css('display','none');
+        $(".listRealArea").css('display','none');
+        $(".listOrientation").css('display','none');
+        $(".condition").css('display','none');
+    }
+    if(name == '套内面积'){
+        $(".roomNoUnit").css('display','none');
+        $(".listBuildArea").css('display','none');
+        $(".listInnerArea").css('display','block');
+        $(".listRealArea").css('display','none');
+        $(".listOrientation").css('display','none');
+        $(".condition").css('display','none');
+    }
+    if(name == '实得面积'){
+        $(".roomNoUnit").css('display','none');
+        $(".listBuildArea").css('display','none');
+        $(".listInnerArea").css('display','none');
+        $(".listRealArea").css('display','block');
+        $(".listOrientation").css('display','none');
+        $(".condition").css('display','none');
+    }
+    if(name == '朝向'){
+        $(".roomNoUnit").css('display','none');
+        $(".listBuildArea").css('display','none');
+        $(".listInnerArea").css('display','none');
+        $(".listRealArea").css('display','none');
+        $(".listOrientation").css('display','none');
+        $(".condition").css('display','block');
+    }
+
+
+
+
+
+    // if (type == 2) {
+    //     $(".cloudTableAuto").find("input").attr("readonly", true);
+    //     $(".cloudTableAuto").find("input").css("background-color", "#e4e4e4");
+    // } else {
+    //     $(".cloudTableAuto").find("input").attr("readonly", false);
+    //     $(".cloudTableAuto").find("input").css("background-color", "#FFF");
+    // }
+}
+
+//添加房号列
+function addRoom() {
+    $("#roomNumId").val(Number($("#roomNumId").val()) + 1);
+    roomIndex_obj._initTable();
+}
+
+//删除房号列
+function delRoom() {
+    $("#roomNumId").val(Number($("#roomNumId").val()) - 1);
+    roomIndex_obj._initTable();
+}
+
+//获取Url参数部分
+function GetUrlPara() {
+    var url = document.location.toString();
+    var arrUrl = url.split("?");
+
+    var para = arrUrl[1];
+    return para;
+}
+
+//paraName 等找参数的名称
+function GetUrlParam(paraName) {
+    var url = document.location.toString();
+    var arrObj = url.split("?");
+    if (arrObj.length > 1) {
+        var arrPara = arrObj[1].split("&");
+        var arr;
+        for (var i = 0; i < arrPara.length; i++) {
+            arr = arrPara[i].split("=");
+            if (arr != null && arr[0] == paraName) {
+                return arr[1];
+            }
+        }
+        return "";
+    } else {
+        return "";
+    }
+}
+
+//设置当前点击的单元数
+function currentUnit(unit){
+    $("#unitNumCurrent").val(unit);
+}
+
+roomIndex_obj.init();

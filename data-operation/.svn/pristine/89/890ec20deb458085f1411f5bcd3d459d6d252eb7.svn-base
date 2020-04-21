@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1" />
+    <link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+    <link href="/resource/css/layui.ext.css" rel="stylesheet">
+    <!-- layui拓展 -->
+    <link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+    <!--数据列表循环-->
+    <script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="addAvgPrice.css" rel="stylesheet">
+    <title>新增均价</title>
+</head>
+<body>
+    <div id="addAvgPrice_wrapper" class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md2"></div>
+            <div class="layui-col-md8">
+                <form class="layui-form" action="">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">楼盘名称：</label>
+                        <div class="layui-input-block">
+                           <input type="text" has="0" name="estateNameInput" id="estateNameInput" placeholder="请检索选择" lay-verify="required" class="layui-input select-search-input" value=""  autocomplete="off">
+                            <select name="communityId" id="communityId" lay-filter="communityId" autocomplete="off" lay-verify="required" class="layui-select" >
+
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">建筑类别：</label>
+                        <div class="layui-input-block">
+                            <select id="buildingType" name="buildingType" lay-filter="buildingType" autocomplete="off" lay-verify="required"></select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">面积段：</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="areaSegment" name="areaSegment" lay-verify="required" name="calDate" class="layui-input">
+                            <span style="color: red" id="areasSection"></span>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">均价日期：</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="calDate" lay-verify="required" name="calDate" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">均价：</label>
+                        <div class="layui-input-block">
+                            <input type="text" id="avgPriceManual" name="avgPriceManual" lay-verify="required" placeholder="请输入均价" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <div class="layui-input-block">
+                            <button class="layui-btn" lay-submit lay-filter="submitAvgPrice">保存</button>
+                            <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="layui-col-md2"></div>
+        <div>
+    </div>
+    <script src="/resource/js/layui/layui.all.js"></script>
+    <!-- layui拓展 -->
+    <script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+    <script src="/resource/js/layui/extend/verify/verify.js"></script>
+    <script src="/resource/js/layui/extend/util/util.js"></script>
+    <script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+    <script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+    <!-- ie 89支持媒体查询 -->
+    <script src="/resource/js/htm5extend/html5.min.js"></script>
+    <script src="/resource/js/htm5extend/respond.min.js"></script>
+
+    <script type="text/javascript">
+        layui.config({
+            base: '/resource/js/layui/extend/' //自定义插件路径
+        }).use('jquery',function(){
+            window.$=layui.$;
+            window.jQuery=layui.$;
+        });
+    </script>
+    <script src="/resource/js/jquery.nicescroll.min.js"></script>
+    <script src="/resource/js/common/common.js"></script>
+    <script type="text/javascript" src="addAvgPrice.js"></script>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+@@include('../base/header.html')
+<link href="index.css" rel="stylesheet">
+<title>仪表盘</title>
+</head>
+<body>
+<div id="dashboardIndex_wrapper" class="layui-container-fluid">
+
+	<div class="layui-row layui-col-space30">
+		<div class="layui-col-md4">
+			<div class="layui-card">
+				<div class="layui-card-header">机构总数</div>
+				<div class="layui-card-body" id="entSum">
+					-
+				</div>
+			</div>
+		</div>
+	</div>	
+			
+</div>   
+@@include('../base/footer.html')
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

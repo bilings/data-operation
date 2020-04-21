@@ -1,0 +1,386 @@
+package com.hifo.dataoperation.entity;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.hifo.dataoperation.entity.mongo.Base.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.bson.types.Decimal128;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.format.annotation.DateTimeFormat;
+
+import java.util.Date;
+
+/**
+ * bus_estate
+ *
+ * @author xmw
+ * @date 2019/05/10 11:40:05
+ */
+@EqualsAndHashCode(callSuper = false)
+@Data
+//@TableName("bus_estate")
+
+@Document(collection = "community")
+public class BusEstate extends BaseEntity {
+
+//    private static final long serialVersionUID = 1L;
+//
+//    @Excel(name = "ID")
+//    private Long id;
+//
+//    @ApiModelProperty(value = "esId", name = "esId")
+//    private String esId;
+//
+//    @ApiModelProperty(value = "guid", name = "guid")
+//    private String guid;
+//
+//    @ApiModelProperty(value = "评估机构id", name = "organizationId")
+//    private Integer organizationId;
+//
+//    @ApiModelProperty(value = "城市id", name = "cityId")
+//    private String cityId;
+//
+//    @Excel(name = "城市(必填)")
+//    @ApiModelProperty(value = "城市", name = "cityName")
+//    private String cityName;
+//
+//    @ApiModelProperty(value = "保留字段，0=住宅，1=商业，2=...", name = "scope")
+//    private String scope;
+//
+//    @ApiModelProperty(value = "行政区id", name = "districtId")
+//    private String districtId;
+//
+//    @Excel(name = "行政区(必填)")
+//    @ApiModelProperty(value = "行政区", name = "districtName")
+//    private String districtName;
+//
+//    @ApiModelProperty(value = "片区id", name = "blockId")
+//    private String blockId;
+//
+//    @Excel(name = "片区板块")
+//    @ApiModelProperty(value = "片区板块，来自字典表", name = "blockName")
+//    private String blockName;
+//
+//    @ApiModelProperty(value = "街道办/乡镇id", name = "townId")
+//    private String townId;
+//
+//    @Excel(name = "街道办/乡镇")
+//    @ApiModelProperty(value = "街道办/乡镇", name = "townName")
+//    private String townName;
+//
+//    @Excel(name = "楼盘名(必填)")
+//    @ApiModelProperty(value = "ES库中的标准名称", name = "name")
+//    private String name;
+//
+//    @ApiModelProperty(value = "标准化楼盘名", name = "stdName")
+//    private String stdName;
+//
+//    @Excel(name = "楼盘别名")
+//    @ApiModelProperty(value = "别名，可以有多个，多个值用英文分号(;)分隔", name = "alias")
+//    private String alias;
+//
+    @Excel(name = "总栋数")
+    @ApiModelProperty(value = "总栋数", name = "totalBuildingNo")
+    private Integer totalBuildingNo;
+
+    @Excel(name = "已建栋数")
+    @ApiModelProperty(value = "已建栋数（数据库已建且可见）", name = "buildingNo")
+    private Integer buildingNo;
+//
+//    @Excel(name = "总户数")
+//    @ApiModelProperty(value = "总户数", name = "totalRoomNo")
+//    private Integer totalRoomNo;
+//
+//    @Excel(name = "已建户数")
+//    @ApiModelProperty(value = "已建户数（数据库已建且楼栋可见）", name = "roomNo")
+//    private Integer roomNo;
+//
+//    @Excel(name = "建筑面积")
+//    @ApiModelProperty(value = "总建筑面积", name = "totalArea")
+//    private Double totalArea;
+//
+//    @Excel(name = "占地面积")
+//    @ApiModelProperty(value = "占地面积", name = "landArea")
+//    private Double landArea;
+//
+//    @Excel(name = "容积率")
+//    @ApiModelProperty(value = "容积率", name = "capacity")
+//    private Double capacity;
+//
+//    @Excel(name = "绿化率")
+//    @ApiModelProperty(value = "绿化率", name = "greenRatio")
+//    private Double greenRatio;
+//
+//    @Excel(name = "停车位数量")
+//    @ApiModelProperty(value = "停车位数量", name = "parkNo")
+//    private Integer parkNo;
+//
+//    @Excel(name = "建成年代（起）")
+//    @ApiModelProperty(value = "建成年代（起）,只需要年份，四位数字", name = "buildYearStart")
+//    private String buildYearStart;
+//
+//    @Excel(name = "建成年代（止）")
+//    @ApiModelProperty(value = "建成年代（止）.只需要年份，四位数字", name = "buildYearEnd")
+//    private String buildYearEnd;
+//
+//    @Excel(name = "详细地址")
+//    @ApiModelProperty(value = "详细地址，可以有多个（散盘），保存为json，标准化地址", name = "addrDetail")
+//    private String addrDetail;
+//
+//    @Excel(name = "参考地址")
+//    @ApiModelProperty(value = "参考地址", name = "addrRef")
+//    private String addrRef;
+//
+//    @ApiModelProperty(value = "开发商原始描述（从ES同步过来）", name = "developerDesc")
+//    private String developerDesc;
+//
+//    @Excel(name = "开发商")
+//    @ApiModelProperty(value = "整理后的开发商，json，包含：城市、全称、字号、是否品牌、品牌词", name = "developerMaintain")
+//    private String developerMaintain;
+//
+//    @Excel(name = "开发商品牌")
+//    @ApiModelProperty(value = "开发商品牌，来自字典表", name = "developerBrand")
+//    private String developerBrand;
+//
+//    @Excel(name = "物管设施")
+//    @ApiModelProperty(value = "物管设施，来自字典表，多选，多个值用英文逗号(,)分隔", name = "equipment")
+//    private String equipment;
+//
+//    @Excel(name = "产权性质", replace = {"商品房_1", "经济适用房_2", "房改房_3", "集资房_4", "自建房_5", "还迁安置房_6", "公租房_7", "其他_8"})
+//    @ApiModelProperty(value = "产权性质，来自字典表", name = "propertyRight")
+//    private String propertyRight;
+//
+//    @Excel(name = "建筑类别")
+//    @ApiModelProperty(value = "建筑类别，来自字典表，多选，多个值用英文逗号(,)分隔", name = "buildingCategory")
+//    private String buildingCategory;
+//
+//    @Excel(name = "住宅品质")
+//    @ApiModelProperty(value = "住宅品质，来自字典表，多选，多个值用英文逗号(,)分隔", name = "quality")
+//    private String quality;
+//
+//    @Excel(name = "主力品质", replace = {"普通住宅（公寓）_10", "高档公寓_11", "花园洋房_12", "联排别墅_13", "叠拼别墅_14", "双拼别墅_15", "独立别墅_16", "类独栋_17", "别墅_18"})
+//    @ApiModelProperty(value = "主力品质，来自字典表", name = "mainQuality")
+//    private String mainQuality;
+//
+//    @Excel(name = "主力面积")
+//    @ApiModelProperty(value = "主力面积", name = "mainArea")
+//    private Double mainArea;
+//
+//    @Excel(name = "主力品质的建筑类别", replace = {"低层_19", "多层_20", "小高层_21", "高层_22", "超高层_23"})
+//    @ApiModelProperty(value = "建筑类别，来自字典表，单选", name = "mainCategory")
+//    private String mainCategory;
+//
+//    @Excel(name = "特殊说明")
+//    @ApiModelProperty(value = "特殊说明，价格差异说明，描述楼盘内少数房产价格差异特别明显的原因", name = "priceDesc")
+//    private String priceDesc;
+//
+//    @ApiModelProperty(value = "楼盘坐标：经度（高德）", name = "lngGd")
+//    private Double lngGd;
+//
+//    @ApiModelProperty(value = "楼盘坐标：纬度（高德）", name = "latGd")
+//    private Double latGd;
+//
+//    @ApiModelProperty(value = "楼盘坐标：经度（百度）", name = "lngBd")
+//    private Double lngBd;
+//
+//    @ApiModelProperty(value = "楼盘坐标：纬度（百度）", name = "latBd")
+//    private Double latBd;
+//
+//    @ApiModelProperty(value = "eastTo", name = "eastTo")
+//    private String eastTo;
+//
+//    @ApiModelProperty(value = "southTo", name = "southTo")
+//    private String southTo;
+//
+//    @ApiModelProperty(value = "westTo", name = "westTo")
+//    private String westTo;
+//
+//    @ApiModelProperty(value = "northTo", name = "northTo")
+//    private String northTo;
+//
+//    @ApiModelProperty(value = "土地取得方式", name = "landMethod")
+//    private String landMethod;
+//
+//    @ApiModelProperty(value = "土地权属性质", name = "landCategory")
+//    private String landCategory;
+//
+//    @ApiModelProperty(value = "施工单位", name = "constructionUnit")
+//    private String constructionUnit;
+//
+//    @ApiModelProperty(value = "设计单位", name = "designUnit")
+//    private String designUnit;
+//
+//    @ApiModelProperty(value = "规划地块号", name = "landNo")
+//    private String landNo;
+//
+//    @ApiModelProperty(value = "宗地形状", name = "landSharp")
+//    private String landSharp;
+//
+//    @ApiModelProperty(value = "宗地地势", name = "landRelief")
+//    private String landRelief;
+//
+//    @ApiModelProperty(value = "楼盘简介", name = "briefIntroduction")
+//    private String briefIntroduction;
+//
+//    @ApiModelProperty(value = "历史销售动态", name = "history")
+//    private String history;
+//
+//    @ApiModelProperty(value = "开发商是否整理完成，0=否，1=是", name = "isDeveloperPerfect")
+//    private String isDeveloperPerfect;
+//
+//    @ApiModelProperty(value = "有无电梯", name = "haveLift")
+//    private Integer haveLift;
+//
+//    @ApiModelProperty(value = "是否可估，0=否，1=是", name = "canEvaluate")
+//    private String canEvaluate;
+//
+//    @ApiModelProperty(value = "是否完善，0=否，1=是", name = "isPerfect")
+//    private String isPerfect;
+//
+//    @ApiModelProperty(value = "可见性：0=前后端都不可见，1=仅后端可见，2=前后端都可见，3=已合并至其它楼盘", name = "visibility")
+//    private String visibility;
+//
+//    @ApiModelProperty(value = "是否虚拟化楼盘，0=否，1=是", name = "isVirtual")
+//    private String isVirtual;
+//
+//    @ApiModelProperty(value = "附件路径", name = "attachment")
+//    private String attachment;
+//
+//    @ApiModelProperty(value = "案例数", name = "caseNo")
+//    private String caseNo;
+//
+//    @ApiModelProperty(value = "是否代建楼盘，0=否，1=是", name = "isAgent")
+//    private Boolean isAgent;
+//
+//    @ApiModelProperty(value = "失败原因", name = "reason")
+//    private String reason;
+//
+//    @ApiModelProperty(value = "创建者id", name = "createId")
+//    private Integer createId;
+//
+//    @ApiModelProperty(value = "创建者", name = "createName")
+//    private String createName;
+//
+//    @ApiModelProperty(value = "最近修改者id", name = "updateId")
+//    private Integer updateId;
+//
+//    @ApiModelProperty(value = "最近修改者", name = "updateName")
+//    private String updateName;
+
+//    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+//    @ApiModelProperty(value = "最近修改时间", name = "updateTime")
+//    private String updateTime;
+
+
+    @ApiModelProperty(value = "城市id", name = "cityId")
+    String cityId;
+
+    //    @Excel(name = "城市(必填)")
+    @ApiModelProperty(value = "城市", name = "cityName")
+    String cityName;
+
+    @ApiModelProperty(value = "建筑结构", name = "buildType")
+    String buildType;
+
+    //    @Excel(name = "总户数")
+    @ApiModelProperty(value = "总户数", name = "totalRoomCount")
+    Integer totalRoomCount;
+
+    @ApiModelProperty(value = "", name = "propertyYears")
+    Integer propertyYears;
+
+    @ApiModelProperty(value = "", name = "propertyYears")
+    Double grossBuildArea;
+
+
+    String buildStructure;
+
+    Boolean open;
+
+
+    @ApiModelProperty(value = "行政区id", name = "districtId")
+    String districtId;
+
+    //    @Excel(name = "行政区(必填)")
+    @ApiModelProperty(value = "行政区", name = "districtName")
+    String districtName;
+
+    Double floorAreaRatio;
+
+    String developerName;
+
+    Double buildingDensity;
+
+    Double greeingRate;
+    /**
+     * 是否特殊楼盘
+     */
+    Boolean isSpecial;
+
+    Boolean isVirtual;
+
+    String buildYear;
+
+    Boolean isDeleted;
+
+    String propertyCompany;
+
+    String address;
+
+    Double propertyFee;
+
+    String communityName;
+
+    String elevatorBrand;
+
+    String communityQuality;
+
+    Object[] otherName;
+
+    Object[] otherAddress;
+
+    String communityBrand;
+
+    String qualityCoefficient;
+
+    String roomStructureType;
+
+    String shape;
+
+    Integer totalBuildingCount;
+
+    String propertyCompanyPhone;
+
+    String specialReason;
+
+    Double[] position;
+
+    Integer totalParkingSpaceCount;
+
+    Double coverageArea;
+
+    Double numberOfParkingSpaces;
+
+    String isWhite;
+
+    String hasElevator;
+
+    String confirm;
+
+    Object[] qualityMainMessage;
+
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @ApiModelProperty(value = "最近修改时间", name = "updateDate")
+    Date updateDate;
+
+    @ApiModelProperty(value = "可见性：0=前后端都不可见，1=仅后端可见，2=前后端都可见，3=已合并至其它楼盘", name = "visibility")
+    private String visibility;
+    //数据来源
+    private String sr;
+
+}

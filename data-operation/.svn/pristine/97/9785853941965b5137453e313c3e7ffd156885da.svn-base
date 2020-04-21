@@ -1,0 +1,91 @@
+package com.hifo.dataoperation.controller;
+
+import com.hifo.dataoperation.base.BasicController;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.entity.mongo.BuiltEstate;
+import com.hifo.dataoperation.intercept.RequiredPermission;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.estate.BuiltService;
+import io.swagger.annotations.*;
+import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+import springfox.documentation.annotations.ApiIgnore;
+
+import java.util.List;
+
+/**
+ * 待建楼盘管理
+ *
+ * @author zzp
+ * @date 2020/3/25 16:20
+ */
+@Api(tags = "待建任务接口")
+@RequestMapping("/built")
+@RestController
+public class BuiltController extends BasicController {
+    @Autowired
+    private BuiltService builtService;
+    /**
+     * 查询楼盘列表
+     *
+     * @param busEstate 查询条件
+     * @return JSON String
+     */
+    @ApiOperation(value = "查询楼盘列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cityId", value = "城市id", paramType = "query", dataType = "String", example = "2"),
+            @ApiImplicitParam(name = "districtId", value = "行政区id", paramType = "query", dataType = "String", example = "3"),
+            @ApiImplicitParam(name = "name", value = "楼盘名称或地址", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "当前页数", paramType = "query", dataType = "int", example = "1", required = true),
+            @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "query", dataType = "int", example = "5", required = true)
+    })
+    @GetMapping("/list")
+    @RequiredPermission("401")
+    public String list(Pagination pages, @ApiIgnore BuiltEstate busEstate) {
+        // 分页数据
+        var page = builtService.findByPage(busEstate, pages);
+        return pageData(page.getTotal(), page.getRecords());
+    }
+    /**
+     * 新增或更新楼盘
+     */
+    @ApiOperation(value = "新增更新楼盘")
+    @PostMapping("/add")
+    @RequiredPermission("100")
+    public ApiResult update(@ApiParam(name = "楼盘信息", value = "json", required = true) @RequestBody List<BusEstate> busEstsates) {
+        return builtService.add(busEstsates);
+    }
+
+    /**
+     * 设置删除
+     *
+     * @param busEstsates id集合，以英文逗号,分隔
+     * @return ApiResult
+     */
+    @ApiOperation(value = "设置删除")
+    @ApiImplicitParam(name = "ids", value = "楼盘编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true)
+    @PostMapping("/delete")
+    @RequiredPermission("100")
+    public ApiResult delete(@RequestBody List<BuiltEstate> busEstsates) {
+        return builtService.delete(busEstsates);
+    }
+    /**
+     * 合并楼盘
+     *
+     * @param fromIds 被合并楼盘的id集合，以英文逗号,分隔
+     * @param toId    合并至楼盘的id
+     * @return ApiResult
+     */
+    @ApiOperation(value = "合并楼盘")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fromIds", value = "被合并楼盘的id集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "toId", value = "合并至楼盘的id", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PostMapping("/merge")
+    @RequiredPermission("100")
+    public ApiResult merge(String[] fromIds, String toId) {
+        return builtService.merge(fromIds, toId);
+    }
+}

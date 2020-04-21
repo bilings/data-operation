@@ -1,0 +1,38 @@
+#estateEdit_wrapper {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    width: 100%;
+}
+
+#estateEdit_wrapper #nameSpan {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#estateEdit_wrapper #addrDetailSpan {
+    color: gray;
+}
+
+#estateEdit_wrapper [name=label-key] {
+    width: 90px;
+    text-align: right;
+}
+
+#estateEdit_wrapper .layui-input-inline {
+    width: 180px;
+}
+
+/*全局设定，输入框的大小*/
+.layui-form-label {
+    padding: 5px 15px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    line-height: 30px;
+}
+
+.layui-form-select dl dd, .layui-form-select dl dt {
+    line-height: 30px;
+}

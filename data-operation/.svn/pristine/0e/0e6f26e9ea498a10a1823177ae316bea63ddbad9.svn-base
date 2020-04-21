@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="index.css" rel="stylesheet">
+    <title>字段属性</title>
+</head>
+<body>
+<div id="fieldIndex_wrapper">
+    <form class="layui-form" action=""  id="fieldId"> </form>
+
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

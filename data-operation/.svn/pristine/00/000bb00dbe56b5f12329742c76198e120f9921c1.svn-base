@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="customerUserEdit.css" rel="stylesheet">
+    <title>编辑用户</title>
+</head>
+<body>
+<div id="customerUserEdit_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*用户账号:</label>
+                <div class="layui-input-inline">
+                    <input type="tel" id="username" autocomplete="off" class="layui-input" name="label-value"
+                           placeholder="请输入用户手机号" lay-verify="required|phone" maxlength="11"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*用户姓名:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" autocomplete="off" class="layui-input" name="label-value"
+                           lay-verify="required"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">所属机构：</label>
+                <div class="layui-input-inline">
+                    <select id="orgSelect" lay-filter="orgSelect" lay-search></select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">客户类型：</label>
+                <div class="layui-input-inline">
+                    <select id="typeSelect" lay-filter="typeSelect" search=""></select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12 js-show-times">
+                <label class="layui-form-label" name="label-key">剩余询价次数:</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="times" autocomplete="off" class="layui-input" name="label-value"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">
+                    <button id="updateBtn" lay-filter="updateBtn" lay-submit="" class="layui-btn layui-btn-normal">保存
+                    </button>
+                </label>
+            </div>
+        </div>
+    </form>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="dict.js"></script>
+<script type="text/javascript" src="customerUserEdit.js"></script>
+</body>
+</html>

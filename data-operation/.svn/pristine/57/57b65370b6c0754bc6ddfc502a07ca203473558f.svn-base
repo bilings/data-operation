@@ -1,0 +1,280 @@
+package com.hifo.dataoperation.service.coe.impl;
+
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DuplicateKeyException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hifo.dataoperation.base.MybatisPlusService;
+import com.hifo.dataoperation.entity.BusAdministrative;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.entity.coe.BusCoeGroup;
+import com.hifo.dataoperation.entity.coe.BusCoeStructure;
+import com.hifo.dataoperation.mapper.coe.BusCoeGroupMapper;
+import com.hifo.dataoperation.mapper.estate.BusEstateMapper;
+import com.hifo.dataoperation.service.base.BasicService;
+import com.hifo.dataoperation.service.coe.BusCoeGroupService;
+import com.hifo.dataoperation.service.coe.BusCoeStructureService;
+import com.hifo.dataoperation.service.coe.enums.CoeGroupHasData;
+import com.hifo.dataoperation.service.coe.enums.CoeGroupType;
+import com.hifo.dataoperation.service.coe.enums.CoeStructureConditionType;
+import com.hifo.dataoperation.service.coe.exception.IllegalCoeItemException;
+import com.hifo.dataoperation.service.coe.exception.InsertCoeGroupException;
+import com.hifo.dataoperation.service.setting.AdministrativeService;
+import com.hifo.dataoperation.vo.CoeGroupParam;
+import com.hifo.dataoperation.vo.CoeStructureParam;
+
+/**
+ * 
+ * @author 杨捷
+ * @Date 2019年4月28日
+ * @Description 通用系数分组服务实现类
+ */
+@Service
+public class BusCoeGroupServiceImpl extends MybatisPlusService<BusCoeGroupMapper, BusCoeGroup>
+		implements BusCoeGroupService {
+
+	@Autowired
+	private BusEstateMapper busEstateMapper;
+	@Autowired
+	private BusCoeStructureService busCoeStructureService;
+	@Autowired
+	private BusCoeGroupMapper busCoeGroupMapper;
+	@Autowired
+	private BasicService basicService;
+	@Autowired
+	private AdministrativeService administrativeService;
+
+	private final String FULLCODE_TAG = ",";
+
+	@Override
+	@Transactional(value = "hifoTransactionManager", rollbackFor = Exception.class)
+	public boolean addCoeGroup(CoeGroupParam param) throws InsertCoeGroupException {
+		if (param != null && param.getCityId() != null) {
+			Integer estateId = param.getEstateId();
+			// 传入的是楼盘id
+			if (estateId != null) {
+				// 楼盘处理逻辑
+				return estateHandle(param);
+			}
+			// 传入的不是楼盘ID
+			else {
+				// 传入的是行政区id
+				if (param.getAdministrativeId() != null) {
+					// 行政区处理逻辑
+					return admistrativeHandle(param);
+				}
+				// 传入的是片区id
+				else if (param.getAreaId() != null) {
+					return areaHandle(param);
+				}
+			}
+		}
+		return false;
+	}
+
+	private CoeStructureParam initCoeStructure(CoeGroupParam param, Long groupId, String fullName) {
+		if (param != null) {
+			CoeStructureParam res = new CoeStructureParam();
+			res.setCoeType(param.getCoeType());
+			res.setConditionType(CoeStructureConditionType.WHOLE_AREA.getCode());
+			res.setGroupId(groupId);
+			res.setName(fullName);
+			return res;
+		}
+		return null;
+	}
+
+	@Override
+	public boolean deleteCoeGroup(Long groupId) {
+
+		return this.removeById(groupId);
+
+	}
+
+	@Override
+	public List<BusCoeGroup> getTreeByCity(Integer coeType, String cityId) { 
+		QueryWrapper<BusCoeGroup> queryWrapper = new QueryWrapper<BusCoeGroup>();
+		queryWrapper.eq("administrativeid", cityId).eq("coeType", coeType).eq("organizationId",
+				basicService.getLoginEmployee().getOrganizationId().longValue());
+		BusCoeGroup root = this.baseMapper.selectOne(queryWrapper);
+		if (root != null) {
+			QueryWrapper<BusCoeGroup> queryListWrapper = new QueryWrapper<BusCoeGroup>();
+			queryListWrapper
+			    .likeRight("fullcode", root.getFullcode())
+				.eq("coeType", coeType);
+			return this.baseMapper.selectList(queryListWrapper);
+		}
+
+		return null;
+	}
+
+	/**
+	 * 计算新建分组的fullcode,需要查询两次数据库
+	 * 
+	 * @param pid
+	 * @return
+	 */
+	private String generalFullCode(Long pid) {
+		String parentFullcode = "";
+		BusCoeGroup group = this.baseMapper.selectById(pid);
+		if (group != null) {
+			parentFullcode = group.getFullcode();
+		}
+		return generalFullCode(pid, parentFullcode);
+	}
+
+	/**
+	 * 计算新建分组的fullcode，需要查询一次数据库
+	 * 
+	 * @param pid
+	 * @return
+	 */
+	private String generalFullCode(Long pid, String parentFullcode) {
+		int count = busCoeGroupMapper.countForFullcode(pid) + 1;
+		String res = parentFullcode + FULLCODE_TAG + count;
+		return res;
+	}
+
+	private boolean insertDbHandle(BusCoeGroup group, String fullName, CoeGroupParam param, boolean needInsertGroup)
+			throws InsertCoeGroupException {
+		boolean saveGroupRes = true;
+		if (needInsertGroup) {
+			try {
+				saveGroupRes = this.save(group);
+			} catch (DuplicateKeyException e) {
+				e.printStackTrace();
+				throw new InsertCoeGroupException("系数组重复，请检查！");
+			}
+		}
+
+//		int insertRes = this.baseMapper.insert(group);
+		CoeStructureParam sParam = this.initCoeStructure(param, group.getId(), fullName);
+		BusCoeStructure addStructureRes = null;
+		try {
+			addStructureRes = busCoeStructureService.addCoeStructure(sParam);
+		} catch (IllegalCoeItemException e) {
+			e.printStackTrace();
+		}
+
+		if (saveGroupRes && addStructureRes != null) {
+			return true;
+		} else {
+			throw new InsertCoeGroupException("保存系数分组失败!");
+		}
+	}
+
+	private boolean areaHandle(CoeGroupParam param) throws InsertCoeGroupException {
+		BusCoeGroup group = new BusCoeGroup();
+		String fullName = param.getCityName() + param.getName();
+		group.setpId(param.getCityId().longValue());
+		group.setCoeType(param.getCoeType());
+		group.setHasdata(CoeGroupHasData.YES.getCode());
+		group.setName(param.getName());
+		group.setFullcode(this.generalFullCode(param.getCityId().longValue()));
+		group.setAdministrativeid(param.getAreaId());
+		group.setType(CoeGroupType.AREA.getCode());
+		group.setOrganizationId(basicService.getLoginEmployee().getOrganizationId().longValue());
+		return insertDbHandle(group, fullName, param, true);
+	}
+
+	private boolean admistrativeHandle(CoeGroupParam param) throws InsertCoeGroupException {
+		BusCoeGroup group = new BusCoeGroup();
+		String fullName = param.getCityName();
+		QueryWrapper<BusCoeGroup> queryWrapper = new QueryWrapper<BusCoeGroup>();
+		queryWrapper.eq("coeType", param.getCoeType()).eq("administrativeid", param.getAdministrativeId());
+		BusCoeGroup oldGroup = this.baseMapper.selectOne(queryWrapper);
+
+		group.setpId(param.getCityId().longValue());
+
+		boolean needInsert = true;
+		// 如果以前有该区域的分组，且无数据，则修改该区域的分组为有数据，且创建对应的第一级结构对象
+		if (oldGroup != null && oldGroup.getHasdata() == CoeGroupHasData.NO.getCode()) {
+			oldGroup.setHasdata(CoeGroupHasData.YES.getCode());
+			if (this.saveOrUpdate(oldGroup)) {
+				needInsert = false;
+			}
+			group.setId(oldGroup.getId());
+		} else {
+			group.setAdministrativeid(param.getAdministrativeId());
+			group.setType(CoeGroupType.DISTRICT.getCode());
+		}
+		fullName += param.getName();
+
+		group.setOrganizationId(basicService.getLoginEmployee().getOrganizationId().longValue());
+		group.setCoeType(param.getCoeType());
+		group.setHasdata(CoeGroupHasData.YES.getCode());
+		group.setName(param.getName());
+		group.setFullcode(this.generalFullCode(param.getCityId().longValue()));
+		return insertDbHandle(group, fullName, param, needInsert);
+	}
+
+	private boolean estateHandle(CoeGroupParam param) throws InsertCoeGroupException {
+		Integer estateId = param.getEstateId();
+		String fullName = param.getCityName();
+		BusCoeGroup group = new BusCoeGroup();
+		group.setEstateid(estateId.longValue());
+		group.setType(CoeGroupType.ESTATE.getCode());
+
+		BusEstate estate = busEstateMapper.selectById(estateId);
+		if (estate != null) {
+			String districtMongoId = estate.getDistrictId();
+			String districtName = estate.getDistrictName();
+			fullName = fullName + districtName + estate.getCommunityName();
+			
+			
+			QueryWrapper<BusAdministrative> queryAdministrativeWrapper = new QueryWrapper<BusAdministrative>();
+			queryAdministrativeWrapper.eq("mongoId", districtMongoId);
+			BusAdministrative administrative = administrativeService.getOne(queryAdministrativeWrapper);
+			
+			QueryWrapper<BusCoeGroup> queryWrapper = new QueryWrapper<BusCoeGroup>();
+			queryWrapper.eq("administrativeid", administrative.getMongoId()).eq("coeType", param.getCoeType());
+			BusCoeGroup district = this.baseMapper.selectOne(queryWrapper);
+			
+			
+			Long parentGroupId = null;
+			String parentFullcode = null;
+			// 如果楼盘的区域没有建立系数分组,则建立一个对应区的分组，此分组下不设置系数结构
+			if (district == null) {
+				BusCoeGroup parentGroup = new BusCoeGroup();
+				long cityId = param.getCityId().longValue();
+				parentGroup.setHasdata(CoeGroupHasData.NO.getCode());
+				parentGroup.setpId(cityId);
+				parentGroup.setName(estate.getDistrictName());
+				parentGroup.setAdministrativeid(administrative.getMongoId());
+				parentGroup.setCoeType(param.getCoeType());
+				parentGroup.setType(CoeGroupType.DISTRICT.getCode());
+				parentFullcode = generalFullCode(cityId);
+				parentGroup.setFullcode(parentFullcode);
+				parentGroup.setOrganizationId(basicService.getLoginEmployee().getOrganizationId().longValue());
+
+				boolean saveRes = this.save(parentGroup);
+				if (saveRes) {
+					parentGroupId = parentGroup.getId();
+				} else {
+					throw new InsertCoeGroupException("保存无数据的区域节点失败!");
+				}
+			} else {
+				parentGroupId = district.getId();
+			}
+			group.setpId(parentGroupId);
+			group.setType(CoeGroupType.ESTATE.getCode());
+			group.setEstateid(estateId.longValue());
+			if (parentFullcode != null) {
+				group.setFullcode(generalFullCode(parentGroupId, parentFullcode));
+			} else {
+				group.setFullcode(generalFullCode(parentGroupId));
+			}
+			group.setCoeType(param.getCoeType());
+			group.setHasdata(CoeGroupHasData.YES.getCode());
+			group.setName(estate.getCommunityName());
+			group.setOrganizationId(basicService.getLoginEmployee().getOrganizationId().longValue());
+			return insertDbHandle(group, fullName, param, true);
+		}
+		return false;
+	}
+
+}

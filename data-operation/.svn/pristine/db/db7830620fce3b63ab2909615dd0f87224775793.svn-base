@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="searchEstate.css" rel="stylesheet">
+    <title>楼栋管理</title>
+</head>
+<body>
+<div id="estateSearch_wrapper">
+    <!--***************************************转移楼栋搜索楼盘************************************************-->
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <div class="layui-input-inline" id="districtDev">
+                        <select id="districtName" lay-search="">
+                            <option value="">行政区</option>
+                            <option value="多层">渝中区</option>
+                            <option value="高层">渝北区</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" id="estateName" class="layui-input" placeholder="楼盘名称" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline" id="btnsearchDiv">
+                    <button id="searchEstateBtn" type="button" class="layui-btn layui-btn-normal">查询</button>
+                    <button id="queryBtn" type="button" class="layui-btn layui-btn-normal">确定</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <table class="layui-table" id="estateTable" lay-filter="estateTable"></table>
+    <!--***************************************************************************************-->
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="searchEstate.js"></script>
+</body>
+</html>

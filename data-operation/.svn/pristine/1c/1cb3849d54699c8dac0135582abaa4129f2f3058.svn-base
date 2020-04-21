@@ -1,0 +1,132 @@
+package com.hifo.dataoperation.vo;
+
+import cn.afterturn.easypoi.excel.annotation.Excel;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.hifo.dataoperation.entity.BusRoom;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * bus_room
+ *
+ * @author jinzhichen
+ * @date 2019/4/16 15;23
+ */
+@EqualsAndHashCode(callSuper = false)
+@Data
+public class BusRoomVO  {
+
+    @ApiModelProperty(value = "房号集合", name = "roomNos")
+    @TableField(exist = false)
+    private String roomNos;
+    @ApiModelProperty(value = "字段名称集合", name = "itemName")
+    @TableField(exist = false)
+    private String itemName;
+    @ApiModelProperty(value = "标准层室号数集合", name = "roomNoPerFloor")
+    @TableField(exist = false)
+    private Integer roomNoPerFloor;
+    @ApiModelProperty(value = "建筑面积集合", name = "buildAreas")
+    @TableField(exist = false)
+    private String buildAreas;
+    @ApiModelProperty(value = "套内面积集合", name = "innerAreas")
+    @TableField(exist = false)
+    private String innerAreas;
+    @ApiModelProperty(value = "预测面积集合", name = "forecastAreas")
+    @TableField(exist = false)
+    private String forecastAreas;
+    @ApiModelProperty(value = "实得面积集合", name = "realAreas")
+    @TableField(exist = false)
+    private String realAreas;
+    @ApiModelProperty(value = "朝向集合", name = "orientations")
+    @TableField(exist = false)
+    private String orientations;
+    @ApiModelProperty(value = "景观集合", name = "scenerys")
+    @TableField(exist = false)
+    private String scenerys;
+    @ApiModelProperty(value = "户型结构集合", name = "structures")
+    @TableField(exist = false)
+    private String structures;
+    @ApiModelProperty(value = "户型集合", name = "houseTypes")
+    @TableField(exist = false)
+    private String houseTypes;
+    @ApiModelProperty(value = "初始价格集合", name = "initPrices")
+    @TableField(exist = false)
+    private String initPrices;
+    @ApiModelProperty(value = "价格系数集合", name = "priceCoes")
+    @TableField(exist = false)
+    private String priceCoes;
+    @ApiModelProperty(value = "证载用途集合", name = "certificationPurposes")
+    @TableField(exist = false)
+    private String certificationPurposes;
+    @ApiModelProperty(value = "旧总楼层", name = "floorTotalNoOld")
+    @TableField(exist = false)
+    private Integer floorTotalNoOld;
+    @ApiModelProperty(value = "新总楼层", name = "floorTotalNoNew")
+    @TableField(exist = false)
+    private Integer floorTotalNoNew;
+    @ApiModelProperty(value = "旧标准层室号数", name = "roomNoPerFloorOld")
+    @TableField(exist = false)
+    private Integer roomNoPerFloorOld;
+    @ApiModelProperty(value = "新标准层室号数", name = "roomNoPerFloorNew")
+    @TableField(exist = false)
+    private Integer roomNoPerFloorNew;
+    @ApiModelProperty(value = "旧地上总楼层", name = "floorOverGroundNoOld")
+    @TableField(exist = false)
+    private Integer floorOverGroundNoOld;
+    @ApiModelProperty(value = "新地上总楼层", name = "floorOverGroundNoNew")
+    @TableField(exist = false)
+    private Integer floorOverGroundNoNew;
+    @ApiModelProperty(value = "旧地下总楼层", name = "floorUnderGroundNoOld")
+    @TableField(exist = false)
+    private Integer floorUnderGroundNoOld;
+    @ApiModelProperty(value = "新地下总楼层", name = "floorUnderGroundNoNew")
+    @TableField(exist = false)
+    private Integer floorUnderGroundNoNew;
+    @ApiModelProperty(value = "旧房号总数", name = "roomNoOld")
+    @TableField(exist = false)
+    private Integer roomNoOld;
+    @ApiModelProperty(value = "新房号总数", name = "roomNoNew")
+    @TableField(exist = false)
+    private Integer roomNoNew;
+    @ApiModelProperty(value = "旧单元数", name = "unitNoOld")
+    @TableField(exist = false)
+    private Integer unitNoOld;
+    @ApiModelProperty(value = "新单元数", name = "unitNoNew")
+    @TableField(exist = false)
+    private Integer unitNoNew;
+    @ApiModelProperty(value = "单元集合", name = "units")
+    @TableField(exist = false)
+    private String units;
+
+
+    @ApiModelProperty(value = "旧单元", name = "unitOld")
+    @TableField(exist = false)
+    private String unitOld;
+    @ApiModelProperty(value = "新单元", name = "unitNew")
+    @TableField(exist = false)
+    private String unitNew;
+
+    @Excel(name = "行政区名称")
+    @ApiModelProperty(value = "行政区名称", name = "districtName")
+    @TableField(exist = false)
+    private String districtName;
+    @Excel(name = "楼盘名称")
+    @ApiModelProperty(value = "楼盘名称", name = "estateName")
+    @TableField(exist = false)
+    private String estateName;
+    @Excel(name = "楼栋名称")
+    @ApiModelProperty(value = "楼栋名称", name = "buildingName")
+    @TableField(exist = false)
+    private String buildingName;
+    @ApiModelProperty(value = "要删除的房号id集合", name = "ids")
+    @TableField(exist = false)
+    private String ids;
+    @ApiModelProperty(value = "楼盘id", name = "estateId")
+    @TableField(exist = false)
+    private Long estateId;
+
+
+
+}

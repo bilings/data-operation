@@ -1,0 +1,22 @@
+package com.hifo.dataoperation.entity;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.hifo.dataoperation.base.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+/**
+ * 字典
+ *
+ * @author whc
+ * @date 2019/4/1
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("hf_dictionary")
+public class HfDictionary extends Entity {
+
+    private Integer categoryId;
+
+    private String item;
+}

@@ -1,0 +1,1390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="df11a28f-aa26-4cf4-b573-2b37cccbbd8f" name="Default Changelist" comment="楼盘列表查询">
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/BusBuildingDao.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/wxh5" afterDir="true" />
+      <change afterPath="$PROJECT_DIR$/target" afterDir="true" />
+      <change beforePath="$PROJECT_DIR$/.idea/compiler.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/compiler.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/encodings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/encodings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/modules.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/modules.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/AdministrativeController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/AdministrativeController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/BuildingController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/BuildingController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/MongodbBasicDao.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/MongodbBasicDao.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/FillBuilding.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/FillBuilding.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/BusBuildingService.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/BusBuildingService.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/wxh5/impl/WxH5ClientServiceImpl.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/wxh5/impl/WxH5ClientServiceImpl.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/application-test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/base/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/base/footer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/building/edit.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/building/edit.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/building/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/building/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/estate/edit.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/estate/edit.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/estate/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/estate/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/estate/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/estate/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/estate/merge.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/estate/merge.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/estate/merge.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/estate/merge.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/home/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/home/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/static/views/home/menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/static/views/home/menus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/dist/views/building/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/dist/views/building/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/dist/views/home/menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/dist/views/home/menus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/sparkles/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/sparkles/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/CHANGELOG.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/CHANGELOG.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/apply-extends.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/apply-extends.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/argsert.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/argsert.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/command.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/command.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/completion.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/completion.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/levenshtein.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/levenshtein.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/obj-filter.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/obj-filter.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/usage.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/usage.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/validation.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/validation.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/yerror.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/lib/yerror.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/be.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/be.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/de.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/de.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/en.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/en.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/es.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/es.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/fr.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/fr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/hi.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/hi.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/hu.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/hu.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/id.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/id.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/it.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/it.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/ja.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/ja.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/ko.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/ko.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/nb.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/nb.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/nl.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/nl.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pirate.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pirate.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pl.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pl.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pt.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pt.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pt_BR.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/pt_BR.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/ru.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/ru.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/th.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/th.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/tr.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/tr.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/zh_CN.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/zh_CN.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/zh_TW.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/locales/zh_TW.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/package.json" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/package.json" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/yargs.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/node_modules/yargs/yargs.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/src/views/building/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/src/views/building/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/resources/web/src/views/home/menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/resources/web/src/views/home/menus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application-dev.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-dev.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application-test.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application-test.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/application.yml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/application.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/DataOperationApplication.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/DataOperationApplication.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/BasicController$FileValue.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/BasicController$FileValue.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/BasicController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/BasicController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/Entity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/Entity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/MyExceptionAdvice.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/MyExceptionAdvice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/MybatisPlusService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/base/MybatisPlusService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/config/CommonThreadPool.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/config/CommonThreadPool.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/config/HifoDataSourceConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/config/HifoDataSourceConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/config/WebMvcConfig.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/config/WebMvcConfig.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/AdministrativeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/AdministrativeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/ApiResult.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/ApiResult.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/AvgPriceController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/AvgPriceController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BuildingController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BuildingController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusEstateAgentController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusEstateAgentController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusEstateController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusEstateController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusOrganizationCoetypeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusOrganizationCoetypeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusRoomController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusRoomController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusSettingController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/BusSettingController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/CoeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/CoeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/CustomerOrgController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/CustomerOrgController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/CustomerUserController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/CustomerUserController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/EmployeeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/EmployeeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/ExtOrganizationController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/ExtOrganizationController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/FieldController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/FieldController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/HomeController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/HomeController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/LoginController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/LoginController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/SettingController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/SettingController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/UploadController.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/controller/UploadController.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/dao/MongodbBasicDao.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/dao/MongodbBasicDao.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/dto/AddrDetailDTO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/dto/AddrDetailDTO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/AvgPriceVo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/AvgPriceVo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusAdministrative.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusAdministrative.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusBuilding.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusBuilding.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstateAgent.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstateAgent.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstateAvgPrice.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstateAvgPrice.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstateAvgPriceWxVo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusEstateAvgPriceWxVo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusMergeRel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusMergeRel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusOrganizationCity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusOrganizationCity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusRoom.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusRoom.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusSetting.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusSetting.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusUploadLog.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusUploadLog.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusVirtualRel.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/BusVirtualRel.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/CategoryDictionary.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/CategoryDictionary.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/CustomerOrg.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/CustomerOrg.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/CustomerUser.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/CustomerUser.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/ExtAskPriceLogVo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/ExtAskPriceLogVo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/ExtEmployee.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/ExtEmployee.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/ExtOrganization.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/ExtOrganization.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/FillBuilding.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/FillBuilding.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/HfDictionary.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/HfDictionary.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/HfOperationLog.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/HfOperationLog.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/HfSequence.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/HfSequence.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/Module.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/Module.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BaseBusCommonCoe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BaseBusCommonCoe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCoeGroup.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCoeGroup.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCoeItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCoeItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCoeStructure.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCoeStructure.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeArea.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeArea.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeFloor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeFloor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeOrientation.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeOrientation.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeScenery.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeScenery.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeStructure.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusCommonCoeStructure.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusOrganizationCoetype.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/BusOrganizationCoetype.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/CoeStructureWithItem.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/coe/CoeStructureWithItem.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/mongo/Base/BaseEntity.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/mongo/Base/BaseEntity.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/mongo/BusEstate.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/entity/mongo/BusEstate.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/intercept/PermissionInterceptor.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/intercept/PermissionInterceptor.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/base/Field.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/base/Field.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/base/Sequence.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/base/Sequence.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/base/Table.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/base/Table.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/basic/BasicMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/basic/BasicMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCoeGroupMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCoeGroupMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCoeItemMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCoeItemMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCoeStructureMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCoeStructureMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeAreaMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeAreaMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeFloorMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeFloorMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeOrientationMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeOrientationMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeSceneryMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeSceneryMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeStructureMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/coe/BusCommonCoeStructureMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/crm/ExtEmployeeMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/crm/ExtEmployeeMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/AvgPriceMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/AvgPriceMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusBuildingMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusBuildingMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusEstateAgentMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusEstateAgentMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusEstateMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusEstateMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusRoomMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/estate/BusRoomMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/BusAdministrativeMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/BusAdministrativeMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/BusSettingMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/BusSettingMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/CustomerUserMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/CustomerUserMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/ExtOrganizationMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/ExtOrganizationMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/HfDictionaryMapper.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/mapper/setting/HfDictionaryMapper.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/pagination/Pagination.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/pagination/Pagination.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/base/BasicService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/base/BasicService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/base/impl/BasicServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/base/impl/BasicServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusCoeGroupService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusCoeGroupService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusCoeItemService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusCoeItemService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusCoeStructureService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusCoeStructureService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusOrganizationCoetypeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/BusOrganizationCoetypeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/CoeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/CoeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/CountCoeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/CountCoeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/FloorCoeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/FloorCoeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeGroupHasData.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeGroupHasData.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeGroupType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeGroupType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeStructureConditionType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeStructureConditionType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeStructureType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeStructureType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeType.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/enums/CoeType.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/exception/IllegalCoeItemException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/exception/IllegalCoeItemException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/exception/InsertCoeGroupException.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/exception/InsertCoeGroupException.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/AreaCoeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/AreaCoeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BaseCoeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BaseCoeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeGroupServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeGroupServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeItemServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeItemServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeStructureServiceImpl$ItemEntry.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeStructureServiceImpl$ItemEntry.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeStructureServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusCoeStructureServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusOrganizationCoetypeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/BusOrganizationCoetypeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/CountCoeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/CountCoeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/FloorCoeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/FloorCoeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/OrientationCoeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/OrientationCoeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/SceneryCoeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/SceneryCoeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/StructureCoeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/coe/impl/StructureCoeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/crm/EmployeeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/crm/EmployeeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/crm/impl/EmployeeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/crm/impl/EmployeeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusAvgPriceService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusAvgPriceService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusBuildingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusBuildingService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusEstateAgentService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusEstateAgentService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusEstateService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusEstateService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusMergeRelService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusMergeRelService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusRoomService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusRoomService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusVirtualRelService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/BusVirtualRelService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusAvgPriceServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusAvgPriceServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusBuildingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusBuildingServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusEstateAgentServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusEstateAgentServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusEstateServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusEstateServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusMergeRelServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusMergeRelServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusRoomServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusRoomServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusVirtualRelServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/estate/impl/BusVirtualRelServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/AdministrativeService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/AdministrativeService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/BusOrganizationCityService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/BusOrganizationCityService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/BusSettingService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/BusSettingService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/CustomerOrgService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/CustomerOrgService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/CustomerUserService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/CustomerUserService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/DictionaryService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/DictionaryService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/ExtOrganizationService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/ExtOrganizationService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/FieldService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/FieldService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/AdministrativeServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/AdministrativeServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/BusOrganizationCityServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/BusOrganizationCityServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/BusSettingServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/BusSettingServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/CustomerOrgServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/CustomerOrgServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/CustomerUserServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/CustomerUserServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/DictionaryServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/DictionaryServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/ExtOrganizationServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/ExtOrganizationServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/FieldServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/setting/impl/FieldServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/upload/UploadService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/upload/UploadService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/upload/impl/UploadServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/upload/impl/UploadServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/wxh5/WxH5ClientService.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/wxh5/WxH5ClientService.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/wxh5/impl/WxH5ClientServiceImpl.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/service/wxh5/impl/WxH5ClientServiceImpl.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$2.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$2.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$3.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$3.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$4.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$4.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$5.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$5.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$6.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$6.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$7.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$7.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$8.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$8.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$9.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant$9.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Constant.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/DateTimeUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/DateTimeUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/DateUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/DateUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/EntityUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/EntityUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/ExcelUtil$1.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/ExcelUtil$1.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/ExcelUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/ExcelUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/HkbUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/HkbUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/HttpClientUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/HttpClientUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/IpUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/IpUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/JSONUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/JSONUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Md5Util.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/Md5Util.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/RecommendMerge.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/RecommendMerge.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/ReflexUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/ReflexUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/RequestUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/RequestUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/StringFormatUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/StringFormatUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/StringUtil.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/StringUtil.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/TreeUtils.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/util/TreeUtils.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/AddrDetailVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/AddrDetailVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/AdministrativeListResponseVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/AdministrativeListResponseVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/AreaCoeDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/AreaCoeDetail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BaseCoe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BaseCoe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BaseTreeVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BaseTreeVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusBuildingFailVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusBuildingFailVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusBuildingVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusBuildingVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAgentVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAgentVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAvgPriceExtend.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAvgPriceExtend.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAvgPriceFailVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAvgPriceFailVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAvgPriceVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateAvgPriceVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateFailVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusEstateFailVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusRoomFailVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusRoomFailVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusRoomVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusRoomVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusSettingVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/BusSettingVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeGroupParam.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeGroupParam.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeGroupTree.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeGroupTree.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeStructureParam.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeStructureParam.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeStructureRes.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/CoeStructureRes.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/DictVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/DictVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/ExtOrganizationVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/ExtOrganizationVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/FloorCoe.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/FloorCoe.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/FloorCoeDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/FloorCoeDetail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/FloorCoeGroupByTotalNo.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/FloorCoeGroupByTotalNo.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/HfDictionaryVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/HfDictionaryVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/OrientationCoeDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/OrientationCoeDetail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/PlUploadVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/PlUploadVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/SceneryCoeDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/SceneryCoeDetail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/StructureCoeDetail.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/StructureCoeDetail.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/TreeVO.class" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/com/hifo/dataoperation/vo/TreeVO.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/logback.xml" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/logback.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/views/base/footer.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/views/base/footer.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/views/building/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/views/building/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/views/estate/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/views/estate/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/views/estate/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/views/estate/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/static/views/home/menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/static/views/home/menus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/web/dist/views/building/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/web/dist/views/building/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/web/dist/views/home/menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/web/dist/views/home/menus.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/web/src/views/building/index.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/web/src/views/building/index.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/target/classes/web/src/views/home/menus.js" beforeDir="false" afterPath="$PROJECT_DIR$/target/classes/web/src/views/home/menus.js" afterDir="false" />
+    </list>
+    <ignored path="$PROJECT_DIR$/target/" />
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CompilerWorkspaceConfiguration">
+    <option name="MAKE_PROJECT_ON_SAVE" value="true" />
+  </component>
+  <component name="DefaultGradleProjectSettings">
+    <option name="testRunner" value="GRADLE" />
+    <option name="delegatedBuild" value="true" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/building/edit.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="39">
+              <caret line="198" column="6" selection-start-line="198" selection-start-column="6" selection-end-line="198" selection-end-column="6" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="HTML File" />
+        <option value="package-info" />
+        <option value="Class" />
+        <option value="JUnit4 Test Class" />
+      </list>
+    </option>
+  </component>
+  <component name="FindInProjectRecents">
+    <findStrings>
+      <find>isS</find>
+      <find>currentCityMongoId</find>
+      <find>homeIndex_obj</find>
+      <find>clearBtn</find>
+      <find>logo</find>
+      <find>hideBtn</find>
+      <find>position</find>
+      <find>tableBar</find>
+      <find>_gotoDetail</find>
+      <find>Date</find>
+      <find>_visibility</find>
+      <find>communityn</find>
+      <find>addBtn</find>
+      <find>buildYearStart</find>
+      <find>visibility</find>
+      <find>isv</find>
+      <find>isVirtual</find>
+      <find>isvirtual</find>
+      <find>virtual</find>
+      <find>detail</find>
+      <find>findby</find>
+      <find>_virtual</find>
+      <find>layui-laypage-btn</find>
+      <find>estateTable</find>
+      <find>districtSelect</find>
+      <find>keyword</find>
+      <find>open</find>
+      <find>communityna</find>
+      <find>buildingList</find>
+      <find>_addTab</find>
+    </findStrings>
+    <replaceStrings>
+      <replace>whc</replace>
+      <replace>com.hifo.dataoperation</replace>
+      <replace>Boolean</replace>
+    </replaceStrings>
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/mongo/BasePageQuery.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/web/src/views/home/login.html" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/mongo/BusEstateService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/mongo/impl/BusEstateServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/pagination/MongoDBUtils.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/BusEstateAgentController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/pagination/PageResult.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/pagination/MongodbUtils.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/hifo/dataoperation/service/estate/impl/BusEstateServiceImplTest.java" />
+        <option value="$PROJECT_DIR$/src/test/java/com/hifo/dataoperation/service/estate/impl/BusEstateServiceTest.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/BusEstateRepository.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/BusEstateDa0.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/DataOperationApplication.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/MongoDbDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/BusEstateController.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/mongo/BusEstate.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/impl/BusMergeRelServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/impl/BusRoomServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/impl/BusAvgPriceServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/coe/impl/CountCoeServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/coe/impl/BusCoeGroupServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/BusEstateDao.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/BusEstateService.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/intercept/PermissionInterceptor.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/config/WebMvcConfig.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/pagination/Pagination.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/web/src/views/estate/index.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/web/src/views/estate/index.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/base/footer.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/home/index.html" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/mongo/Base/BaseEntity.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/application-dev.yml" />
+        <option value="$PROJECT_DIR$/src/main/resources/application-test.yml" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/estate/edit.js" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/MongodbBasicDao.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/application.yml" />
+        <option value="$PROJECT_DIR$/src/main/resources/logback.xml" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/estate/index.html" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/impl/BusEstateServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/BusEstate.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/estate/merge.html" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/estate/index.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/estate/merge.js" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/impl/BusBuildingServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/wxh5/impl/WxH5ClientServiceImpl.java" />
+        <option value="$PROJECT_DIR$/src/main/resources/web/src/views/building/index.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/web/src/views/home/menus.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/home/menus.js" />
+        <option value="$PROJECT_DIR$/src/main/resources/static/views/building/edit.html" />
+      </list>
+    </option>
+  </component>
+  <component name="MavenImportPreferences">
+    <option name="importingSettings">
+      <MavenImportingSettings>
+        <option name="importAutomatically" value="true" />
+      </MavenImportingSettings>
+    </option>
+  </component>
+  <component name="MavenProjectNavigator">
+    <treeState>
+      <expand>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="data-operation" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+        </path>
+        <path>
+          <item name="" type="16c1761:MavenProjectsStructure$RootNode" />
+          <item name="data-operation" type="9519ce18:MavenProjectsStructure$ProjectNode" />
+          <item name="Lifecycle" type="58874e2:MavenProjectsStructure$LifecycleNode" />
+        </path>
+      </expand>
+      <select />
+    </treeState>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="1400" />
+    <option name="height" value="1000" />
+  </component>
+  <component name="ProjectView">
+    <navigator proportions="" version="1">
+      <autoscrollFromSource ProjectPane="false" />
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="ProjectPane">
+        <subPane>
+          <expand>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="com" type="462c0819:PsiDirectoryNode" />
+              <item name="hifo" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="building" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="data-operation" type="b2602c69:ProjectViewProjectNode" />
+              <item name="BigDataOperationSystem" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="main" type="462c0819:PsiDirectoryNode" />
+              <item name="resources" type="462c0819:PsiDirectoryNode" />
+              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="views" type="462c0819:PsiDirectoryNode" />
+              <item name="home" type="462c0819:PsiDirectoryNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+      </pane>
+      <pane id="PackagesPane" />
+      <pane id="Scope" />
+      <pane id="AndroidView" />
+      <pane id="Scratches" />
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="DefaultHtmlFileTemplate" value="HTML File" />
+    <property name="RequestMappingsPanelOrder0" value="0" />
+    <property name="RequestMappingsPanelOrder1" value="1" />
+    <property name="RequestMappingsPanelOrder2" value="2" />
+    <property name="RequestMappingsPanelWidth0" value="75" />
+    <property name="RequestMappingsPanelWidth1" value="75" />
+    <property name="RequestMappingsPanelWidth2" value="75" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="aspect.path.notification.shown" value="true" />
+    <property name="com.intellij.testIntegration.createTest.CreateTestDialog.defaultLibrary" value="JUnit4" />
+    <property name="last_opened_file_path" value="E:/hifo/财税平台/3.编码设计阶段/1.源码/trunk/financetax" />
+    <property name="nodejs_interpreter_path" value="C:/Program Files/nodejs/node" />
+    <property name="project.structure.last.edited" value="Modules" />
+    <property name="project.structure.proportion" value="0.15" />
+    <property name="project.structure.side.proportion" value="0.2" />
+    <property name="restartRequiresConfirmation" value="false" />
+    <property name="settings.editor.selected.configurable" value="editor.preferences.import" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CreateTestDialog.RecentsKey">
+      <recent name="com.hifo.dataoperation.service.estate.impl" />
+    </key>
+    <key name="MoveClassesOrPackagesDialog.RECENTS_KEY">
+      <recent name="com.hifo" />
+    </key>
+    <key name="CreateTestDialog.Recents.Supers">
+      <recent name="" />
+    </key>
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="com.hifo.dataoperation.service.mongo.impl" />
+      <recent name="com.hifo.dataoperation.service.mongo" />
+      <recent name="com.hifo.admin" />
+      <recent name="com.hifo.admin.config" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\dataoperationsys\data-operation\src\main\java\com\hifo\dataoperation\dao" />
+      <recent name="E:\dataoperationsys\data-operation\src\main\resources\static" />
+      <recent name="E:\数据维护系统\data-operation\src\main\resources" />
+      <recent name="E:\数据维护系统\data-operation\src\main\java" />
+    </key>
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager" selected="Spring Boot.DataOperationApplication">
+    <configuration default="true" type="Applet">
+      <option name="POLICY_FILE" value="$APPLICATION_HOME_DIR$/bin/appletviewer.policy" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="Application" factoryName="Application">
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="run" type="BatchConfigurationType" factoryName="Batch" temporary="true">
+      <module name="data-operation" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="WORKING_DIRECTORY" value="E:\dataoperationsys\data-operation\src\main\resources\web" />
+      <option name="PARENT_ENVS" value="true" />
+      <option name="SCRIPT_NAME" value="run.bat" />
+      <option name="PARAMETERS" value="" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="BusEstateServiceTest.findByPage" type="JUnit" factoryName="JUnit" temporary="true" nameIsGenerated="true">
+      <module name="data-operation" />
+      <extension name="coverage">
+        <pattern>
+          <option name="PATTERN" value="com.hifo.dataoperation.service.estate.impl.*" />
+          <option name="ENABLED" value="true" />
+        </pattern>
+      </extension>
+      <option name="PACKAGE_NAME" value="com.hifo.dataoperation.service.estate.impl" />
+      <option name="MAIN_CLASS_NAME" value="com.hifo.dataoperation.service.estate.impl.BusEstateServiceTest" />
+      <option name="METHOD_NAME" value="findByPage" />
+      <option name="TEST_OBJECT" value="method" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="JUnit" factoryName="JUnit">
+      <option name="TEST_OBJECT" value="class" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="DataOperationApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+      <module name="data-operation" />
+      <option name="SPRING_BOOT_MAIN_CLASS" value="com.hifo.dataoperation.DataOperationApplication" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="TestNG">
+      <option name="TEST_OBJECT" value="CLASS" />
+      <option name="WORKING_DIRECTORY" value="$MODULE_DIR$" />
+      <properties />
+      <listeners />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="#org.jetbrains.idea.devkit.run.PluginConfigurationType">
+      <module name="" />
+      <option name="VM_PARAMETERS" value="-Xmx512m -Xms256m -XX:MaxPermSize=250m -ea" />
+      <option name="PROGRAM_PARAMETERS" />
+      <predefined_log_file enabled="true" id="idea.log" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <list>
+      <item itemvalue="Batch.run" />
+      <item itemvalue="JUnit.BusEstateServiceTest.findByPage" />
+      <item itemvalue="Spring Boot.DataOperationApplication" />
+    </list>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Batch.run" />
+        <item itemvalue="JUnit.BusEstateServiceTest.findByPage" />
+      </list>
+    </recent_temporary>
+  </component>
+  <component name="SvnConfiguration" cleanupOnStartRun="true">
+    <configuration>C:\Users\Administrator\AppData\Roaming\Subversion</configuration>
+    <supportedVersion>125</supportedVersion>
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="256481bc-fcd5-47c5-85ac-4de351832922" name="Default" comment="" />
+      <created>1584425413228</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1584425413228</updated>
+      <workItem from="1584425416635" duration="4000" />
+      <workItem from="1584425438022" duration="2331000" />
+      <workItem from="1584495650729" duration="4146000" />
+      <workItem from="1584511848446" duration="1218000" />
+      <workItem from="1584581601843" duration="1757000" />
+      <workItem from="1584584113868" duration="5205000" />
+      <workItem from="1584589404150" duration="102000" />
+      <workItem from="1584589527405" duration="321000" />
+      <workItem from="1584589869728" duration="11295000" />
+      <workItem from="1584667214774" duration="30429000" />
+      <workItem from="1584926645983" duration="23074000" />
+      <workItem from="1584962568869" duration="400000" />
+      <workItem from="1584962990484" duration="2703000" />
+      <workItem from="1585014343459" duration="25084000" />
+    </task>
+    <task id="LOCAL-00001">
+      <created>1584581676538</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1584581676539</updated>
+    </task>
+    <task id="LOCAL-00002">
+      <created>1584587695680</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1584587695680</updated>
+    </task>
+    <task id="LOCAL-00003">
+      <created>1584596566982</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1584596566982</updated>
+    </task>
+    <task id="LOCAL-00004">
+      <created>1584597792071</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1584597792071</updated>
+    </task>
+    <task id="LOCAL-00005">
+      <created>1584599509133</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1584599509133</updated>
+    </task>
+    <task id="LOCAL-00006" summary="楼盘">
+      <created>1584952570057</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1584952570057</updated>
+    </task>
+    <task id="LOCAL-00007" summary="楼盘">
+      <created>1584952859932</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1584952859932</updated>
+    </task>
+    <task id="LOCAL-00008" summary="楼盘列表查询">
+      <created>1585042325445</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1585042325445</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
+    <servers />
+  </component>
+  <component name="TestHistory">
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 11h 45m 23s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 11h 48m 38s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 12h 25m 51s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 12h 26m 45s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 12h 28m 08s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 12h 30m 21s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 13h 08m 40s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 13h 11m 15s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 13h 12m 10s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+    <history-entry file="BusEstateServiceTest_findByPage - 2020.03.20 at 13h 13m 35s.xml">
+      <configuration name="BusEstateServiceTest.findByPage" configurationId="JUnit" />
+    </history-entry>
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="110491000" />
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info active="true" content_ui="combo" id="Project" order="0" visible="true" weight="0.25" />
+      <window_info id="Structure" order="1" weight="0.25" />
+      <window_info id="Capture Tool" order="2" />
+      <window_info id="UI Designer" order="3" />
+      <window_info id="Image Layers" order="4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info id="Designer" order="6" />
+      <window_info anchor="bottom" id="Java Enterprise" />
+      <window_info anchor="bottom" id="Problems" order="0" weight="0.32996634" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" weight="0.32884398" />
+      <window_info anchor="bottom" id="Run" order="3" visible="true" weight="0.45666668" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.5263749" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="Version Control" order="8" weight="0.6453423" />
+      <window_info anchor="bottom" id="MyBatis Sql Log" order="9" />
+      <window_info anchor="bottom" id="Terminal" order="10" weight="0.47444445" />
+      <window_info anchor="bottom" id="Run with VisualVM" order="11" />
+      <window_info anchor="bottom" id="Debug with VisualVM" order="12" />
+      <window_info anchor="bottom" id="Event Log" order="13" side_tool="true" />
+      <window_info anchor="bottom" id="Messages" order="14" />
+      <window_info anchor="bottom" id="Spring" order="15" />
+      <window_info anchor="right" id="Commander" order="0" weight="0.4" />
+      <window_info anchor="right" id="Maven Projects" order="1" weight="0.16185898" />
+      <window_info anchor="right" id="Ant Build" order="2" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="3" weight="0.25" />
+      <window_info anchor="right" id="Palette" order="4" />
+      <window_info anchor="right" id="Palette&#9;" order="5" />
+      <window_info anchor="right" id="Capture Analysis" order="6" />
+      <window_info anchor="right" id="Database" order="7" />
+      <window_info anchor="right" id="Theme Preview" order="8" />
+      <window_info anchor="right" id="Bean Validation" order="9" />
+    </layout>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="楼盘" />
+    <MESSAGE value="静态文件移动到static 文件夹" />
+    <MESSAGE value="楼盘列表查询" />
+    <option name="LAST_COMMIT_MESSAGE" value="楼盘列表查询" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="java-line">
+          <url>file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/intercept/PermissionInterceptor.java</url>
+          <line>25</line>
+          <properties />
+          <option name="timeStamp" value="15" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="jar://$MAVEN_REPOSITORY$/com/baomidou/mybatis-plus-core/3.0.1/mybatis-plus-core-3.0.1.jar!/com/baomidou/mybatisplus/core/metadata/IPage.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-75">
+          <caret line="11" column="17" selection-start-line="11" selection-start-column="17" selection-end-line="11" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-mongodb/2.1.9.RELEASE/spring-data-mongodb-2.1.9.RELEASE.jar!/org/springframework/data/mongodb/core/query/Query.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="612">
+          <caret line="87" column="20" lean-forward="true" selection-start-line="87" selection-start-column="20" selection-end-line="87" selection-end-column="20" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/intercept/PermissionInterceptor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="305">
+          <caret line="29" column="21" lean-forward="true" selection-start-line="29" selection-start-column="21" selection-end-line="29" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/config/WebMvcConfig.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="725">
+          <caret line="35" column="5" lean-forward="true" selection-start-line="35" selection-start-column="5" selection-end-line="35" selection-end-column="5" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/run.bat">
+      <provider selected="true" editor-type-id="text-editor" />
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/src/views/estate/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="23" column="58" selection-start-line="23" selection-start-column="58" selection-end-line="23" selection-end-column="58" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/src/views/estate/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="3925">
+          <caret line="157" column="129" selection-start-line="157" selection-start-column="15" selection-end-line="157" selection-end-column="129" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/pagination/Pagination.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="525">
+          <caret line="28" selection-start-line="28" selection-end-line="28" />
+          <folding>
+            <element signature="method#setAscs#0;class#Pagination#0" />
+            <element signature="docComment;method#setAsc#0;class#Pagination#0" />
+            <element signature="method#setDescs#0;class#Pagination#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/base/header.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="8" column="35" lean-forward="true" selection-start-line="8" selection-start-column="35" selection-end-line="8" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/base/footer.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="14" column="36" lean-forward="true" selection-start-line="14" selection-start-column="36" selection-end-line="14" selection-end-column="36" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/dist/views/home/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-6338">
+          <caret line="22" column="38" lean-forward="true" selection-start-line="22" selection-start-column="38" selection-end-line="22" selection-end-column="38" />
+          <folding>
+            <marker date="1584957293285" expanded="true" signature="5742:5748" ph="&amp;nbsp;" />
+            <marker date="1584957293285" expanded="true" signature="5748:5754" ph="&amp;nbsp;" />
+            <marker date="1584957293285" expanded="true" signature="8979:8998" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/base/BasicController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-5725">
+          <caret line="42" column="21" selection-start-line="42" selection-start-column="21" selection-end-line="42" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/BusEstateService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="111">
+          <caret line="95" column="26" selection-start-line="95" selection-start-column="26" selection-end-line="95" selection-end-column="26" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/base/MyExceptionAdvice.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="155">
+          <caret line="22" selection-start-line="22" selection-end-line="22" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/home/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="800">
+          <caret line="32" column="17" lean-forward="true" selection-start-line="32" selection-start-column="17" selection-end-line="32" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/BusEstateDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="8" column="46" selection-start-line="8" selection-start-column="46" selection-end-line="8" selection-end-column="46" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/mongo/BusEstate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="15" column="35" selection-start-line="15" selection-start-column="35" selection-end-line="15" selection-end-column="35" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/mongo/Base/BaseEntity.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="325">
+          <caret line="13" column="1" lean-forward="true" selection-start-line="13" selection-start-column="1" selection-end-line="13" selection-end-column="1" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/home/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1438">
+          <caret line="163" column="32" selection-start-line="163" selection-start-column="29" selection-end-line="163" selection-end-column="32" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application-dev.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="400">
+          <caret line="16" column="49" selection-start-line="16" selection-start-column="49" selection-end-line="16" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application-test.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="19" column="49" lean-forward="true" selection-start-line="19" selection-start-column="49" selection-end-line="19" selection-end-column="49" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_201/src.zip!/java/util/regex/Pattern.java" />
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-mongodb/2.1.9.RELEASE/spring-data-mongodb-2.1.9.RELEASE.jar!/org/springframework/data/mongodb/core/query/Criteria.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="142">
+          <caret line="67" selection-start-line="67" selection-end-line="67" />
+          <folding>
+            <element signature="e#2276#2277#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$MAVEN_REPOSITORY$/org/springframework/data/spring-data-mongodb/2.1.9.RELEASE/spring-data-mongodb-2.1.9.RELEASE.jar!/org/springframework/data/mongodb/core/MongoTemplate.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="1017" column="24" selection-start-line="1017" selection-start-column="24" selection-end-line="1017" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/application.yml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="550">
+          <caret line="22" column="31" selection-start-line="22" selection-start-column="31" selection-end-line="22" selection-end-column="31" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/logback.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="175">
+          <caret line="7" column="38" lean-forward="true" selection-start-line="7" selection-start-column="38" selection-end-line="7" selection-end-column="38" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="603">
+          <caret line="204" column="55" selection-start-line="204" selection-start-column="43" selection-end-line="204" selection-end-column="55" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/edit.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="662">
+          <caret line="33" column="24" selection-start-line="33" selection-start-column="24" selection-end-line="33" selection-end-column="24" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/dao/MongodbBasicDao.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="133">
+          <caret line="148" selection-start-line="148" selection-end-line="148" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/base/MybatisPlusService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="287">
+          <caret line="153" column="13" selection-start-line="153" selection-start-column="13" selection-end-line="153" selection-end-column="13" />
+          <folding>
+            <element signature="e#4825#4826#0" expanded="true" />
+            <element signature="e#4875#4876#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/impl/BusEstateServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="651">
+          <caret line="1061" column="26" selection-start-line="1061" selection-start-column="26" selection-end-line="1061" selection-end-column="26" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="method#update#0;class#BusEstateServiceImpl#0" />
+            <element signature="method#delete#0;class#BusEstateServiceImpl#0" />
+            <element signature="method#mergeBuilding#0;class#BusEstateServiceImpl#0" />
+            <element signature="method#mergeAvgPrice#0;class#BusEstateServiceImpl#0" />
+            <element signature="method#merge#0;class#BusEstateServiceImpl#0" />
+            <element signature="method#undoMerge#0;class#BusEstateServiceImpl#0" />
+            <element signature="method#virtual#0;class#BusEstateServiceImpl#0" />
+            <element signature="method#undoVirtual#0;class#BusEstateServiceImpl#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/BusEstate.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="601">
+          <caret line="382" column="10" selection-start-line="382" selection-start-column="10" selection-end-line="382" selection-end-column="10" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/index.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="250">
+          <caret line="25" column="46" selection-start-line="25" selection-start-column="32" selection-end-line="25" selection-end-column="46" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/merge.css">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/merge.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="23" selection-start-line="23" selection-end-line="23" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="450">
+          <caret line="27" column="14" selection-start-line="23" selection-start-column="8" selection-end-line="27" selection-end-column="14" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/virtual.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="426">
+          <caret line="104" column="42" selection-start-line="104" selection-start-column="14" selection-end-line="104" selection-end-column="42" />
+          <folding>
+            <marker date="1585040937064" expanded="true" signature="2373:2379" ph="&amp;nbsp;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="442">
+          <caret line="120" column="50" selection-start-line="120" selection-start-column="10" selection-end-line="120" selection-end-column="50" />
+          <folding>
+            <marker date="1585041858338" expanded="true" signature="4098:4110" ph="..." />
+            <marker date="1585041858338" expanded="true" signature="4306:4312" ph="&amp;nbsp;" />
+            <marker date="1585041858338" expanded="true" signature="5441:5453" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/BusRoomController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="350">
+          <caret line="34" column="13" selection-start-line="34" selection-start-column="13" selection-end-line="34" selection-end-column="13" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/estate/merge.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="437">
+          <caret line="68" column="29" selection-start-line="68" selection-start-column="29" selection-end-line="68" selection-end-column="29" />
+          <folding>
+            <marker date="1585041898657" expanded="true" signature="2374:2380" ph="&amp;nbsp;" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/.idea/workspace.xml">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-10452">
+          <caret line="379" column="27" selection-start-line="379" selection-start-column="27" selection-end-line="379" selection-end-column="27" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/entity/BusBuilding.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1500">
+          <caret line="84" selection-start-line="84" selection-end-line="84" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/wxh5/impl/WxH5ClientServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1661">
+          <caret line="497" column="39" lean-forward="true" selection-start-line="497" selection-start-column="39" selection-end-line="497" selection-end-column="39" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/impl/BusBuildingServiceImpl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1432">
+          <caret line="734" column="5" selection-start-line="734" selection-start-column="5" selection-end-line="734" selection-end-column="5" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#3713#3714#0" expanded="true" />
+            <element signature="e#3759#3760#0" expanded="true" />
+            <element signature="e#20539#20540#0" expanded="true" />
+            <element signature="e#20600#20601#0" expanded="true" />
+            <element signature="e#21238#21249#0" expanded="true" />
+            <element signature="e#21577#21594#0" expanded="true" />
+            <element signature="e#27515#27531#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/service/estate/BusBuildingService.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-520">
+          <caret line="17" column="17" selection-start-line="17" selection-start-column="17" selection-end-line="17" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/BusEstateController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="33" column="11" selection-start-line="33" selection-start-column="4" selection-end-line="33" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/java/com/hifo/dataoperation/controller/BuildingController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="173">
+          <caret line="46" column="33" selection-start-line="46" selection-start-column="23" selection-end-line="46" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/src/views/home/menus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="200">
+          <caret line="28" column="6" selection-start-line="28" selection-start-column="6" selection-end-line="28" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/home/menus.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="380">
+          <caret line="28" column="6" selection-start-line="28" selection-start-column="6" selection-end-line="28" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/web/src/views/building/index.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2883">
+          <caret line="323" column="36" selection-start-line="323" selection-start-column="29" selection-end-line="323" selection-end-column="36" />
+          <folding>
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+            <element signature="n#style#0;n#a#0;n#!!top" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/resources/static/views/building/edit.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="39">
+          <caret line="198" column="6" selection-start-line="198" selection-start-column="6" selection-end-line="198" selection-end-column="6" />
+        </state>
+      </provider>
+    </entry>
+  </component>
+  <component name="masterDetails">
+    <states>
+      <state key="ArtifactsStructureConfigurable.UI">
+        <settings>
+          <artifact-editor />
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="FacetStructureConfigurable.UI">
+        <settings>
+          <last-edited>No facets are configured</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="GlobalLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="JdkListConfigurable.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ModuleStructureConfigurable.UI">
+        <settings>
+          <last-edited>data-operation</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectJDKs.UI">
+        <settings>
+          <last-edited>1.8</last-edited>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+      <state key="ProjectLibrariesConfigurable.UI">
+        <settings>
+          <splitter-proportions>
+            <option name="proportions">
+              <list>
+                <option value="0.2" />
+              </list>
+            </option>
+          </splitter-proportions>
+        </settings>
+      </state>
+    </states>
+  </component>
+</project>

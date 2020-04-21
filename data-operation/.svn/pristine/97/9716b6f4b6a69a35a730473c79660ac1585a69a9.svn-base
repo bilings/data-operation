@@ -1,0 +1,191 @@
+package com.hifo.dataoperation.controller;
+
+import com.hifo.dataoperation.base.BasicController;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.intercept.RequiredPermission;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.estate.BusAvgPriceService;
+import com.hifo.dataoperation.util.ExcelUtil;
+import com.hifo.dataoperation.vo.BusEstateAvgPriceExtend;
+import io.swagger.annotations.*;
+import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import springfox.documentation.annotations.ApiIgnore;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+
+/**
+ * @author 张宗朋
+ * @create 8:47 时间
+ */
+@SuppressWarnings("rawtypes")
+@Api(tags = "均价管理")
+@RequestMapping("avg")
+@RestController
+public class AvgPriceController extends BasicController {
+
+    @Autowired
+    private BusAvgPriceService avgPriceService;
+
+    /**
+     * 新增均价
+     */
+    @ApiOperation(value = "新增均价")
+    @PostMapping("/avgPriceServiceAdd")
+    public ApiResult avgPriceServiceAdd(@ApiParam(name = "新增均价", value = "json", required = true) @RequestBody BusEstateAvgPriceExtend busEstateAvgPrice) {
+        return avgPriceService.avgPriceServiceAdd(busEstateAvgPrice);
+    }
+
+    /**
+     * 获取楼盘均价列表
+     *
+     * @param busEstateAvgPrice 均价实体
+     * @return String
+     */
+    @ApiOperation(value = "查询楼盘均价")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "cityId", value = "城市id", paramType = "query", dataType = "String", example = "2", required = true),
+            @ApiImplicitParam(name = "estateId", value = "楼盘id", paramType = "query", dataType = "int", example = "3"),
+            @ApiImplicitParam(name = "districtId", value = "行政区id", paramType = "query", dataType = "String", example = "3"),
+            @ApiImplicitParam(name = "estateName", value = "楼盘名称", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "quality", value = "物业品质", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "visibility", value = "均价状态", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "caseNoMin", value = "案例数最小值", paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "caseNoMax", value = "案例数最大值", paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "avgPriceSysMin", value = "均价最小值", paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "avgPriceSysMax", value = "均价最大值", paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "calDateStart", value = "开始时间", paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "calDateEnd", value = "结束时间", paramType = "query", dataType = "int"),
+            @ApiImplicitParam(name = "page", value = "当前页数", paramType = "query", dataType = "int", example = "1", required = true),
+            @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "query", dataType = "int", example = "5", required = true)
+    })
+    @GetMapping("/list")
+    @RequiredPermission("300")
+    public String list(Pagination pages, @ApiIgnore BusEstateAvgPriceExtend busEstateAvgPrice) {
+        var page = avgPriceService.list(pages, busEstateAvgPrice);
+        return pageData(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 确认人工价格
+     *
+     * @param id 均价集合
+     * @return APIResult
+     */
+    @ApiOperation(value = "确认人工价格")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "楼盘均价编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "price", value = "人工价格)", paramType = "query", dataType = "double", example = "1000", required = true)
+    })
+    @PutMapping("confirm")
+    @ResponseBody
+    @RequiredPermission("300")
+    public ApiResult confirm(String id, float price) {
+        avgPriceService.confirm(id, price);
+        return ApiResult.success("成功");
+    }
+
+    /**
+     * 删除价格和取消删除价格
+     *
+     * @param ids 均价集合
+     * @return APIResult
+     */
+    @ApiOperation(value = "设置可见性")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘均价编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "visibility", value = "可见性(0=前后端都不可见，1=仅后端可见，2=前后端都可见，3=已合并至其它楼盘)", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("visibility")
+    @ResponseBody
+    @RequiredPermission("300")
+    public ApiResult visibility(String[] ids, String visibility) {
+        avgPriceService.visibility(ids, visibility);
+        return ApiResult.success("成功");
+    }
+
+    /**
+     * 审核价格
+     *
+     * @param isAudit 均价集合
+     * @return APIResult
+     */
+    @ApiOperation(value = "设置审核价格")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘均价编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "isAudit", value = "可见性(0=前后端都不可见，1=仅后端可见，2=前后端都可见，3=已合并至其它楼盘)", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PutMapping("isAudit")
+    @ResponseBody
+    @RequiredPermission("300")
+    public ApiResult check(String[] ids, String isAudit) {
+        avgPriceService.check(ids, isAudit);
+        return ApiResult.success("成功");
+    }
+
+    /**
+     * 当楼盘修改物业类型之后
+     *
+     * @param busEstate 均价集合
+     * @return APIResult
+     */
+    @PostMapping("updateQuality")
+    @ResponseBody
+    @RequiredPermission("300")
+    public ApiResult updateQuality(@RequestBody BusEstate busEstate) {
+        String str = avgPriceService.updateQuality(busEstate);
+        return ApiResult.success(str);
+    }
+
+    /**
+     * 下载均价模板
+     *
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "下载均价模板")
+    @GetMapping("downAvgPriceTemplate")
+    @RequiredPermission("200")
+    public void downBuildingTemplate(HttpServletResponse response) {
+        ExcelUtil.exportExcel(new ArrayList<>(), "均价信息", "均价", BusEstateAvgPriceExtend.class, "均价模板.xls", response);
+    }
+
+    /**
+     * 下载均价信息数据
+     */
+    @ApiOperation(value = "下载楼栋信息数据", produces = "application/octet-stream")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "columns", value = "楼栋信息表头", example = "城市名称_cityName,行政区名称_districtName,街道_townName,均价名称_name", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "cityId", value = "城市id", example = "城市名称_cityName,行政区名称_districtName,街道_townName,均价名称_name", paramType = "query", dataType = "String")
+    })
+    @GetMapping("download")
+    @RequiredPermission("300")
+    public void download(String[] columns, BusEstateAvgPriceExtend vo, HttpServletResponse response) {
+        if (columns != null && columns.length > 0) {
+            // 内容动态导出
+            var listMaps = avgPriceService.findMaps(vo);
+            ExcelUtil.exportExcel(listMaps, "均价信息", "均价", columns, "均价信息.xls", response);
+        } else {
+            // 内容全部导出
+            var list = avgPriceService.findLists(vo);
+            ExcelUtil.exportExcel(list, "均价信息", "均价", BusEstateAvgPriceExtend.class, "均价信息.xls", response);
+        }
+    }
+
+    /**
+     * 导入均价信息数据
+     */
+	@ApiOperation(value = "导入均价信息数据")
+    @PostMapping(value = "importAvgPrice", consumes = "multipart/*", headers = "content-type=multipart/form-data")
+    @RequiredPermission("200")
+    public ApiResult importAvgPrice(@ApiParam(name = "file", value = "上传的文件", required = true) MultipartFile file) {
+        try {
+            return ApiResult.success(avgPriceService.importAvgPrice(file));
+        } catch (Exception e) {
+            return ApiResult.failed(e.getMessage());
+        }
+    }
+
+}

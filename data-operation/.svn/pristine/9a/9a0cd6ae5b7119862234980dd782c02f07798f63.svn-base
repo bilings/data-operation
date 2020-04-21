@@ -1,0 +1,24 @@
+package com.hifo.dataoperation.dao;
+
+import org.springframework.stereotype.Repository;
+import com.hifo.dataoperation.entity.mongo.BusWaitMergeEty;
+
+/**
+ * 待建合并数据访问层
+ * @author weisibin
+ * @date 2020年4月17日10:52:22
+ */
+@Repository
+public class BusWaitMergeDao extends MongodbBasicDao<BusWaitMergeEty>{
+
+	@Override
+	public Class<BusWaitMergeEty> getEntityClass() {
+		return BusWaitMergeEty.class;
+	}
+
+	@Override
+	public String getCollectionName() {
+		return "warehouse_community_waitmerge";
+	}
+
+}

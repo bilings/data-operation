@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    @@include('../base/header.html')
+    <link href="index.css" rel="stylesheet">
+    <title>导入</title>
+</head>
+<body>
+<div id="importIndex_wrapper">
+    <div class="layui-container">
+        <div class="layui-row">
+            <div class="layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <button type="button" class="layui-btn layui-btn-sm" id="estateUpload">
+                            <i class="layui-icon layui-icon-upload"></i>
+                        </button>
+                        <span class="bigText">楼盘数据</span>
+                        <a href="#" class="hyperlink" id="estateTemplate">下载模板</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <button type="button" class="layui-btn layui-btn-sm" id="buildingUpload">
+                            <i class="layui-icon layui-icon-upload"></i>
+                        </button>
+                        <span class="bigText">楼栋数据</span>
+                        <a href="#" class="hyperlink" id="buildingTemplate">下载模板</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <button type="button" class="layui-btn layui-btn-sm" id="roomUpload">
+                            <i class="layui-icon layui-icon-upload"></i>
+                        </button>
+                        <span class="bigText">房号数据</span>
+                        <a href="#" class="hyperlink" id="roomTemplate">下载模板</a>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-col-md3">
+                <div class="layui-card">
+                    <div class="layui-card-body">
+                        <button type="button" class="layui-btn layui-btn-sm" id="avgPriceUpload">
+                            <i class="layui-icon layui-icon-upload"></i>
+                        </button>
+                        <span class="bigText">均价数据</span>
+                        <a href="#" class="hyperlink" id="avgPriceTemplate">下载模板</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <table class="layui-hide" id="uploadLogTable" lay-filter="uploadLogTable"></table>
+    <script type="text/html" id="toolbar">
+        <div class="layui-inline">
+            <select id="type">
+                <option value="">请选择类型</option>
+                <option value="楼盘">楼盘</option>
+                <option value="楼栋">楼栋</option>
+                <option value="房号">房号</option>
+                <option value="均价">均价</option>
+            </select>
+        </div>
+        <div class="layui-inline">
+            <input type="text" id="createName" class="layui-input" placeholder="操作人" autocomplete="off"/>
+        </div>
+        <div class="layui-inline">
+            <button id="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-primary" lay-event="searchBtn">
+                <li class="layui-icon layui-icon-search"></li>
+            </button>
+        </div>
+    </script>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

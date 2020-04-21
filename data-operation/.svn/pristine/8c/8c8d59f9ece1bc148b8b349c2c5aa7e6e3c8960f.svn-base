@@ -1,0 +1,151 @@
+var estateMerge_obj = {
+
+    urlConfig: {
+        estateList: '/estate/list',
+        estateDetail: '/estate/detail',
+        merge: '/estate/merge'
+    },
+
+    init: function () {
+        this._initTable();
+        this._initToolbar();
+    },
+
+    /**
+     * 表格全局变量
+     */
+    tableIns: null,
+
+    /**
+     * 初始化表格
+     * @private
+     */
+    _initTable: function () {
+        this.tableIns = layui.table.render({
+            elem: '#estateMerge_wrapper #estateTable',
+            toolbar: '#toolbar',
+            title: '选择楼盘',
+            cols: [[
+                {
+                    field: 'radio', title: '', width: 50,
+                    templet: function (d) {
+                        return '<input type="radio" name="id" value="' + d.id + '">';
+                    }
+                },
+                {
+                    field: 'name', title: '名称',
+                    templet: function (d) {
+                        var a = d.name;
+                        if (d.isVirtual === '1') {
+                            var badge = '&nbsp;<span class="layui-badge layui-bg-cyan">虚</span>';
+                            a = a + badge;
+                        }
+                        return a;
+                    }
+                },
+                {field: 'districtName', title: '行政区'},
+                {
+                    field: 'addrDetail', title: '地址',
+                    templet: function (d) {
+                        try {
+                            var addrDetail = JSON.parse(d.addrDetail);
+                            var str = addrDetail.road + addrDetail.number;
+                            if (addrDetail.number) {
+                                str = str + '号';
+                            }
+                            return str;
+                        } catch (e) {
+                            return '';
+                        }
+                    }
+                }
+            ]],
+            id: 'estateTable',
+            page: true
+        });
+    },
+
+    /**
+     * 初始化toolbar
+     * @private
+     */
+    _initToolbar: function () {
+        var _this = this;
+        // 默认在输入框填写所选的第一个楼盘的名称
+        var ids = layui.util.urlParam('ids');
+        var id = ids.split(',')[0];
+        $.get({
+            url: _this.urlConfig.estateDetail,
+            data: {id: id},
+            success: function (res) {
+                $('#estateMerge_wrapper #keyword').val(res.data.name);
+            }
+        });
+        // 绑定按钮点击
+        layui.table.on('toolbar(estateTable)', function (obj) {
+            if (obj.event === 'searchBtn') {
+                var keyword = $('#estateMerge_wrapper #keyword').val();
+                _this.tableIns.reload({
+                    url: _this.urlConfig.estateList,
+                    where: {
+                        cityId: parent.parent.homeIndex_obj.currentCityMongoId,
+                        name: keyword
+                    },
+                    method: 'get',
+                    done: function () {
+                        // 保留搜索关键词
+                        $('#estateMerge_wrapper #keyword').val(keyword);
+                    }
+                });
+            } else if (obj.event === 'mergeBtn') {
+                var toId = $('#estateMerge_wrapper input[name="id"]:checked ').val();
+                if (!toId) {
+                    layer.msg('请选择楼盘');
+                    return;
+                }
+                $.ajax({
+                    url: _this.urlConfig.merge,
+                    type: "PUT",
+                    data: {fromIds: ids, toId: toId},
+                    success: function () {
+                        _this._timerAndClose();
+                    }
+                });
+            }
+        });
+    },
+
+    _timerAndClose: function () {
+        var i = 3;
+        var interval;
+        layer.confirm('合并完成', {
+            btn: [i + 1 + 's后关闭'], //按钮
+            skin: 'layui-layer-molv',
+            success: function (a, b) {
+                $(".layui-layer-btn0").css("backgroundColor", "#92B8B1");
+                var fn = function () {
+                    $(".layui-layer-btn0").text(i + 's后关闭');
+                    i--;
+                };
+                interval = setInterval(function () {
+                    fn();
+                    if (i === 0) {
+                        $(".layui-layer-btn0").css("backgroundColor", "#019F95");
+                        clearInterval(interval);
+                        // 刷新父页面表格
+                        parent.estateIndex_obj._displayTable();
+                        // 关闭本层
+                        layer.closeAll();
+                        // 关闭弹出层
+                        parent.layer.closeAll();
+                    }
+                }, 1000);
+            },
+            end: function () {
+                clearInterval(interval);
+            }
+        });
+    }
+};
+
+estateMerge_obj.init();

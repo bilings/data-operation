@@ -1,0 +1,58 @@
+package com.hifo.dataoperation.service.estate.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.BusBuilding;
+import com.hifo.dataoperation.service.estate.BusRoomService;
+import com.hifo.dataoperation.vo.BusRoomVO;
+import com.mongodb.client.FindIterable;
+import org.bson.Document;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.ArrayList;
+import java.util.List;
+
+
+/**
+ * 房号
+ *
+ * @author jinzhichen
+ * @date 2019/4/23 15:22
+ */
+
+@Service
+public class BusRoomServiceImpl implements BusRoomService {
+    @Autowired
+    private MongoTemplate mongoTemplate;
+    @Override
+    public ApiResult queryList(String buildingId,String util) {
+        List<Document> list = new ArrayList<>();
+        Document document = new Document("buildingId","58f56158e087110d9c88ce74");
+        FindIterable<Document> roomList =  mongoTemplate.getCollection("warehouse_room_service").find(document);
+        for(Document room:roomList){
+            int physicsFloor = room.getInteger("physicsFloor");
+            list.add(room);
+        }
+        return ApiResult.success(list);
+    }
+
+    @Override
+    public List<BusRoomVO> list(QueryWrapper<BusRoomVO> queryWrapper) {
+        return null;
+    }
+
+    @Override
+    public void save(BusRoomVO room) {
+
+    }
+
+    @Override
+    public void updateByBuilding(BusBuilding busBuilding) {
+
+    }
+}
+
+
+

@@ -1,0 +1,63 @@
+#correctAvgPrice_wrapper {
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.top10{
+    margin-top: 10px;
+}
+
+.marginL20{
+    margin-left: 20px;
+}
+.formWidth{
+    width: 10% !important;
+}
+.areaWidth{
+    width: 10% !important;
+}
+
+.textHeight{
+    height: 28px;
+    line-height: 28px;
+}
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    line-height: 30px;
+}
+th,td{
+    line-height: 25px !important;
+    height: 25px !important;
+    padding: 0px !important;
+}
+/*.layui-table-cell{
+    line-height: 25px !important;
+    height: 25px !important;
+    padding: 0px !important;
+}*/
+.layui-input-inline input{
+    height: 30px;
+    line-height: 30px;
+}
+.marginR10{
+    margin-right: 10px;
+}
+
+.marginL10{
+    margin-left: 10px;
+}
+.hideElement{
+    display: none;
+}
+.showElement{
+    display: block;
+}
+#usedCaseTable{
+    margin-top: 0px !important;
+}
+button{
+    height: 28px !important;
+}
+.usedCaseTableRow{
+    height: 185px;
+}

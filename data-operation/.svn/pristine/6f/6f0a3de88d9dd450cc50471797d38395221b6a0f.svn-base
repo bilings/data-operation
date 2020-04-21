@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="addGroup.css" rel="stylesheet">
+    <title>添加分组管理</title>
+</head>
+<body>
+<div id="addGroupIndex_wrapper">
+    <br>
+    <form class="layui-form layui-form-pane" action="">
+        <input type="hidden" name="coeType" id="coeType" lay-filter="coeType" class="layui-input" readonly/>
+        <div class="layui-form-item">
+            <label class="layui-form-label">*城市:</label>
+            <div class="layui-input-inline">
+                <input type="text" name="cityName" id="cityName" lay-filter="cityName" class="layui-input" autocomplete="off" readonly/>
+                <input type="hidden" name="cityId" id="cityId" lay-filter="cityName" class="layui-input" autocomplete="off" readonly/>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">行政区：</label>
+            <div class="layui-input-inline">
+                <select name="administrativeId" lay-filter="administrativeId" id="administrativeId">
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">片区：</label>
+            <div class="layui-input-inline">
+                <select name="areaId" lay-filter="areaId" id="areaId">
+                </select>
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <label class="layui-form-label">楼盘：</label>
+            <div class="layui-input-inline">
+                <input type="text" name="name" id="name" lay-filter="name" class="layui-input" placeholder="楼盘"/>
+                <input type="hidden" name="estateId" id="estateId" lay-filter="estateId" class="layui-input" />
+            </div>
+        </div>
+
+        <div class="layui-form-item">
+            <button class="layui-btn" lay-submit="" lay-filter="saveBtn">提交</button>
+        </div>
+    </form>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="/resource/js/jquery-ui.js"></script>
+<script type="text/javascript" src="addGroup.js"></script>
+</body>
+</html>

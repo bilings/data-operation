@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.crm.ExtEmployeeMapper">
+
+    <!-- 查询 -->
+    <select id="query" resultType="com.hifo.dataoperation.entity.ExtEmployee">
+    select *
+    from ext_employee
+    where organizationId=#{organizationId}
+    and (username like '%${keyword}%' or name like '%${keyword}%')
+  </select>
+
+</mapper>

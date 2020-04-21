@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="customerOrgEdit.css" rel="stylesheet">
+    <title>编辑机构</title>
+</head>
+<body>
+<div id="customerOrgEdit_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-row js-children-show hidden">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">上级机构:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="orgName" autocomplete="off" class="layui-input border-zero" name="label-value" readonly="readonly"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*机构名称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" autocomplete="off" class="layui-input" name="label-value" lay-verify="required"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*客户类型：</label>
+                <div class="layui-input-inline">
+                    <select id="typeSelect" lay-filter="typeSelect" search=""></select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row js-parent-show hidden">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*询价次数:</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="times" autocomplete="off" class="layui-input" name="label-value" lay-verify="required" value="0"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">
+                    <button id="updateBtn" lay-filter="updateBtn" lay-submit="" class="layui-btn layui-btn-normal">保存</button>
+                </label>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="dict.js"></script>
+<script type="text/javascript" src="customerOrgEdit.js"></script>
+</body>
+</html>

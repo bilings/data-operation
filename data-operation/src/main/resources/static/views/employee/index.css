@@ -1,0 +1,13 @@
+/*全局设定，输入框的大小*/
+.layui-form-label {
+    padding: 5px 15px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    line-height: 30px;
+}
+
+.layui-form-select dl dd, .layui-form-select dl dt {
+    line-height: 30px;
+}

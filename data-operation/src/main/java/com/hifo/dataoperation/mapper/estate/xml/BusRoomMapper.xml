@@ -1,0 +1,195 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.estate.BusRoomMapper">
+    <select id="busRooms" resultType="com.hifo.dataoperation.vo.BusRoomVO">
+        SELECT
+        br.physicsFloor,
+        br.nominalFloor,
+        group_concat(
+        concat(br.id, '_', br.roomNo) order by br.id
+        ) AS roomNos,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.buildArea,'')) order by br.id
+        ) AS buildAreas,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.innerArea,'')) order by br.id
+        ) AS innerAreas,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.forecastArea,''))order by br.id
+        ) AS forecastAreas,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.realArea,'')) order by br.id
+        ) AS realAreas,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.orientation,'')) order by br.id
+        ) AS orientations,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.scenery,'')) order by br.id
+        ) AS scenerys,
+        group_concat(
+        concat(br.id, '_', br.houseType) order by br.id
+        ) AS houseTypes,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.initPrice,'')) order by br.id
+        ) AS initPrices,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.priceCoe,'')) order by br.id
+        ) AS priceCoes,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.certificationPurpose,'')) order by br.id
+        ) AS certificationPurposes,
+        group_concat(
+        concat(br.id, '_', IFNULL(br.structure,'')) order by br.id
+        ) AS structures
+        FROM
+        bus_room br
+        <where>
+            <if test="busRoom.organizationId > 0">
+                AND br.organizationId = #{busRoom.organizationId}
+            </if>
+            <if test="busRoom.buildingId > 0">
+                AND br.buildingId = #{busRoom.buildingId}
+            </if>
+            <if test="busRoom.unit  != null and busRoom.unit != ''">
+                AND br.unit = #{busRoom.unit}
+            </if>
+        </where>
+        GROUP BY
+        br.physicsFloor,
+        br.nominalFloor
+        ORDER BY
+        br.physicsFloor ASC
+    </select>
+
+    <select id="busRoomList" resultType="com.hifo.dataoperation.vo.BusRoomVO">
+        SELECT
+        a.id,
+        a.esId,
+        a.organizationId,
+        a.buildingId,
+        a.unit,
+        a.roomNo,
+        a.buildArea,
+        a.innerArea,
+        a.forecastArea,
+        a.realArea,
+        a.orientation,
+        a.scenery,
+        a.structure,
+        a.houseType,
+        a.initPrice,
+        a.priceCoe,
+        a.physicsFloor,
+        a.nominalFloor,
+        a.floor,
+        a.certificationPurpose
+        FROM
+        bus_room a
+        <where>
+            <if test="vo.buildingId != null and vo.buildingId > 0">
+                AND a.buildingId = #{vo.buildingId}
+            </if>
+            <if test="vo.unit != null and vo.unit != ''">
+                AND a.unit = #{vo.unit}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectCountByEstId" resultType="com.hifo.dataoperation.vo.BusRoomVO">
+        SELECT
+        a.id,
+        a.esId,
+        a.organizationId,
+        a.buildingId,
+        a.unit,
+        a.roomNo,
+        a.buildArea,
+        a.innerArea,
+        a.forecastArea,
+        a.realArea,
+        a.orientation,
+        a.scenery,
+        a.structure,
+        a.houseType,
+        a.initPrice,
+        a.priceCoe,
+        a.physicsFloor,
+        a.nominalFloor,
+        a.floor,
+        a.certificationPurpose
+        FROM
+        bus_room a,
+        bus_estate b,
+        bus_building c
+        <where>
+            a.buildingId = c.id
+            AND c.estateId = b.id
+            and a.roomNo  !=  ''
+            <if test="vo.estateId != null and vo.estateId > 0">
+                AND b.id = #{vo.estateId}
+            </if>
+        </where>
+    </select>
+
+
+    <select id="selectRooms" resultType="com.hifo.dataoperation.vo.BusRoomVO">
+        SELECT
+        a.id,
+        a.esId,
+        a.organizationId,
+        a.buildingId,
+        a.unit,
+        a.roomNo,
+        a.buildArea,
+        a.innerArea,
+        a.forecastArea,
+        a.realArea,
+        a.orientation,
+        a.scenery,
+        a.structure,
+        a.houseType,
+        a.initPrice,
+        a.priceCoe,
+        a.physicsFloor,
+        a.nominalFloor,
+        a.floor,
+        a.certificationPurpose
+        FROM
+        bus_room a
+        <where>
+            <if test="vo.floorTotalNoNew != null and vo.floorTotalNoNew > 0">
+                AND a.physicsFloor <![CDATA[>]]> #{vo.floorTotalNoNew}
+            </if>
+            <if test="vo.floorTotalNoOld != null and vo.floorTotalNoOld > 0">
+                AND a.physicsFloor <![CDATA[<=]]> #{vo.floorTotalNoOld}
+            </if>
+            <if test="vo.roomNoPerFloorNew != null and vo.roomNoPerFloorNew > 0">
+                AND a.roomOrder <![CDATA[>]]> #{vo.roomNoPerFloorNew}
+            </if>
+            <if test="vo.roomNoPerFloorOld != null and vo.roomNoPerFloorOld > 0">
+                AND a.roomOrder <![CDATA[<=]]> #{vo.roomNoPerFloorOld}
+            </if>
+            <if test="vo.unitNoNew != null and vo.unitNoNew > 0">
+                AND a.unitNo <![CDATA[>]]> #{vo.unitNoNew}
+            </if>
+            <if test="vo.unitNoOld != null and vo.unitNoOld > 0">
+                AND a.unitNo <![CDATA[<=]]> #{vo.unitNoOld}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectBuildingId" resultType="com.hifo.dataoperation.vo.BusRoomVO">
+        SELECT
+        b.id as buildingId
+        FROM
+        bus_estate a,
+        bus_building b
+        <where>
+            a.organizationId = b.organizationId
+            AND a.districtName = #{vo.districtName}
+            AND a. NAME = #{vo.estateName}
+            AND b.estateId = a.id
+            AND b. NAME = #{vo.buildingName}
+        </where>
+    </select>
+</mapper>

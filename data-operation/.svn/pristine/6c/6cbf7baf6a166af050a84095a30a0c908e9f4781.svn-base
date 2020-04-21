@@ -1,0 +1,92 @@
+package com.hifo.dataoperation.service.estate.impl;
+
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.dao.BuiltEstateDao;
+import com.hifo.dataoperation.dao.BusEstateDao;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.entity.mongo.BuiltEstate;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.estate.BuiltService;
+import com.hifo.dataoperation.util.StringUtil;
+import lombok.extern.java.Log;
+import org.apache.commons.lang3.StringUtils;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+import java.util.regex.Pattern;
+
+@Log
+@Service
+public class BuiltServiceImpl implements BuiltService {
+    @Autowired
+    private BuiltEstateDao builtEstateDao;
+    @Autowired
+    private BusEstateDao busEstateDao;
+
+    @Override
+    public Pagination<BuiltEstate> findByPage(BuiltEstate busEstate, Pagination pages) {
+        Query query = findListQuery(busEstate, pages);
+        Pagination<BuiltEstate> busEstatesList = builtEstateDao.getPageLists(pages.getPage(),pages.getLimit(),query);
+        return  busEstatesList;
+    }
+
+    @Override
+    public ApiResult add(List<BusEstate> busEstates) {
+        for (BusEstate estate : busEstates) {
+            estate.setId(new ObjectId().toString());
+        }
+        busEstateDao.insertMulti(busEstates);
+        return ApiResult.success("添加成功");
+    }
+
+    @Override
+    public ApiResult delete(List<BuiltEstate> busEstates) {
+        for (BuiltEstate estate : busEstates) {
+            builtEstateDao.deleteById(estate.getId());
+        }
+        return ApiResult.success("删除成功");
+    }
+
+    @Override
+    public ApiResult merge(String[] fromIds, String toId) {
+
+        return  ApiResult.success("合并成功");
+    }
+
+    /**
+     * 格式化列表查询条件
+     *
+     * @param busEstate
+     * @param page
+     * @return
+     */
+    public static Query findListQuery(BuiltEstate busEstate, Pagination page) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        if (StringUtils.isNotBlank(busEstate.getCityId())) {
+            criteria.and("cityId").is(busEstate.getCityId());
+        }
+        if (StringUtils.isNotBlank(busEstate.getDistrictId())) {
+            criteria.and("districtId").is(busEstate.getDistrictId());
+        }
+        if (StringUtil.isNotEmpty(busEstate.getCommunityName())) {
+            Pattern pattern= Pattern.compile("^.*"+busEstate.getCommunityName()+".*$", Pattern.CASE_INSENSITIVE);
+            criteria.orOperator(Criteria.where("communityName").regex(pattern),
+                    Criteria.where("otherName").regex(pattern),
+                    Criteria.where("address").regex(pattern)
+            );
+        }
+        criteria.and("isMerged").is(false);
+        query.addCriteria(criteria);
+        if (StringUtil.isEmpty(page.ascs()) && StringUtil.isEmpty(page.descs())) {
+            query.with(new Sort(new Sort.Order(Sort.Direction.DESC, "updateTime")));
+        }
+        return query;
+    }
+
+}

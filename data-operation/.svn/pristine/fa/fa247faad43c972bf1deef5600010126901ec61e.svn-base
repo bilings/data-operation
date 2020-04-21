@@ -1,0 +1,81 @@
+var RoomIndex_obj = {
+    init: function () {
+        var _this = this;
+
+        _this._initBasicTable();
+    },
+
+    /**
+     * 下拉
+     * @private
+     */
+    _initBasicTable: function() {
+        layui.use(['element', 'table'], function(){
+            var table = layui.table;
+            var element = layui.element;
+
+            //获取hash来切换选项卡，假设当前地址的hash为lay-id对应的值
+            // var layid = location.hash.replace(/^#test1=/, '');
+            // element.tabChange('room-filter', layid); //假设当前地址为：http://a.com#test1=222，那么选项卡会自动切换到“发送消息”这一项
+            // $('#homeIndex_wrapper').toggleClass('homeIndex_spread');
+            //监听Tab切换，以改变地址hash值
+            element.on('tab(room-filter)', function(){
+                var $ = layui.jquery
+                var  lay_id = this.getAttribute('lay-id');
+                //封装房号
+                var colss = [];
+                var ob = [
+                    {field:'physicsFloor', title: '物理层' }
+                    ,{field:'nominalFloor', title: '名义层'}
+
+                ]
+                $.ajax({
+                    url: "/room/roomhead?type="+lay_id+"&buildingId=1111&util=11",
+                    type: 'get',
+                    success: function (res) {
+                       for (var i=1;i<res.data;i++){
+                           var object={field:'room_'+i,title: i+'室号'}
+                           ob.push(object)
+                        }
+                        colss.push(ob)
+
+                        //方法级渲染
+                        table.render({
+                            elem: '#Lay_'+lay_id
+                            ,url: '/room/roomList?buildingId=1111111&util=1'
+                            ,cols: colss
+                            ,id: 'roomReload'
+                        });
+                    }
+                });
+
+                var $ = layui.$, active = {
+                    reload: function(){
+                        var roomReload = $('#roomReload');
+                        //执行重载
+                        table.reload('testReload', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                            ,where: {
+                                key: {
+                                    id: roomReload.val()
+                                }
+                            }
+                        }, 'data');
+                    }
+                };
+                $('.roomTable .layui-btn').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+                /******************列表渲染结束*********************/
+            });
+
+        });
+    }
+}
+
+$(function () {
+    RoomIndex_obj.init();
+});

@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="renderer" content="webkit">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="-1" />
+    <link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+    <link href="/resource/css/layui.ext.css" rel="stylesheet">
+    <!-- layui拓展 -->
+    <link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+    <!--数据列表循环-->
+    <script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="correctAvgPrice.css" rel="stylesheet">
+    <title>修正系统价格</title>
+</head>
+<body>
+<div id="correctAvgPrice_wrapper">
+    <div class="layui-row top10 textHeight">
+        <span id="estate_Name" class="marginL20"></span>
+        <span id="buildingTypeName" class="marginL20"></span>
+        <span id="areaSegment" class="marginL20"></span><span>m²</span>
+        <span id="cal_Date" class="marginL20"></span>
+        <span id="avgPriceSys" class="marginL20"></span><span>元/m²</span>
+        <span></span>
+        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal marginL20 hideElement" id="cancel">取消</button>
+        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal marginL20 hideElement" id="apply">采用价格</button>
+        <button class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal marginL20" id="correctSysPrice">修正系统价格</button>
+    </div>
+    <div class="layui-row top10 showElement" id="showCaseTitle">
+        <span style="font-size: 18px;">|估价所用案例</span>
+    </div>
+    <div class="layui-row usedCaseTableRow">
+        <table class="layui-table" lay-size="sm" id="usedCaseTable" lay-filter="usedCaseTable"></table>
+    </div>
+    <div id="chooseDiv" class="layui-row top10 hideElement">
+        <div class="layui-row top10" id="chooseCaseTitle">
+            <span style="font-size: 18px;">|请选择案例</span>
+        </div>
+        <form class="layui-form">
+            <div class="layui-row top10 textHeight">
+                <div class="layui-inline">
+                    <!--楼盘名称-->
+                    <!--<div class="layui-input-inline marginL10">
+                        楼盘名称：
+                    </div>
+                    <div class="layui-input-inline formWidth marginR10">
+                       &lt;!&ndash; <label class="layui-form-label">楼盘名称：</label>&ndash;&gt;
+                        <input type="text" id="estateName" class="layui-input" placeholder="楼盘名称" autocomplete="off"/>
+                    </div>-->
+                    <!--面积范围-->
+                    <div class="layui-input-inline areaWidth">
+                        <input type="text" id="areaMin" class="layui-input" placeholder="面积最小值" autocomplete="off"/>
+                    </div>-
+                    <div class="layui-input-inline areaWidth marginR10">
+                        <input type="text" id="areaMax" class="layui-input" placeholder="面积最大值" autocomplete="off"/>
+                    </div>
+                    <!--时间范围-->
+                    <div class="layui-input-inline formWidth marginR10">
+                        <input type="text" class="layui-input" id="caseDate" placeholder="开始时间-结束时间">
+                    </div>
+                    <div class="layui-input-inline" id="btnDiv">
+                        <button id="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-radius layui-btn-normal">
+                            <li class="layui-icon layui-icon-search"></li>
+                        </button>
+                        <button id="clearBtn" type="reset" class="layui-btn  layui-btn-sm layui-btn-radius layui-btn-normal">清 空</button>
+                        <!--<button id="autoChooseCase" type="button" class="layui-btn  layui-btn-sm layui-btn-radius layui-btn-normal">自动选择案例</button>-->
+                        <button id="countSysPrice" type="button" class="layui-btn  layui-btn-sm layui-btn-radius layui-btn-normal">计算系统价格</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <table class="layui-table" lay-size="sm" id="chooseCaseTable" lay-filter="chooseCaseTable"></table>
+    </div>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+    layui.config({
+        base: '/resource/js/layui/extend/' //自定义插件路径
+    }).use('jquery',function(){
+        window.$=layui.$;
+        window.jQuery=layui.$;
+    });
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="correctAvgPrice.js"></script>
+</body>
+</html>

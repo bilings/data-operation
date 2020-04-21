@@ -1,0 +1,302 @@
+var avgPriceIndex_obj = {
+    currentCityMongoId: '',
+    tableIns: '',
+    urlConfig: {
+        // 列表
+        avgList: "/avgPrice/list",
+        avgDelete: "/avg/delete",
+        avgCheck: "/avg/check",
+        districtOfCity: '/setting/districtOfCity',
+        blockOfCity: '/setting/blockOfCity',
+        buildingType: '/avgPrice/buildingType',
+        hideOrShow: "/avgPrice/hideOrShow",
+        editManualPrice: "/avgPrice/editManualPrice"
+    },
+
+    /**
+     * 界面js入口
+     */
+    init: function () {
+        // 初始化表格
+        this._initTable();
+        // 初始化收索
+        this._initSearch();
+        // 绑定倒出按钮
+        this._initExportBtn();
+        // 下拉初始化
+        this._initSelect();
+        // 绑定行操作
+        this._initRowBar();
+        // 绑定日期选择插件
+        this._initDate();
+        // 人工均价修改功能绑定
+        this._editManualAvg();
+        // 初始化工具栏
+        this._initToolbar();
+    },
+
+
+    /**
+     * 初始化下拉
+     */
+    _initSelect: function () {
+        let _this = this;
+        let cityMongoId = parent.homeIndex_obj.currentCityMongoId;
+        _this.currentCityMongoId = cityMongoId;
+        // 行政区
+        $common.initBaseSelect(_this.urlConfig.districtOfCity, {parentId: cityMongoId}, 'districtSelect', '行政区')
+        // 建筑类型
+        $common.initBaseSelect(_this.urlConfig.buildingType, null, 'buildingTypeSelect', '建筑类型');
+    },
+
+    /**
+     * 初始化导出按钮
+     */
+    _initExportBtn: function () {
+        $('#avgPriceIndex_wrapper #exportAvgPrice').on('click', function () {
+            layui.layer.open({
+                type: 2,
+                title: '导出条件',
+                content: 'export.html?cityName=' + parent.homeIndex_obj.currentCity,
+                area: ['97%', '97%']
+            });
+            return false;
+        });
+    },
+
+    /**
+     * 初始化搜索按钮
+     */
+    _initSearch: function () {
+        let _this = this;
+        $('#avgPriceIndex_wrapper #searchBtn').on('click', function () {
+            let data = {
+                cityId: parent.homeIndex_obj.currentCityMongoId,
+                districtId: $('#avgPriceIndex_wrapper #districtSelect').val(),
+                communityName: $('#avgPriceIndex_wrapper #estateName').val(),
+                buildingType: $('#avgPriceIndex_wrapper #buildingTypeSelect').val(),
+                caseNoMin: $('#avgPriceIndex_wrapper #caseNumMin').val(),
+                caseNoMax: $('#avgPriceIndex_wrapper #caseNumMax').val(),
+                calDateStart: $('#avgPriceIndex_wrapper #calDate').val().split(' - ')[0],
+                calDateEnd: $('#avgPriceIndex_wrapper #calDate').val().split(' - ')[1],
+                monthGainMin: $('#avgPriceIndex_wrapper #monthGainMin').val(),
+                monthGainMax: $('#avgPriceIndex_wrapper #monthGainMax').val(),
+            };
+            _this.tableIns.reload({
+                method: 'get',
+                where: data
+            });
+        });
+    },
+
+    /**
+     * 带参数刷新table
+     * @private
+     */
+    _refreshTable(){
+        let _this = this;
+        let data = {
+            cityId: parent.homeIndex_obj.currentCityMongoId,
+            districtId: $('#avgPriceIndex_wrapper #districtSelect').val(),
+            communityName: $('#avgPriceIndex_wrapper #estateName').val(),
+            buildingType: $('#avgPriceIndex_wrapper #buildingTypeSelect').val(),
+            caseNoMin: $('#avgPriceIndex_wrapper #caseNumMin').val(),
+            caseNoMax: $('#avgPriceIndex_wrapper #caseNumMax').val(),
+            calDateStart: $('#avgPriceIndex_wrapper #calDate').val().split(' - ')[0],
+            calDateEnd: $('#avgPriceIndex_wrapper #calDate').val().split(' - ')[1],
+            monthGainMin: $('#avgPriceIndex_wrapper #monthGainMin').val(),
+            monthGainMax: $('#avgPriceIndex_wrapper #monthGainMax').val(),
+        };
+        _this.tableIns.reload({
+            method: 'get',
+            where: data
+        });
+    },
+    /**
+     * 行工具栏按钮
+     */
+    _initRowBar: function () {
+        let _this = this;
+        // 绑定按钮
+        layui.table.on('tool(avgPriceTable)', function (obj) {
+            let data = obj.data;
+            if (obj.event === 'hide') {
+                // 隐藏和可见相互切换
+                let visibility = data.visibility === '0' ? '1' : '0';
+                let ids = [data.id];
+                _this._visibility(ids,visibility);
+            } else if (obj.event === 'correctAvgPrice') {
+                _this._correctAvgPrice(data.id);
+            }
+        });
+    },
+
+    /**
+     * 行人工均价修改
+     */
+    _editManualAvg: function () {
+        let  _this = this;
+        layui.table.on('edit(avgPriceTable)', function (obj) {
+            let param = {};
+            param.id = obj.data.id;
+            param.avgPriceManual = obj.data.avgPriceManual;
+            $.post({
+                url: _this.urlConfig.editManualPrice,
+                data: JSON.stringify(param),
+                contentType: "application/json",
+                success: function (res) {
+                    layer.msg(res.msg);
+                    _this._refreshTable();
+                }
+            });
+        });
+    },
+
+    /**
+     * 修正系统均价
+     */
+    _correctAvgPrice: function (id) {
+        layer.open({
+            type: 2,
+            title: '修正系统均价',
+            content: 'correctAvgPrice.html?id=' + id,
+            area: ['80%', '96%']
+        });
+    },
+
+    /**
+     * 新增均价
+     */
+    _addAvgPrice: function(){
+        layer.open({
+            type: 2,
+            title: '新增均价',
+            content: 'addAvgPrice.html',
+            area: ['50%', '90%']
+        });
+    },
+
+    /**
+     * 隐藏/可见
+     * @param ids 修改的id集合
+     * @param visibility "0":隐藏,"1":打开
+     */
+    _visibility: function (ids, visibility) {
+        let _this = this;
+        if (ids.length === 0) {
+            layer.msg('请首先选择楼盘');
+        } else {
+            $.ajax({
+                url: _this.urlConfig.hideOrShow,
+                type: 'post',
+                data: {ids: ids, visibility : visibility},
+                success: function (res) {
+                    if (res.code === 0) {
+                        // 刷新当前页
+                        $(".layui-laypage-btn")[0].click();
+                        var text;
+                        if (visibility == "0") {
+                            text = "隐藏";
+                        } else {
+                            text = "打开";
+                        }
+                        layer.msg("已成功" + text + "选中的楼盘");
+                    }
+                }
+            });
+        }
+    },
+
+    /**
+     * table工具条事件
+     */
+    _initToolbar: function () {
+        let _this = this;
+        let _table = layui.table;
+        // 工具栏事件 表头按钮触发事件
+        _table.on('toolbar(avgPriceTable)', function (obj) {
+            let checkStatus = _table.checkStatus(obj.config.id);
+            let ids = [];
+            $.each(checkStatus.data,function (i,item) {
+                ids.push(item.id);
+            });
+            switch (obj.event) {
+                case 'batchHide'://批量隐藏
+                    _this._visibility(ids,"0");
+                    break;
+                case 'batchShow'://批量显示
+                    _this._visibility(ids,"1");
+                    break;
+                case 'addAvgPrice'://新增均价
+                    _this._addAvgPrice();
+                    break;
+            }
+        });
+    },
+
+
+    /**
+     *日期选择插件
+     */
+    _initDate() {
+        //年月范围
+        layui.laydate.render({
+            elem: '#calDate'
+            , type: 'month'
+            , format: 'yyyyMM'
+            , range: true
+        })
+    },
+
+
+
+    /**
+     * 根据res展示表格
+     */
+    _initTable: function () {
+        let _this = this;
+        // 刷新表格
+        _this.tableIns = layui.table.render({
+            id: 'avgPriceTable',
+            title: '均价数据表',
+            method: 'get',
+            //contentType: 'application/json',
+            elem: '#avgPriceIndex_wrapper #avgPriceTable',
+            toolbar: '#avgPriceToolbar',
+            url: _this.urlConfig.avgList,
+            where: {
+                cityId: parent.homeIndex_obj.currentCityMongoId,
+                districtId: $('#avgPriceIndex_wrapper #districtSelect').val(),
+                estateName: $('#avgPriceIndex_wrapper #estateName').val(),
+                buildingType: $('#avgPriceIndex_wrapper #buildingCategorySelect').val(),
+                caseNoMin: $('#avgPriceIndex_wrapper #caseNumMin').val(),
+                caseNoMax: $('#avgPriceIndex_wrapper #caseNumMax').val(),
+                calDateMin: $('#avgPriceIndex_wrapper #calDate').val().split(' - ')[0],
+                calDateMax: $('#avgPriceIndex_wrapper #calDate').val().split(' - ')[1],
+                monthGainMin: $('#avgPriceIndex_wrapper #monthGainMin').val(),
+                monthGainMax: $('#avgPriceIndex_wrapper #monthGainMax').val()
+            },
+            cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {field: 'communityName', title: '楼盘名称'},
+                {field: 'buildingTypeName', title: '建筑类别'},
+                {field: 'areasSection', title: '面积段(m²)', templet:function (b) {
+                            let a = b.areasSection;
+                            return a[0]+"-"+a[1];
+                    }},
+                {field: 'calDate', title: '日期'},
+                {field: 'monthGain', title: '环比'},
+                {field: 'caseNo', title: '案例数'},
+                {field: 'avgPriceSys', title: '系统均价(元/m²)'},
+                {field: 'avgPriceManual', title: '人工均价(元/m²)', edit: 'number'},
+                {fixed: 'right', title: '操作', toolbar: '#avgPriceBar', width: 180}
+            ]],
+            page: true,
+            /*done: function () {
+
+            }*/
+        });
+    }
+};
+
+avgPriceIndex_obj.init();

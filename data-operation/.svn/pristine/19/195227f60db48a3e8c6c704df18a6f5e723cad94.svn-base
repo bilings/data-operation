@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="detail.css" rel="stylesheet">
+    <title>楼盘</title>
+</head>
+<body>
+<div id="estateDetail_wrapper">
+    <label>
+        <span id="nameSpan"></span>&nbsp;&nbsp;&nbsp;
+        <span id="addrDetailSpan"></span>
+    </label>
+    <hr/>
+    <span class="layui-breadcrumb">
+        <a href="#"><cite style="color: blue;">楼盘信息</cite></a>
+        <a href="#">楼栋列表</a>
+        <a href="#">楼盘均价</a>
+        <a href="#">合并虚拟信息</a>
+        <a href="#">楼盘系数配置</a>
+    </span>
+    <br><br>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">*城市:</label>
+            <label class="layui-form-label" name="label-value" id="cityName"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">*行政区:</label>
+            <label class="layui-form-label" name="label-value" id="districtName"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">片区板块:</label>
+            <label class="layui-form-label" name="label-value" id="blockName"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">街道办/乡镇:</label>
+            <label class="layui-form-label" name="label-value" id="townName"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">*楼盘名称:</label>
+            <label class="layui-form-label" name="label-value" id="name"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">产权形式:</label>
+            <label class="layui-form-label" name="label-value" id="propertyRight"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <label class="layui-form-label" name="label-key">详细地址:</label>
+            <label class="layui-form-label" name="label-value" id="addrDetail"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <label class="layui-form-label" name="label-key">参考地址:</label>
+            <label class="layui-form-label" name="label-value" id="addrRef"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <label class="layui-form-label" name="label-key">楼盘别名:</label>
+            <label class="layui-form-label" name="label-value" id="alias"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">总户数:</label>
+            <label class="layui-form-label" name="label-value" id="totalRoomNo"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">*楼栋总数:</label>
+            <label class="layui-form-label" name="label-value" id="totalBuildingNo"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">车位数:</label>
+            <label class="layui-form-label" name="label-value" id="parkNo"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">总占地面积:</label>
+            <label class="layui-form-label" name="label-value" id="usedAcreage"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">总建筑面积:</label>
+            <label class="layui-form-label" name="label-value" id="buildingAcreage"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">绿化率:</label>
+            <label class="layui-form-label" name="label-value" id="greenRatio"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">容积率:</label>
+            <label class="layui-form-label" name="label-value" id="capacity"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">开发商品牌:</label>
+            <label class="layui-form-label" name="label-value" id="developerBrand"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">开发商:</label>
+            <label class="layui-form-label" name="label-value" id="developerDesc"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">主力面积:</label>
+            <label class="layui-form-label" name="label-value" id="mainAcreage"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">建成年代(起):</label>
+            <label class="layui-form-label" name="label-value" id="buildYearStart"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">建成年代(止):</label>
+            <label class="layui-form-label" name="label-value" id="buildYearEnd"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">主力类别:</label>
+            <label class="layui-form-label" name="label-value" id="mainCategory"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">是否可估:</label>
+            <label class="layui-form-label" name="label-value" id="canEvaluate"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">是否完善:</label>
+            <label class="layui-form-label" name="label-value" id="isPerfect"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">主力品质:</label>
+            <label class="layui-form-label" name="label-value" id="mainQuality"></label>
+        </div>
+        <div class="layui-col-xs3">
+            <label class="layui-form-label" name="label-key">有无电梯:</label>
+            <label class="layui-form-label" name="label-value" id="haveLift"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <label class="layui-form-label" name="label-key">价格差异说明:</label>
+            <label class="layui-form-label" name="label-value" id="priceDesc"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <label class="layui-form-label" name="label-key">物管设施:</label>
+            <label class="layui-form-label" name="label-value" id="equipment"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <label class="layui-form-label" name="label-key">建筑类别:</label>
+            <label class="layui-form-label" name="label-value" id="buildingCategory"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs12">
+            <label class="layui-form-label" name="label-key">住宅品质:</label>
+            <label class="layui-form-label" name="label-value" id="quality"></label>
+        </div>
+    </div>
+    <div class="layui-row">
+        <div class="layui-col-xs3" name="">
+            <label class="layui-form-label" name="label-key">
+                <button id="editBtn" type="button" class="layui-btn layui-btn-normal">编辑</button>
+            </label>
+        </div>
+    </div>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="detail.js"></script>
+</body>
+</html>

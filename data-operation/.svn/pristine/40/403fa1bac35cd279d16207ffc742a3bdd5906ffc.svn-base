@@ -1,0 +1,308 @@
+package com.hifo.dataoperation.dao;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.mongodb.client.ListIndexesIterable;
+import com.mongodb.client.model.IndexOptions;
+import com.mongodb.client.model.Indexes;
+import org.bson.Document;
+import org.bson.types.ObjectId;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.data.mongodb.core.query.Update;
+import org.springframework.stereotype.Component;
+import org.springframework.util.ObjectUtils;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 描述:
+ * mongoDB基础方法封装
+ */
+@Component
+public abstract class MongodbBasicDao<T> {
+
+
+    Gson gson = new GsonBuilder().disableHtmlEscaping().create();
+    /**
+     * 注入template
+     */
+    @Autowired
+    private MongoTemplate mongoTemplate;
+
+
+
+    /**
+     * 获取class
+     *
+     * @return
+     */
+    public abstract Class<T> getEntityClass();
+
+    /**
+     * 获取collection 名字
+     * @return
+     */
+    public abstract String getCollectionName();
+
+    /**
+     * 功能描述: 创建一个集合
+     * 同一个集合中可以存入多个不同类型的对象，我们为了方便维护和提升性能，
+     * 后续将限制一个集合中存入的对象类型，即一个集合只能存放一个类型的数据
+     *
+     * @param name 集合名称，相当于传统数据库的表名
+     * @return:void
+     */
+    public void createCollection(String name) {
+        mongoTemplate.createCollection(name);
+    }
+
+    /**
+     * 功能描述: 创建索引
+     * 索引是顺序排列，且唯一的索引
+     *
+     * @param filedName      对象中的某个属性名
+     * @return:java.lang.String
+     */
+    public String createIndex(String filedName) {
+        //配置索引选项
+        IndexOptions options = new IndexOptions();
+        // 设置为唯一
+        options.unique(true);
+        //创建按filedName升序排的索引
+        return mongoTemplate.getCollection(this.getCollectionName()).createIndex(Indexes.ascending(filedName), options);
+    }
+
+
+    /**
+     * 功能描述: 获取当前集合对应的所有索引的名称
+     *
+     * @return:java.util.List<java.lang.String>
+     */
+    public List<String> getAllIndexes() {
+        ListIndexesIterable<Document> list = mongoTemplate.getCollection(this.getCollectionName()).listIndexes();
+        //上面的list不能直接获取size，因此初始化arrayList就不设置初始化大小了
+        List<String> indexes = new ArrayList<>();
+        for (org.bson.Document document : list) {
+            document.entrySet().forEach((key) -> {
+                //提取出索引的名称
+                if (key.getKey().equals("name")) {
+                    indexes.add(key.getValue().toString());
+                }
+            });
+        }
+        return indexes;
+    }
+
+    /**
+     * 功能描述: 往对应的集合中插入一条数据
+     *
+     * @param info           存储对象
+     * @return:void
+     */
+    public void insert(T info) {
+        mongoTemplate.insert(info,this.getCollectionName());
+    }
+
+    /**
+     * 功能描述: 往对应的集合中批量插入数据，注意批量的数据中不要包含重复的id
+     *
+     * @param infos 对象列表
+     * @return:void
+     */
+
+    public void insertMulti(List<T> infos) {
+        mongoTemplate.insert(infos, this.getCollectionName());
+    }
+
+    /**
+     * 功能描述: 使用索引信息精确更改某条数据
+     *
+     * @param id             唯一键
+     * @param info           待更新的内容
+     * @return:void
+     */
+    public void updateById(String id, T info) {
+        Query query = new Query(Criteria.where("id").is(id));
+        Update update = new Update();
+        String str = gson.toJson(info);
+        JSONObject jQuery = JSON.parseObject(str);
+        jQuery.forEach((key, value) -> {
+            //因为id相当于传统数据库中的主键，这里使用时就不支持更新，所以需要剔除掉
+            if (!key.equals("id") || !key.equals("opsition")) {
+                update.set(key, value);
+            }
+        });
+        mongoTemplate.updateMulti(query, update, info.getClass(), this.getCollectionName());
+    }
+
+    /**
+     *  根据条件更新
+     * @param id
+     * @param maps
+     */
+    public void updateByParams(String id, Map<String,Object> maps) {
+        Query query = new Query(Criteria.where("id").is(id));
+        Update update = new Update();
+        for(Map.Entry<String,Object> entry :maps.entrySet()){
+               update.set(entry.getKey(),entry.getValue());
+        }
+        mongoTemplate.upsert(query,update,this.getEntityClass());
+    }
+
+    /**
+     * 功能描述: 根据id删除集合中的内容
+     *
+     * @param id             序列id
+     * @return:void
+     */
+
+    public void deleteById(String id) {
+        // 设置查询条件，当id=#{id}
+        Query query = new Query(Criteria.where("id").is(id));
+        // mongodb在删除对象的时候会判断对象类型，如果你不传入对象类型，只传入了集合名称，它是找不到的
+        // 上面我们为了方便管理和提升后续处理的性能，将一个集合限制了一个对象类型，所以需要自行管理一下对象类型
+        // 在接口传入时需要同时传入对象类型
+        mongoTemplate.remove(query, this.getEntityClass(), this.getCollectionName());
+    }
+
+
+    public void  deleteByCondition(Map<String, Object> conditions) {
+        if (!ObjectUtils.isEmpty(conditions)) {
+            Query query = new Query();
+            conditions.forEach((key, value) -> query.addCriteria(Criteria.where(key).is(value)));
+            mongoTemplate.remove(query, this.getEntityClass(), this.getCollectionName());
+        }
+    }
+
+    /**
+     * 功能描述: 根据id查询信息
+     *
+     * @param id             注解
+     * @param clazz          类型
+     * @return:java.util.List<T>
+     */
+
+    public T selectById(String id, Class<T> clazz) {
+        // 查询对象的时候，不仅需要传入id这个唯一键，还需要传入对象的类型，以及集合的名称
+        return mongoTemplate.findById(id, clazz,this.getCollectionName());
+    }
+
+    /**
+     * 功能描述: 查询列表信息
+     * 将集合中符合对象类型的数据全部查询出来
+     *
+     * @param clazz       类型
+     * @return:java.util.List<T>
+     */
+    public List<T> selectList( Class<T> clazz) {
+        return selectList(clazz, null, null);
+    }
+
+    /**
+     * 功能描述: 分页查询列表信息
+     *
+     * @param clazz       对象类型
+     * @param currentPage 当前页码
+     * @param pageSize    分页大小
+     * @return:java.util.List<T>
+     */
+    public List<T> selectList( Class<T> clazz, Integer currentPage, Integer pageSize) {
+        //设置分页参数
+        Query query = new Query();
+        //设置分页信息
+        if (!ObjectUtils.isEmpty(currentPage) && ObjectUtils.isEmpty(pageSize)) {
+            query.limit(pageSize);
+            query.skip(pageSize * (currentPage - 1));
+        }
+        return mongoTemplate.find(query, clazz,this.getCollectionName());
+    }
+
+
+    /**
+     * 功能描述: 根据条件查询集合
+     *
+     * @param conditions  查询条件，目前查询条件处理的比较简单，仅仅做了相等匹配，没有做模糊查询等复杂匹配
+     * @param currentPage 当前页码
+     * @param pageSize    分页大小
+     * @return:java.util.List<T>
+     */
+
+    public List<T> selectByCondition(Map<String, Object> conditions,  Integer currentPage, Integer pageSize) {
+        if (ObjectUtils.isEmpty(conditions)) {
+            return selectList(this.getEntityClass(), currentPage, pageSize);
+        } else {
+            //设置分页参数
+            Query query = new Query();
+            if(pageSize != null){
+                query.limit(pageSize);
+            }
+           if(currentPage !=null){
+               query.skip(currentPage);
+           }
+            // 往query中注入查询条件
+            conditions.forEach((key, value) -> query.addCriteria(Criteria.where(key).is(value)));
+            return mongoTemplate.find(query,this.getEntityClass(),this.getCollectionName());
+        }
+    }
+
+    /**
+     * 功能描述: 根据条件查询集合
+     *
+     * @param query       查询条件
+     * @param clazz       对象类型
+     * @return
+     */
+    public List<T> selectByQuery(Query query, Class<T> clazz) {
+        List<T> result = mongoTemplate.find(query, clazz, this.getCollectionName());
+        return result;
+    }
+
+    /**
+     * 根据条件获取总数
+     * @param conditions
+     * @return
+     */
+    public Long countByCondition(Map<String, Object> conditions) {
+        if (ObjectUtils.isEmpty(conditions)) {
+            Query query = new Query();
+            // 往query中注入查询条件
+            conditions.forEach((key, value) -> query.addCriteria(Criteria.where(key).is(value)));
+            return mongoTemplate.count(query,this.getEntityClass());
+        }
+        return  null;
+    }
+
+
+
+
+    /**
+     * 分页查询
+     *
+     * @param pageNo
+     * @param pageSize
+     * @param query
+     * @return
+     */
+    public Pagination<T> getPageLists(Long pageNo, Long pageSize, Query query) {
+        long totalCount = this.mongoTemplate.count(query, this.getEntityClass());
+        Pagination page = new Pagination(pageNo, pageSize, totalCount);
+        Long startNum = (page.getPage() - 1) * pageSize;
+        query.skip(startNum);// skip相当于从那条记录开始
+        query.limit(pageSize.intValue());// 从skip开始,取多少条记录
+        List datas = this.selectByQuery(query,this.getEntityClass());
+        page.setRecords(datas);
+        return page;
+    }
+
+
+}

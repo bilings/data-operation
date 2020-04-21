@@ -1,0 +1,39 @@
+package com.hifo.dataoperation.service.avgprice;
+
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.dto.BusEstateAvgPriceEtyDto;
+import com.hifo.dataoperation.pagination.Pagination;
+
+/**
+ * 楼盘均价业务层接口
+ * @author weisibin
+ * @2020年4月8日17:43:36
+ */
+@SuppressWarnings("rawtypes")
+public interface BusAvgPriceService{
+	
+	/**
+     * 分页查询楼盘均价
+     * @param BusEstateAvgPriceEtyDto 条件参数dto
+     * @param page 分页参数
+     * @return Pagination<BusEstateAvgPriceEtyDto>
+     */
+	Pagination<BusEstateAvgPriceEtyDto> findByPage(BusEstateAvgPriceEtyDto busEstateAvgPriceEtyDto, Pagination page);
+    
+	/**
+	 * 获取建筑分类
+	 * @param busEstateAvgPriceEtyDto
+	 * @return ApiResult 返回状态/数据
+	 */
+	ApiResult buildingType(); 
+	
+	/**
+	 * 批量/单条-隐藏/显示
+	 * @param ids 多个id
+	 * @param ba 单个实例参数
+	 * @return ApiResult 返回状态/数据
+	 */
+	ApiResult hideOrShow(String[] ids,BusEstateAvgPriceEtyDto ba);
+	
+    
+}

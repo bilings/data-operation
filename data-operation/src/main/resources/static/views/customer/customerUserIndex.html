@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="customerUserIndex.css" rel="stylesheet">
+    <title>用户管理</title>
+</head>
+<body>
+<div id="customerUserIndex_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" id="username" class="layui-input" placeholder="请输入关键字" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline" id="btnDiv">
+                    <button id="searchBtn"lay-event="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-normal ">查询</button>
+                    <script type="text/html" id="customerUserIndexBar">
+                        <button id="addBtn" lay-event="addBtn" type="button" class="layui-btn layui-btn-sm">添加用户</button>
+                        <button id="editBtn" lay-event="editBtn" type="button" class="layui-btn layui-btn-sm">编辑</button>
+                        <button id="resetBtn" lay-event="resetBtn" type="button" class="layui-btn layui-btn-sm">重置密码</button>
+                        <button id="deleteBtn" lay-event="deleteBtn"type="button" class="layui-btn layui-btn-sm">删除</button>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="customerUserIndexTableDiv">
+        <table class="layui-hide" id="customerUserIndexTable" lay-filter="customerUserIndexTable"></table>
+    </div>
+</div>
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="dict.js"></script>
+<script type="text/javascript" src="customerUserIndex.js"></script>
+</body>
+</html>

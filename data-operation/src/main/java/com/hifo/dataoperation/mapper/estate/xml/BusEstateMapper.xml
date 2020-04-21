@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.estate.BusEstateMapper">
+
+    <!-- 根据楼盘条件查询楼盘 -->
+    <select id="selectPageByEstate" resultType="com.hifo.dataoperation.entity.BusEstate">
+        select *
+        from bus_estate
+        where
+        organizationId = #{busEstate.organizationId}
+        <if test="busEstate.cityName!=null and busEstate.cityName!=''">
+            AND cityName= #{busEstate.cityName}
+        </if>
+        <if test="busEstate.name!=null and busEstate.name!=''">
+            AND (name like '%${busEstate.name}%' or addrDetail like '%${busEstate.name}%')
+        </if>
+        <if test="busEstate.createName!=null and busEstate.createName!=''">
+            AND (createName like '%${busEstate.createName}%' or updateName like '%${busEstate.createName}%')
+        </if>
+        <choose>
+            <when test="busEstate.visibility!=null and busEstate.visibility!=''">
+                AND visibility=#{busEstate.visibility}
+            </when>
+            <otherwise>
+                and visibility in (1, 2)
+            </otherwise>
+        </choose>
+    </select>
+
+    <!-- 分页查询 -->
+    <select id="query" resultType="com.hifo.dataoperation.entity.BusEstate">
+        select *
+        from bus_estate
+        where
+        organizationId = #{busEstate.organizationId}
+        <if test="busEstate.cityName!=null and busEstate.cityName!=''">
+            AND cityName= #{busEstate.cityName}
+        </if>
+        <if test="busEstate.name!=null and busEstate.name!=''">
+            AND (name like '%${busEstate.name}%' or addrDetail like '%${busEstate.name}%')
+        </if>
+        <if test="busEstate.createName!=null and busEstate.createName!=''">
+            AND (createName like '%${busEstate.createName}%' or updateName like '%${busEstate.createName}%')
+        </if>
+        <choose>
+            <when test="busEstate.visibility!=null and busEstate.visibility!=''">
+                AND visibility=#{busEstate.visibility}
+            </when>
+            <otherwise>
+                and visibility in (1, 2)
+            </otherwise>
+        </choose>
+        limit ${start},${limit}
+    </select>
+
+
+    <!-- 分页查询 有价格 -->
+    <select id="queryList" resultType="com.hifo.dataoperation.entity.BusEstate">
+        select be.*
+        from bus_estate be left JOIN bus_estate_avg_price bp on be.id = bp.estateId
+        where
+        bp.calDate>#{calDate}
+        AND (bp.avgPriceSys > 0 or bp.avgPriceManual > 0)
+        AND bp.visibility ='2'
+        <if test="name!=null and name!=''">
+            AND (be.name like '%${name}%' or be.name like '%${name}%')
+        </if>
+        group BY  be.id
+        limit ${start},${limit}
+    </select>
+</mapper>

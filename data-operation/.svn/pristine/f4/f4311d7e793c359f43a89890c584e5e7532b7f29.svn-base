@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.setting.HfDictionaryMapper">
+
+    <!-- 查询 -->
+    <select id="query" resultType="com.hifo.dataoperation.entity.BusDictionary">
+        select *
+        from hf_dictionary
+        where categoryId =
+        (select id from hf_category
+        <where>
+            <if test="id > 0">
+                and id=#{id}
+            </if>
+            <if test="category != null and category != ''">
+                and description = #{category}
+            </if>
+        </where>
+        )
+    </select>
+
+    <select id="queryTitle" resultType="com.hifo.dataoperation.vo.BusDictionaryVO">
+        select id,categoryId,item as title
+        from hf_dictionary
+        where categoryId =
+        (select id from hf_category
+        <where>
+            <if test="id > 0">
+                and id=#{id}
+            </if>
+            <if test="category != null and category != ''">
+                and description = #{category}
+            </if>
+        </where>
+        )
+    </select>
+
+    <!-- 所有字典数据,字典项字符串 -->
+    <select id="selectListByItems" resultType="com.hifo.dataoperation.vo.DictVO">
+        SELECT
+        cm.description as category,
+        GROUP_CONCAT(dm.item ORDER BY dm.id) as item
+        FROM hf_category cm
+        LEFT JOIN hf_dictionary dm on cm.id=dm.categoryId
+        WHERE dm.item is not null and cm.description !='bool'
+        GROUP BY cm.description
+        ORDER BY cm.id
+    </select>
+
+</mapper>

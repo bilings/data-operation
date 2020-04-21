@@ -1,0 +1,143 @@
+package com.hifo.dataoperation.util;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import lombok.var;
+import net.sourceforge.pinyin4j.PinyinHelper;
+import net.sourceforge.pinyin4j.format.HanyuPinyinCaseType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinOutputFormat;
+import net.sourceforge.pinyin4j.format.HanyuPinyinToneType;
+import net.sourceforge.pinyin4j.format.HanyuPinyinVCharType;
+
+import java.lang.reflect.Array;
+import java.util.Collection;
+import java.util.Map;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
+/**
+ * 字符串工具类
+ *
+ * @author whc
+ * 2019/3/12
+ */
+public class StringUtil {
+
+    /**
+     * object转string
+     */
+    public static String str(Object obj) {
+        return isNull(obj) ? "" : obj.toString();
+    }
+
+    /**
+     * 判断一个对象是否为空
+     */
+    public static boolean isNull(Object obj) {
+        return obj == null || "null".equalsIgnoreCase(obj.toString()) || "".equals(obj.toString());
+    }
+
+    /**
+     * 判断一个字符串是否包含输入正则表达式
+     *
+     * @param str      字符串
+     * @param regexArr 正则
+     * @return boolean
+     */
+    public static boolean contains(String str, String... regexArr) {
+        for (String regex : regexArr) {
+            if (Pattern.matches(regex, str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public static boolean isNotNull(Object obj) {
+        return !isNull(obj);
+    }
+
+    public static boolean isEmpty(Object obj) {
+        if (obj == null) {
+            return true;
+        } else if (obj instanceof String) {
+            if (((String) obj).trim().length() == 0) {
+                return true;
+            }
+            return "null".equalsIgnoreCase(((String) obj).trim());
+        } else if (obj instanceof CharSequence) {
+            return ((CharSequence) obj).length() == 0;
+        } else if (obj instanceof Collection) {
+            return ((Collection) obj).isEmpty();
+        } else if (obj instanceof Map) {
+            return ((Map) obj).isEmpty();
+        } else if (obj.getClass().isArray()) {
+            return Array.getLength(obj) == 0;
+        }
+        return false;
+    }
+
+    public static boolean isNotEmpty(Object obj) {
+        return !isEmpty(obj);
+    }
+
+    /**
+     * addr Json2String
+     *
+     * @param str
+     * @return
+     */
+    public static String formatAddrJson2String(String str) {
+        var buff = new StringBuffer();
+        var arr = JSONArray.parseArray(str);
+        var size = arr.size();
+        for (var i = 0; i < size; i++) {
+            var obj = (Map) JSON.parse(arr.get(i).toString());
+            if (StringUtil.isNotEmpty(obj.get("road"))) {
+                buff.append(obj.get("road"));
+            }
+            if (StringUtil.isNotEmpty(obj.get("number"))) {
+                if (StringUtil.isNotEmpty(obj.get("road"))) {
+                    buff.append("-");
+                }
+                buff.append(obj.get("number"));
+                buff.append("号");
+            }
+            if (i != size - 1) {
+                buff.append(",");
+            }
+        }
+        return buff.toString();
+    }
+
+    /**
+     * 汉字转为拼音
+     *
+     * @param chinese 汉字
+     * @return 拼音
+     */
+    public static String toPinyin(String chinese) {
+        HanyuPinyinOutputFormat defaultFormat = new HanyuPinyinOutputFormat();
+        /* 拼音用小写 */
+        defaultFormat.setCaseType(HanyuPinyinCaseType.LOWERCASE);
+        /* 不需要声调 */
+        defaultFormat.setToneType(HanyuPinyinToneType.WITHOUT_TONE);
+        /* 用v表示而不是u，比如：女=nv */
+        defaultFormat.setVCharType(HanyuPinyinVCharType.WITH_V);
+
+        StringBuilder pinyinStr = new StringBuilder();
+        char[] newChar = chinese.toCharArray();
+        for (char c : newChar) {
+            if (c > 128) {
+                try {
+                    pinyinStr.append(PinyinHelper.toHanyuPinyinStringArray(c, defaultFormat)[0]);
+                } catch (Exception ignored) {
+                }
+            } else {
+                pinyinStr.append(c);
+            }
+        }
+        return pinyinStr.toString();
+    }
+
+}

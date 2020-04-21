@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="customerOrgIndex.css" rel="stylesheet">
+    <title>机构管理</title>
+</head>
+<body class="layui-layout-body">
+<div id="customerOrgIndex_wrapper" class="layui-layout-admin">
+    <div class="layui-header">
+        <div id="btnDiv">
+            <form class="layui-form" action="">
+                <div class="layui-row" style="padding: 10px;">
+                    <div class="layui-form-item">
+                        <div class="layui-inline"style="padding-right: 50px;">
+                            <button id="addBtn" lay-event="addBtn" type="button" class="layui-btn layui-btn-sm">添加机构</button>
+                            <button id="editBtn" lay-event="editBtn" type="button" class="layui-btn layui-btn-sm">编辑</button>
+                            <button id="deleteBtn" lay-event="deleteBtn"type="button" class="layui-btn layui-btn-sm">删除</button>
+                            <button id="addChildrenBtn" lay-event="addChildrenBtn" type="button" class="layui-btn layui-btn-sm">添加子机构</button>
+                        </div>
+                        <div class="layui-inline">
+                            <div class="layui-input-inline">
+                                <input type="hidden" id="orgId"/>
+                                <input type="text" id="name" class="layui-input" placeholder="请输入关键字" autocomplete="off"/>
+                            </div>
+                            <button id="searchBtn"lay-event="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-normal">查询</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-side">
+        <div class="layui-side-scroll">
+            <ul id="orgTree" class="layui-nav layui-nav-tree" lay-filter="orgTree"></ul>
+        </div>
+    </div>
+    <div class="layui-body">
+        <div id="orgDetail">
+            <div class="layui-row" style="padding: 10px;">
+                <div class="layui-form-item">
+                    <div class="layui-inline">
+                        <label class="layui-form-label" name="label-key">机构名称:</label>
+                        <input type="text" id="orgName" autocomplete="off" class="layui-input" name="label-value" value=""/>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" name="label-key">客户类型:</label>
+                        <input type="text" id="orgType" autocomplete="off" class="layui-input" name="label-value" value=""/>
+                    </div>
+                    <div class="layui-inline">
+                        <label class="layui-form-label" name="label-key">剩余查询次数:</label>
+                        <input type="text" id="orgTimes" autocomplete="off" class="layui-input" name="label-value" value=""/>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div id="tableShow">
+            <label class="layui-form-label" name="label-key">机构下用户:</label>
+            <table class="layui-hide" id="customerOrgIndexTable" lay-filter="customerOrgIndexTable"></table>
+        </div>
+    </div>
+</div>
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="dict.js"></script>
+<script type="text/javascript" src="customerOrgIndex.js"></script>
+</body>
+</html>

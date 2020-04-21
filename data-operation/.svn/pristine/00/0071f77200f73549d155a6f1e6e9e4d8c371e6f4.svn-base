@@ -1,0 +1,293 @@
+package com.hifo.dataoperation.controller;
+
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.hifo.dataoperation.base.BasicController;
+import com.hifo.dataoperation.entity.BusBuilding;
+import com.hifo.dataoperation.intercept.RequiredPermission;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.estate.BusBuildingService;
+import com.hifo.dataoperation.util.ExcelUtil;
+import com.hifo.dataoperation.util.StringUtil;
+import com.hifo.dataoperation.util.RequestUtil;
+import com.hifo.dataoperation.vo.BusBuildingVO;
+import io.swagger.annotations.*;
+import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletResponse;
+import java.util.ArrayList;
+
+
+@Api(tags = "楼栋管理")
+@RequestMapping("building")
+@RestController
+public class BuildingController extends BasicController {
+
+    @Autowired
+    private BusBuildingService buildingService;
+
+    /**
+     * 楼栋List
+     * @param busBuilding 楼栋
+     * @return
+     */
+    @ApiOperation(value = "查询楼栋列表")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "communityId", value = "楼盘Id", paramType = "query", dataType = "String", example = "重庆市", required = true),
+            @ApiImplicitParam(name = "buildingName", value = "楼栋名称", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "address", value = "地址", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "page", value = "当前页数", paramType = "query", dataType = "int", example = "1", required = true),
+            @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "query", dataType = "int", example = "20", required = true)
+    })
+    @GetMapping("/list")
+    @ResponseBody
+    @RequiredPermission("100")
+    public String list(Pagination pages, BusBuilding busBuilding) {
+
+        var page = buildingService.list(pages, busBuilding);
+        // 保存查询条件用于导出
+        RequestUtil.session("filter", busBuilding);
+        return pageData(page.getTotal(), page.getRecords());
+
+    }
+
+    /**
+     * 新增和修改楼栋
+     * @param busBuilding
+     * @return
+     */
+    @ApiOperation(value = "新增和修改楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "communityId", value = "楼盘Id", paramType = "save", dataType = "String", example = "11", required = true),
+            @ApiImplicitParam(name = "buildingName", value = "楼栋名称", paramType = "save", dataType = "String", example = "1栋", required = true),
+            @ApiImplicitParam(name = "id", value = "有id存在更新，无id添加", paramType = "save", dataType = "String"),
+            @ApiImplicitParam(name = "quality", value = "物业品质", paramType = "save", dataType = "String"),
+            @ApiImplicitParam(name = "visibility", value = "楼栋状态", paramType = "save", dataType = "String"),
+    })
+    @PostMapping("save")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> saveBuilding(@ApiParam(name = "楼栋信息", value = "json", required = true) @RequestBody BusBuilding busBuilding) {
+        String res = buildingService.saveBuilding(busBuilding);
+        if (StringUtil.isNull(res)) {
+            return ApiResult.success(res);
+        } else {
+            return ApiResult.failed(res);
+        }
+    }
+
+    /**
+     * 隐藏楼栋
+     * @param ids
+     * @return
+     */
+    @ApiOperation(value = "隐藏楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+    })
+    @PostMapping("hide")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> hideBuilding(String[] ids) {
+        buildingService.hideBuilding(ids);
+        return ApiResult.success("成功");
+    }
+
+    /**
+     * 合并楼栋
+     * @param fromIds
+     * @param toId
+     * @return
+     */
+    @ApiOperation(value = "合并楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "fromIds", value = "被合并楼盘的id集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "toId", value = "合并至楼盘的id", paramType = "query", dataType = "String", example = "1", required = true)
+    })
+    @PostMapping("merge")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> mergeBuilding(String[] fromIds, String toId) {
+        String res = buildingService.mergeBuilding(fromIds, toId);
+        return ApiResult.success("合并成功");
+    }
+
+    /**
+     * 显示楼栋
+     * @param ids
+     * @return
+     */
+    @ApiOperation(value = "显示楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+    })
+    @PostMapping("show")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> showBuilding(String[] ids) {
+        buildingService.showBuilding(ids);
+        return ApiResult.success("成功");
+    }
+
+    /**
+     * 转移楼栋
+     * @param transferIds
+     * @return
+     */
+    @ApiOperation(value = "转移楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "estateId", value = "楼盘Id", paramType = "save", dataType = "String", example = "11", required = true),
+            @ApiImplicitParam(name = "transferIds", value = "楼栋名称", paramType = "save", dataType = "String", example = "1,2,3", required = true),
+    })
+    @PostMapping("transfer")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> transferBuilding(long estateId, String transferIds) {
+        String res = buildingService.transferBuilding(estateId, transferIds);
+        if (res == null) {
+            return ApiResult.success("成功");
+        } else {
+            return ApiResult.failed(res);
+        }
+
+    }
+
+    /**
+     * 根据ID查询楼栋
+     * @param id
+     * @return
+     */
+    @ApiOperation(value = "根据ID查询楼栋")
+    @ApiImplicitParam(name = "id", value = "楼栋Id", paramType = "query", dataType = "Long", example = "1", required = true)
+    @PostMapping("findById")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<BusBuilding> findById(Long id) {
+        BusBuilding build = buildingService.findById(id);
+        return ApiResult.success(build);
+    }
+
+
+    /**
+     * 填充保存楼栋
+     * @param colName
+     * @return
+     */
+    @ApiOperation(value = "填充保存楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "colName", value = "填充字段", paramType = "save", dataType = "String", example = "['name','quality']", required = true),
+            @ApiImplicitParam(name = "fillIds", value = "要填充的楼栋ID", paramType = "save", dataType = "String", example = "1,2,3", required = true),
+            @ApiImplicitParam(name = "id", value = "模板楼栋ID", paramType = "save", dataType = "String", example = "3", required = true),
+    })
+    @PostMapping("fillSave")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> fillSave(String[] colName, String fillIds, String id) {
+        buildingService.fillSave(colName, fillIds, id);
+        return ApiResult.success("成功");
+    }
+
+    /**
+     * 删除楼栋
+     * @param ids
+     * @return
+     */
+    @ApiOperation(value = "删除楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+    })
+    @PostMapping("delete")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> delete(String[] ids) {
+        buildingService.delete(ids);
+        return ApiResult.success("删除成功");
+    }
+
+    /**
+     * 取消删除楼栋
+     * @param ids
+     * @return
+     */
+    @ApiOperation(value = "取消删除楼栋")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "ids", value = "楼盘编号集合，以英文逗号,分隔", paramType = "query", dataType = "String", example = "1,2", required = true),
+    })
+    @PostMapping("undelete")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> undelete(String[] ids) {
+        buildingService.undelete(ids);
+        return ApiResult.success("取消删除成功");
+    }
+
+    /**
+     * 复制楼栋
+     * @param busBuilding
+     * @return
+     */
+    @ApiOperation(value = "复制楼栋")
+    @PostMapping("copy")
+    @ResponseBody
+    @RequiredPermission("100")
+    public ApiResult<String> copy(@ApiParam(name = "楼栋信息", value = "json", required = true) @RequestBody BusBuilding busBuilding) {
+        String res = buildingService.copy(busBuilding);
+        if (res == null) {
+            return ApiResult.success("复制成功");
+        } else {
+            return ApiResult.failed(res);
+        }
+
+    }
+
+    /**
+     * 下载楼栋模板
+     * @param response HttpServletResponse
+     */
+    @ApiOperation(value = "下载楼栋模板")
+    @GetMapping("downBuildingTemplate")
+    @RequiredPermission("200")
+    public void downBuildingTemplate(HttpServletResponse response) {
+        ExcelUtil.exportExcel(new ArrayList<>(), "楼栋信息", "楼栋", BusBuildingVO.class, "楼栋模板.xls", response);
+    }
+
+    /**
+     * 下载楼栋信息数据
+     */
+    @ApiOperation(value = "下载楼栋信息数据", produces = "application/octet-stream")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "columns", value = "楼栋信息表头", example = "城市名称_cityName,行政区名称_districtName,街道_townName,楼栋名称_name", paramType = "query", dataType = "String"),
+            @ApiImplicitParam(name = "estateId", value = "楼盘id", example = "城市名称_cityName,行政区名称_districtName,街道_townName,楼栋名称_name", paramType = "query", dataType = "String")
+    })
+    @GetMapping("download")
+    @RequiredPermission("100")
+    public void download(String[] columns, long estateId, HttpServletResponse response) {
+        if (columns != null && columns.length > 0) {
+            // 内容动态导出
+            var listMaps = buildingService.findMaps(estateId);
+            ExcelUtil.exportExcel(listMaps, "楼栋信息", "楼栋", columns, "楼栋信息.xls", response);
+        } else {
+            // 内容全部导出
+            var list = buildingService.findLists(estateId);
+            ExcelUtil.exportExcel(list, "楼栋信息", "楼栋", BusBuilding.class, "楼栋信息.xls", response);
+        }
+    }
+
+    /**
+     * 导入楼栋信息数据
+     */
+    @ApiOperation(value = "导入楼栋信息数据")
+    @PostMapping(value = "importBuilding", consumes = "multipart/*", headers = "content-type=multipart/form-data")
+    @RequiredPermission("200")
+    public ApiResult importBuilding(@ApiParam(name = "file", value = "上传的文件", required = true) MultipartFile file) {
+        try {
+            return ApiResult.success(buildingService.importBuilding(file));
+        } catch (Exception e) {
+            return ApiResult.failed(e.getMessage());
+        }
+    }
+
+}
+

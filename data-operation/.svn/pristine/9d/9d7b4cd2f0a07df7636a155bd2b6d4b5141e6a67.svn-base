@@ -1,0 +1,185 @@
+package com.hifo.dataoperation.controller;
+
+import com.hifo.dataoperation.base.BasicController;
+import com.hifo.dataoperation.intercept.RequiredPermission;
+import com.hifo.dataoperation.mapper.base.Field;
+import com.hifo.dataoperation.mapper.base.Table;
+import com.hifo.dataoperation.entity.ExtEmployee;
+import com.hifo.dataoperation.entity.ExtOrganization;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.base.BasicService;
+import com.hifo.dataoperation.service.crm.EmployeeService;
+import com.hifo.dataoperation.util.RequestUtil;
+import io.swagger.annotations.*;
+import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
+
+/**
+ * 用户接口，分两部分：
+ * 1. 登录用户相关操作
+ * 2. 用户管理相关操作
+ *
+ * @author whc
+ * @date 2019/3/14 14:41
+ */
+@Api(tags = "用户管理")
+@RestController
+@RequestMapping("/emp")
+public class EmployeeController extends BasicController {
+
+    @Autowired
+    private BasicService basicService;
+    @Autowired
+    private EmployeeService employeeService;
+
+    /**
+     * 验证当前用户是否登录
+     *
+     * @return 0=是，其他=否
+     */
+    @ApiOperation(value = "验证当前用户是否登录 0=是，其他=否")
+    @PostMapping("/validate")
+    public ApiResult validate() {
+        if (RequestUtil.isLogin()) {
+            return ApiResult.success();
+        } else {
+            return ApiResult.failed();
+        }
+    }
+
+    /**
+     * 获取当前用户的权限
+     *
+     * @return List
+     */
+    @ApiOperation(value = "获取当前用户的权限")
+    @GetMapping("/myPermission")
+    public ApiResult<List> myPermission() {
+        return ApiResult.success(basicService.getLoginPermission());
+    }
+
+    /**
+     * 获取当前用户详细信息
+     *
+     * @return String
+     */
+    @ApiOperation(value = "获取当前用户详细信息")
+    @GetMapping("/titleInfo")
+    public ApiResult<String> myInfo() {
+        ExtEmployee employee = basicService.getLoginEmployee();
+        ExtOrganization organization = basicService.load2Java(Table.ext_organization, Field.pk(employee.getOrganizationId()), ExtOrganization.class);
+        String titleInfo = organization.getName() + " - " + employee.getName();
+        return ApiResult.success(titleInfo);
+    }
+
+    /**
+     * 获取当前用户所在机构的城市
+     *
+     * @return List
+     */
+    @ApiOperation(value = "获取当前用户所在机构的城市")
+    @GetMapping("/cityList")
+    public ApiResult cityList() {
+        return ApiResult.success(employeeService.getCityListByOrganization(basicService.getLoginEmployee().getOrganizationId()));
+    }
+
+    /**
+     * 修改当前机构默认城市
+     */
+    @ApiOperation(value = "修改当前机构默认城市")
+    @PutMapping("/updateCityById/{id}")
+    public ApiResult updateCityById(@PathVariable("id") Long id) {
+        return employeeService.updateCityById(id);
+    }
+
+    /**
+     * 新增/更新用户
+     *
+     * @param extEmployee ExtEmployee
+     * @return ApiResult
+     */
+    @ApiOperation(value = "新增/更新用户")
+    @PostMapping("/save")
+    @RequiredPermission("606")
+    public ApiResult save(@ApiParam(name = "用户信息", value = "json", required = true) @RequestBody @Validated ExtEmployee extEmployee) {
+        extEmployee.setOrganizationId(basicService.getLoginEmployee().getOrganizationId());
+        employeeService.update(extEmployee);
+        return ApiResult.success();
+    }
+
+    /**
+     * 根据id删除用户
+     *
+     * @param id 编号
+     * @return ApiResult
+     */
+    @ApiOperation(value = "根据id删除用户")
+    @ApiImplicitParam(name = "id", value = "用户id", paramType = "query", dataType = "String", example = "1", required = true)
+    @PostMapping("/delete")
+    @RequiredPermission("606")
+    public ApiResult delete(String id) {
+        employeeService.delete(id);
+        return ApiResult.success();
+    }
+
+    /**
+     * 根据id获取用户信息
+     *
+     * @param id 编号
+     * @return ExtEmployee
+     */
+    @ApiOperation(value = "根据id获取用户信息")
+    @ApiImplicitParam(name = "id", value = "用户id", paramType = "query", dataType = "String", example = "1", required = true)
+    @GetMapping("/findById")
+    @RequiredPermission("606")
+    public ApiResult<ExtEmployee> findById(String id) {
+        ExtEmployee employee = employeeService.findById(id);
+        // 避免前端undefined异常
+        if (employee == null) {
+            employee = new ExtEmployee();
+        }
+        return ApiResult.success(employee);
+    }
+
+    /**
+     * 获取当前用户同机构的所有用户
+     *
+     * @return List
+     */
+    @ApiOperation(value = "获取当前用户同机构的所有用户")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "keyword", value = "关键字（name/username）", paramType = "query", dataType = "String", example = "1", required = true),
+            @ApiImplicitParam(name = "page", value = "当前页数", paramType = "query", dataType = "int", example = "1", required = true),
+            @ApiImplicitParam(name = "limit", value = "每页条数", paramType = "query", dataType = "int", example = "5", required = true)
+    })
+    @GetMapping("/list")
+    @RequiredPermission("606")
+    public String list(String keyword, Pagination pages) {
+        var page = employeeService.getEmployeeList(basicService.getLoginEmployee().getOrganizationId(), keyword, pages);
+        return pageData(page.getTotal(), page.getRecords());
+    }
+
+    /**
+     * 修改用户密码
+     *
+     * @param id
+     * @param password
+     * @return
+     */
+    @ApiOperation(value = "修改用户密码")
+    @ApiImplicitParams({
+            @ApiImplicitParam(name = "id", value = "用户id", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "pwd", value = "用户原密码", paramType = "query", dataType = "String", example = "1,2", required = true),
+            @ApiImplicitParam(name = "password", value = "用户密码", paramType = "query", dataType = "String", example = "1,2", required = true)
+    })
+    @PutMapping("/resetPwd")
+    @RequiredPermission("606")
+    public ApiResult resetPassword(String id, String password, String pwd) {
+        return employeeService.resetPassword(id, password, pwd);
+    }
+
+}

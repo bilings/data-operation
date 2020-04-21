@@ -1,0 +1,30 @@
+package com.hifo.dataoperation.entity;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.hifo.dataoperation.base.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("bus_administrative")
+/**
+ * 
+ * @author 杨捷
+ * @date 2019年5月9日
+ * @description
+ */
+public class BusAdministrative extends Entity {
+    private Integer organizationId;
+    private String mongoId;
+    private String regionId;
+    private String name;
+    private String type;
+    private String simpleName;
+    private String pinyin;
+    private String pinyinCode;
+    private String parentId;
+    private String parentName;
+    private String otherName;
+    private String comment;
+}

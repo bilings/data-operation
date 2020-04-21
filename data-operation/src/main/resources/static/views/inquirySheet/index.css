@@ -1,0 +1,10 @@
+#datafeedIndex_wrapper .bigText {
+    font-weight: bold;
+    font-size: 15px;
+}
+
+.radio_right {
+    line-height: 28px;
+    margin: 6px 10px 0 0;
+    font-size: 12px;
+}

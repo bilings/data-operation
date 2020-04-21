@@ -1,0 +1,17 @@
+package com.hifo.dataoperation.service.coe;
+
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.coe.FloorCityConfig;
+
+
+public interface FloorCityConfigService {
+
+    FloorCityConfig findById(String id);
+
+    void delete(String[] ids);
+
+    ApiResult List();
+
+    void save(FloorCityConfig entity);
+
+}

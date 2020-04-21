@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="merge.css" rel="stylesheet">
+    <title>合并</title>
+</head>
+<body>
+<div id="estateMerge_wrapper">
+    <table class="layui-table" id="estateTable" lay-filter="estateTable"></table>
+    <script type="text/html" id="toolbar" lay-filter="employeeToolbar">
+        <div class="layui-inline">
+            <input type="text" id="keyword" class="layui-input" placeholder="楼盘名称/地址搜索" autocomplete="off"/>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="searchBtn" lay-event="searchBtn">搜索</button>
+            <button class="layui-btn layui-btn-sm" id="mergeBtn" lay-event="mergeBtn">合并</button>
+        </div>
+    </script>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="merge.js"></script>
+</body>
+</html>

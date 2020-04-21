@@ -1,0 +1,17 @@
+#avgCoe_wrapper {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+}
+#addCityCoe{
+    width: 90px !important;
+    height: 30px !important;
+    color: #0C0C0C;
+    right: 0;
+    position: absolute;
+    font-size: 14px;
+}
+.layui-col-md3,.layui-col-md9 {
+    border: 1px solid #e7e7e7;
+}

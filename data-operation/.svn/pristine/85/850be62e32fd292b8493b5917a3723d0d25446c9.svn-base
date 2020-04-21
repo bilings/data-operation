@@ -1,0 +1,8 @@
+#addAvgPrice_wrapper {
+    padding-top: 50px;
+}
+.select-search-input {
+    position: absolute;
+    z-index: 2;
+    width: 80%;
+}

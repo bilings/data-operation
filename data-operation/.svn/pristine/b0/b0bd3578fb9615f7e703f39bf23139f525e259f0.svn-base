@@ -1,0 +1,198 @@
+package com.hifo.dataoperation.timetask.thread;
+
+import java.math.BigDecimal;
+import java.util.Date;
+import java.util.List;
+
+import org.bson.types.ObjectId;
+import org.springframework.data.mongodb.core.query.BasicQuery;
+import org.springframework.data.mongodb.core.query.Query;
+
+import com.alibaba.fastjson.JSON;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
+import com.hifo.dataoperation.dao.BusEstateDao;
+import com.hifo.dataoperation.dao.BusWaitMergeDao;
+import com.hifo.dataoperation.entity.BusEstate;
+import com.hifo.dataoperation.entity.mongo.BuiltEstate;
+import com.hifo.dataoperation.entity.mongo.BusWaitMergeEty;
+import com.hifo.dataoperation.timetask.config.ContrastConfig;
+import com.hifo.dataoperation.util.ExceptionMsgUtil;
+import com.hifo.dataoperation.util.Similarity;
+import com.hifo.dataoperation.util.StringUtil;
+import com.mongodb.BasicDBObject;
+import com.mongodb.DBObject;
+
+import lombok.extern.slf4j.Slf4j;
+
+/**
+ * 比较数据子线程
+ * @author weisibin
+ * @date 2020年4月20日11:13:12
+ */
+@Slf4j
+public class ContrastThread implements CommonRunnable{
+	private ContrastConfig cc;
+	private BusEstateDao ed;
+	private BuiltEstate be;
+	private BusWaitMergeDao bwd;
+
+	public ContrastThread(BuiltEstate be,BusEstateDao ed,BusWaitMergeDao bwd, ContrastConfig cc) {
+		this.cc = cc;
+		this.ed = ed;
+		this.be = be;
+		this.bwd = bwd;
+	}
+
+	@Override
+	public void running() throws Exception {
+		//暂时对于目标库查询不做分页
+		//根据城市/区域-查询出全部符合条件的目标数据
+		List<BusEstate> el = this.estateList(be);
+		if(null == el){
+			return;
+		}
+		//循环对比数据
+		for (BusEstate e : el) {
+			double nameScore = this.getScore(e.getName(), be.getName());
+			double addrScore = this.getScore(e.getAddress(), be.getAddress());
+			//如果符合条件，直接返回
+			if(this.isSave(nameScore,addrScore)){
+				//符合条件保存
+				this.add(be, e, nameScore, addrScore);
+				Thread.sleep(cc.getContrastSpaceTime());
+			}
+		}
+	}
+	
+	/**
+	 * 比较字符串获取分数
+	 * @param str1 1参数
+	 * @param str2 2参数
+	 * @return double 分数
+	 */
+	private double getScore(String str1,String str2){
+		if(StringUtils.isEmpty(str1) || StringUtils.isEmpty(str2)){
+			return 0;
+		}
+		return Similarity.sim(str1, str2)*100;
+	}
+	
+	/**
+	 * 获取符合条件的目标楼盘的数据信息
+	 * @param be 参数
+	 * @return List<BusEstate> 目标楼盘数据
+	 */
+	private List<BusEstate> estateList(BuiltEstate be){
+	/*	if(null == be){
+			return null;
+		}*/
+		BusEstate e  = new BusEstate();
+		if(StringUtil.isNotEmpty(be.getCityName()) && StringUtil.isNotEmpty(be.getDistrictName())){
+			e.setCityName(be.getCityName());
+			e.setDistrictName(be.getDistrictName());
+			e.setIsMerged(false);
+			return ed.selectByQuery(this.getQuery(e), BusEstate.class);
+		}
+		return null;
+	}
+	
+	/**
+	 * 组装Query对象
+	 * @param be 查询条件
+	 * @return Query
+	 */
+	private Query getQuery(BusEstate be) {
+		DBObject dbObject = new BasicDBObject();
+		/*// 楼盘id
+		if (StringUtil.isNotEmpty(be.getId())) {
+			dbObject.put("_id", be.getId()); 
+		}
+		// 城市id
+		if (StringUtil.isNotEmpty(be.getCityId()) && StringUtil.isNotEmpty(be.getDistrictId())) {
+			dbObject.put("cityId", be.getCityId());
+			dbObject.put("districtId", be.getDistrictId());
+		}*/
+		// 城市名 // 区域名
+		if (StringUtil.isNotEmpty(be.getCityName()) && StringUtil.isNotEmpty(be.getDistrictName())) {
+			dbObject.put("cityName", be.getCityName());
+			dbObject.put("districtName", be.getDistrictName());
+		}
+		// 是否已经合并
+		if (StringUtil.isNotEmpty(be.getIsMerged())) {
+			dbObject.put("isMerged", be.getIsMerged());
+		}
+		BasicDBObject fieldsObject = new BasicDBObject();
+		//指定返回的字段
+		fieldsObject.put("_id", true);
+		fieldsObject.put("name", true);
+		fieldsObject.put("cityId", true);
+		fieldsObject.put("cityName", true);
+		fieldsObject.put("districtId", true);
+		fieldsObject.put("districtName", true);
+		fieldsObject.put("address", true);
+		fieldsObject.put("siteName", true);
+		fieldsObject.put("caseNo", true);
+		
+		Query query = new BasicQuery(dbObject.toString(),fieldsObject.toJson());
+		return query;
+	}
+	
+	/**
+	 * 根据分值判断是否需要保存，如果需要保存把分数设置到实体中
+	 * @return boolean true:是  else false
+	 */
+	private boolean isSave(double nameScore, double addrScore) {
+		if(nameScore == 0 || addrScore == 0){
+			return false;
+		}
+		BigDecimal ns = new BigDecimal(nameScore);
+		BigDecimal nsm = new BigDecimal(cc.getNameScoreMix());
+		BigDecimal as = new BigDecimal(addrScore);
+		BigDecimal asm = new BigDecimal(cc.getAddrScoreMix());
+		if (nsm.compareTo(ns) < 0 && asm.compareTo(as) <0) {
+			return true;
+		}
+		return false;
+	}
+
+	/**
+	 * 组装需要保存的参数
+	 * @param be 源数据
+	 * @param e 目标数据
+	 */
+	private void add(BuiltEstate be,BusEstate e,Double nameScore,Double addrScore){
+		BusWaitMergeEty bw = new BusWaitMergeEty();
+		bw.setId(new ObjectId().toString());
+		bw.setNameScore(nameScore);
+		bw.setAddressScore(addrScore);
+		bw.setIsMerged("0");
+		bw.setCreateTime(new Date());
+		//目标数据设置
+		bw.setTAddress(e.getAddress());
+		bw.setTCaseNo(e.getCaseNO());
+		bw.setTCityId(e.getCityId());
+		bw.setTCityName(e.getCityName());
+		bw.setTDistrictId(e.getDistrictId());
+		bw.setTDistrictName(e.getDistrictName());
+		bw.setTId(e.getId());
+		bw.setTName(e.getName());
+		bw.setTResource(e.getSiteName());
+		//待比较数据设置
+		bw.setWAddress(be.getAddress());
+		bw.setWCaseNo(be.getCaseNO());
+		bw.setWCityId(be.getCityId());
+		bw.setWCityName(be.getCityName());
+		bw.setWDistrictId(be.getDistrictId());
+		bw.setWDistrictName(be.getDistrictName());
+		bw.setWId(be.getId());
+		bw.setWName(be.getName());
+		bw.setWResource(be.getSiteName());
+		bwd.insert(bw);
+		log.info("保存了数据：==>{}",JSON.toJSONString(bw));
+	}
+
+	@Override
+	public void exception(Exception e) {
+		log.error("对比任务子线程执行出现异常：{}",ExceptionMsgUtil.getStackMsg(e));
+	}
+}

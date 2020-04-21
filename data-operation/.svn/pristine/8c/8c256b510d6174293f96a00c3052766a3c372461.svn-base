@@ -1,0 +1,89 @@
+var homeIndex_menus = [
+    // {
+    //     text: '主页',
+    //     icon: 'layui-icon-home',
+    //     url: '../dashboard/index.html'
+    // },
+    // {
+    //     text: 'API文档',
+    //     icon: 'layui-icon-fonts-code',
+    //     url: '/swagger-ui.html'
+    // },
+    {
+        text: '楼盘管理',
+        icon: 'layui-icon-template-1',
+        url: '../estate/index.html',
+        code: '100'
+    },
+    {
+        text: '楼栋管理',
+        icon: 'layui-icon-template-1',
+        url: '../building/index.html',
+        code: '100'
+    },
+    {
+        text: '房号管理',
+        icon: 'layui-icon-template-1',
+        url: '../room/index.html',
+        code: '100'
+    },
+    {
+        text: '批量导入',
+        icon: 'layui-icon-upload-circle',
+        url: '../import/index.html',
+        code: '200'
+    }, {
+        text: '均价管理',
+        icon: 'layui-icon-rmb',
+        code: '300',
+        children: [{
+            text: '楼盘均价',
+            url: '../avg/price.html',
+            code: '302'
+        }, {
+            text: '通用系数',
+            url: '../avg/coe.html',
+            code: '303'
+        }]
+    }, {
+        text: '基础配置',
+        icon: 'layui-icon-set',
+        code: '400',
+        children: [{
+            text: '字段选项',
+            url: '../field/index.html',
+            code: '401'
+        }, {
+            text: '数据订阅',
+            url: '../datafeed/index.html',
+            code: '403'
+        }, {
+            text: '询价单',
+            url: '../inquirySheet/index.html',
+            code: '404'
+        }, {
+            text: '行政区划配置',
+            url: '../administraive/index.html',
+            code: '405'
+        }]
+    }, {
+        text: '权限管理',
+        icon: 'layui-icon-auz',
+        code: '600',
+        children: [{
+            text: '员工管理',
+            url: '../employee/index.html',
+            code: '601'
+        }, {
+            text: '客户管理',
+            code: '602',
+            children: [{
+                text: '用户管理',
+                url: '../customer/customerUserIndex.html'
+            }, {
+                text: '机构管理',
+                url: '../customer/customerOrgIndex.html'
+            }]
+        }]
+    }
+];

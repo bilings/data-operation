@@ -1,0 +1,268 @@
+var RoomIndex_obj = {
+
+    urlConfig:{
+        unitList:'/room/unitList',
+        roomList:'/room/roomList',
+        dictionary: '/setting/dictionary'
+    },
+    buiding:new Object(),
+    buildingId:'',
+    lay_id:'',
+    unitNo:'',
+    btn:'',
+    init: function () {
+        var _this = this;
+        // 获取楼栋ID
+        buildingId =layui.util.getQueryString("buildId");
+        unitNo=layui.util.getQueryString("unit");
+
+        // 初始化单元
+        _this._initUnit();
+        //切换Tab初始化房号表单
+        _this._initChangeTabsTable();
+        // 初始化房号表单
+        //_this._initRoomsTable();
+        // 切换单元
+       _this._initChangeUnitButton();
+       _this._initCreateRoom();
+       _this._saveRoom();
+       //加载朝向数据
+        _this._initAdvanceSelect(_this.urlConfig.dictionary, {category:'朝向'},"roomOri");
+        _this._initAdvanceSelect(_this.urlConfig.dictionary, {category:'景观'},"roomScen");
+        _this._initAdvanceSelect(_this.urlConfig.dictionary, {category:'户型结构'},"roomStruct");
+    },
+
+    /**
+     * 初始化单元
+     * @private
+     */
+    _initUnit:function(){
+        var _this = this;
+        $.ajax({
+            url: _this.urlConfig.unitList+"?buildingId="+buildingId,
+            type: 'get',
+            contentType: 'application/json;',
+            dataType: "json",
+            success: function (res) {
+
+                if (res.code === 0) {
+                    _this.buiding=res.data;
+                   var unitName=res.data.unitName.split(",");
+                   $(unitName).each(function (i,o) {
+                       if(i==0){
+                           _this.btn = o;
+                           $("#unitList").append('<button class="layui-btn site-demo-active layui-btn-warm" data-type="util1">'+o+'</button>') ;
+                       }
+                       else{
+                           $("#unitList").append('<button class="layui-btn site-demo-active" data-type="util1">'+o+'</button>') ;
+                       }
+                   });
+                }
+                  // 初始化房号表单
+                  _this._initRoomsTable();
+                  // 切换单元
+                  _this._initChangeUnitButton();
+                  //初始化加减符号点击事件
+                  //_this._addCols();
+                  //初始化单元号点击事件
+                  _this._initUnitChanage();
+            }
+        });
+    },
+    /**
+     * 切换单元按钮
+     * @private
+     */
+    _initChangeUnitButton: function () {
+        var _this= this;
+        $('#roomIndex_wrapper .site-demo-active').on('click', function (res) {
+            var btn = $(this).text();
+            _this.btn=btn;
+            $.ajax({
+                url: _this.urlConfig.roomList+"?a=initChangeUnitButton&buildingId="+buildingId+"&util="+_this.btn,
+                type: 'get',
+                dataType: "json",
+                success: function (res) {
+                    //_this._initRoomsTable();
+                }
+            });
+        });
+    },
+    /**
+     * 初始化房号表单
+     * @private
+     */
+    _initRoomsTable: function() {
+        var _this = this;
+        var tableHtml=$(".hidBox .roomTable").html();
+        $(".layui-tab-content div .layui-table").html(tableHtml);
+        $(".layui-tab-content div .layui-table").data("layernumber",_this.buiding.layerNumber);
+
+        $(".layui-tab-content div .layui-table").each(function(i,table){
+            _this._createTable($(table));
+        });
+
+    },
+    /**
+     *单元点击事件
+     */
+    _initUnitChanage:function(){
+        var _this=this;
+        $("#unitList button").unbind().bind("click",function () {
+            $("#unitList button").removeClass("layui-btn-warm");
+            $(this).addClass("layui-btn-warm");
+            //切换单元，再次初始化表格 填了没保存该背时
+            _this._initRoomsTable();
+        });
+    },
+    /**
+     *切换Tab展示表单
+     * @private
+     */
+    _initChangeTabsTable: function() {
+        var _this= this;
+
+    },
+    /**
+     * 生成房号 巴拉巴拉 啥啥啥
+     * @private
+     */
+    _initCreateRoom:function () {
+        var _this=this;
+        $("[data-type='create_room']").bind("click",function () {
+            _this._createTable($(".layui-show .layui-table"));
+        });
+    },
+    _saveRoom:function(){
+        $("[data-type='save_room']").bind("click",function () {
+
+        });
+    },
+    _createTable:function(table){
+        var _this=this;
+        var tableId=table.prop("id");
+        //初始化一下 当前操作表格
+        table.html($(".hidBox .roomTable").html());
+
+        var thead=table.find("thead");
+        var tbody=table.find("tbody");
+
+        var interest=$(".layui-show [name='interest']").val();
+        var totalFloor=parseInt(_this.buiding.totalFloor);
+        var underGroundFloor=-parseInt(_this.buiding.underGroundFloor);
+        var layerNumber=table.data("layernumber");
+
+        if(totalFloor<=0){
+            layer.msg("总楼层不正确，请优先设置楼栋信息"); return;
+        }
+        for(var k=1;k<=layerNumber;k++){//处理室号表头
+            thead.find("tr").append('<td>室号'+k+'</td>');
+        }
+        for (var i=1;i<=totalFloor;i++){//循环楼层
+            var row=$('<tr></tr>');
+            row.append('<td>'+i+'</td>');
+            row.append('<td><input type="text" class="layui-input" autocomplete="off" spellcheck="false" value="'+underGroundFloor+'"></td>');
+
+            //处理室号
+            for (var k=1;k<=layerNumber;k++){
+                if(tableId=="Lay_roomNo"){//房号
+                    var roomName=underGroundFloor+interest+k;
+                    row.append('<td><input type="text" class="layui-input" autocomplete="off" spellcheck="false" value="'+roomName+'"></td>');
+                }
+                else if(tableId=="Lay_orientation"){//朝向
+                    var select = $(".roomOri").html();
+                    row.append('<td>'+select+'</td>');
+                }
+                else if(tableId=="Lay_scenery"){//景观
+                    var select = $(".roomScen").html();
+                    row.append('<td>'+select+'</td>');
+                }
+                else if(tableId=="Lay_structure"){//结构
+                    var select = $(".roomStruct").html();
+                    row.append('<td>'+select+'</td>');
+                }
+                else {//建筑面积、套内面积、初始价格、价格系数 都在这里啦
+                    row.append('<td><input type="number" class="layui-input" autocomplete="off" spellcheck="false"></td>');
+                }
+            }
+
+            if(underGroundFloor==-1) underGroundFloor+=2;
+            else underGroundFloor++;
+            tbody.append(row);
+        }
+
+        //重载下拉选择框样式
+        layui.form.render('select');
+
+
+        //加减号
+        _this._moveAddSub(table);
+        //_this._addCols(table);
+    },
+    /**
+     * 加减室号
+     * @private
+     */
+    _addCols:function (table) {
+        var _this=this;
+
+        table.find("i").each(function(i,o){
+            $(o).unbind().bind("click",function(){
+                var layerNumber=table.data("layernumber");
+                if(i==0) {
+                    if(table.find("tr").first().find("td").length==2||layerNumber==0){
+                        console.log("不能再减了，铁子，没有拉！"); return;
+                    }
+                    _this._moveAddSub(table,"-");
+                    table.find('tr').find("td:last").remove();
+                    layerNumber--;
+                }
+                else{
+                    layerNumber++;
+                    table.find("thead tr").append("<td>室号"+layerNumber+"</td>");
+                    table.find('tbody tr').append('<td><input type="text" class="layui-input" autocomplete="off" spellcheck="false"></td>');
+                    _this._moveAddSub(table);
+                }
+                table.data("layernumber",layerNumber);
+            });
+        });
+    },
+    /**
+     * 移动加减符号
+     * @private
+     */
+    _moveAddSub:function (table,type) {
+        var _this=this;
+        var thead=table.find("thead");
+        thead.find('i').each(function (i,o) {
+            if(type=="-"){
+                if(i==0) thead.find('td:last').prev().prepend($(o));
+                else thead.find('td:last').prev().append($(o));
+            }
+            else{
+                if(i==0) thead.find('td:last').prepend($(o));
+                else thead.find('td:last').append($(o));
+            }
+
+        });
+        _this._addCols(table);
+    },
+    _initAdvanceSelect: function (url, data, id) {
+        var _this = this;
+        $.get({
+            url: url,
+            data: data,
+            async:false,
+            success: function (res) {
+                $.each(res.data, function (index, item) {
+                    $('.'+id+' select').append('<option value="' + item.id + '">' + item.item + '</option>');
+                });
+                //layui.form.render('select');
+            }
+        });
+    }
+}
+
+$(function () {
+    RoomIndex_obj.init();
+});

@@ -1,0 +1,46 @@
+var gulp = require('gulp');
+var del = require('del');
+var fileinclude = require('gulp-file-include');
+
+//STEP 1删除编译目录
+gulp.task('del', function () {
+    return del(['dist']);
+});
+
+//STEP 2拷贝至编译目录
+gulp.task('copydist', function () {
+    return gulp.src(['src/**'])
+        .pipe(gulp.dest('dist'));
+});
+
+//STEP 3文件include
+gulp.task('fileinclude', function () {
+    return gulp.src('src/views/**/*.html')
+        .pipe(fileinclude({}))
+        .pipe(gulp.dest('dist/views'));
+});
+
+//STEP 4拷贝至static目录
+gulp.task('copystatic', function () {
+    return gulp.src(['dist/**'])
+        .pipe(gulp.dest('../static'));
+});
+
+//STEP 5over
+gulp.task('over', function () {
+    console.log('over....');
+});
+
+//任务开始
+gulp.task('default', gulp.series('del', 'copydist', 'fileinclude', 'copystatic', 'over'));
+
+//文件监控
+//gulp.watch('src/**', gulp.series('del', 'copydist', 'fileinclude', 'copystatic', 'over'));
+// gulp.watch('src/**', function () {
+//     // del(['dist']);
+//     // gulp.src(['src/**']).pipe(gulp.dest('dist'));
+//     // gulp.src('src/views/**/*.html').pipe(fileinclude({})).pipe(gulp.dest('dist/views'));
+//     // gulp.src(['dist/**']).pipe(gulp.dest('../static'));
+//     gulp.series('del', 'copydist', 'fileinclude', 'copystatic', 'over');
+//     console.log('sequenceTask is over');
+// });

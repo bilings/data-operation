@@ -1,0 +1,29 @@
+package com.hifo.dataoperation.service.coe.impl;
+
+import com.hifo.dataoperation.dao.BusCoeDao;
+import com.hifo.dataoperation.dao.BusFloorCoeDao;
+import com.hifo.dataoperation.entity.coe.FloorCoefficient;
+import com.hifo.dataoperation.service.coe.FloorCoefficientService;
+import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import java.util.List;
+
+@Log
+@Service
+public class FloorCoefficientImpl implements FloorCoefficientService {
+
+
+    @Autowired
+    private BusFloorCoeDao busFloorCoeDao;
+    @Override
+    public List<FloorCoefficient> selectList(String configId) {
+        return null;
+    }
+
+    @Override
+    public void save(FloorCoefficient entity) {
+        busFloorCoeDao.insert(entity);
+    }
+}

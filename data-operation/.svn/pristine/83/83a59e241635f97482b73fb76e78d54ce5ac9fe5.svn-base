@@ -1,0 +1,51 @@
+package com.hifo.dataoperation.service.coe.impl;
+
+
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.dao.BusCoeDao;
+import com.hifo.dataoperation.entity.coe.FloorCityConfig;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.coe.FloorCityConfigService;
+import lombok.extern.java.Log;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import javax.management.Query;
+import java.util.List;
+
+/**
+ * @author bxl
+ * @create 18:21
+ */
+@Log
+@Service
+public class FloorCityConfigImpl implements FloorCityConfigService {
+
+    @Autowired
+    private BusCoeDao busCoeDao;
+
+    @Override
+    public FloorCityConfig findById(String id) {
+        return busCoeDao.selectById(id,FloorCityConfig.class);
+
+    }
+
+    @Override
+    public void delete(String[] ids) {
+        for (String id:ids) {
+            busCoeDao.deleteById(id);
+            ///删除系数表数据 根据pid
+        }
+    }
+
+    @Override
+    public ApiResult List() {
+        List<FloorCityConfig> list=busCoeDao.selectList(FloorCityConfig.class,null,null );
+        return  ApiResult.success(list);
+    }
+
+    @Override
+    public void save(FloorCityConfig entity) {
+        busCoeDao.insert(entity);
+    }
+}

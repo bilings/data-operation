@@ -1,0 +1,248 @@
+package com.hifo.dataoperation.entity.mongo;
+
+
+import com.hifo.dataoperation.entity.mongo.Base.BaseEntity;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+import org.springframework.data.mongodb.core.mapping.Document;
+
+import java.util.Date;
+
+/**
+ * bus_estate
+ *
+ * @author xmw
+ * @date 2019/05/10 11:40:05
+ */
+@Data
+@Document(collection = "warehouse_community_standard")
+public class BuiltEstate extends BaseEntity {
+     String antId;
+
+     Double price;
+
+     Date fetchDate;
+
+     Integer fetchMonth;
+    /**
+     * 来源代码
+     */
+     String sr;
+    /**
+     * 来源名称
+     */
+     String siteName;
+    /**
+     * 楼盘名字
+     */
+    String name;
+    /**
+     * 来源url
+     */
+     String url;
+    /**
+     * 省份id
+     */
+     String provinceId;
+
+     String provinceName;
+
+    @ApiModelProperty(value = "城市id", name = "cityId")
+    String cityId;
+
+    @ApiModelProperty(value = "城市", name = "cityName")
+    String cityName;
+
+    @ApiModelProperty(value = "行政区id", name = "districtId")
+    String districtId;
+
+    //    @Excel(name = "行政区(必填)")
+    @ApiModelProperty(value = "行政区", name = "districtName")
+    String districtName;
+
+    /**
+     * 区域id
+     */
+    String regionId;
+
+    String communityUrl;
+
+    String guid;
+
+    String dataType;
+    /**
+     * 合并楼盘id
+     */
+    String mergeId;
+    /**
+     * 是否同步
+     */
+    String isSync;
+    /**
+     * 是否合并
+     */
+    Boolean isMerged;
+    /**
+     * 标准楼盘名称
+     */
+    String stdName;
+
+    String stdUrl;
+
+
+    Object[] otherName;
+
+    Object[] otherAddress;
+
+    String[] guidList;
+
+    String gdmc;
+    /**
+     * 楼盘简介
+     */
+    String projectBrief;
+
+    String gdid;
+
+    String grossBuildArea;
+
+    String type;
+
+    String citycode;
+
+    String stdAddress;
+    /**
+     * 地址
+     */
+    String address;
+
+    String mapsr;
+
+    Double mcsimilar;
+
+    String propertyFee;
+
+    String districtcode;
+
+    String gddistrictname;
+
+    String identifier;
+
+    String gdfinish;
+
+    Double similar;
+
+    //    @Excel(name = "总户数")
+    @ApiModelProperty(value = "总户数", name = "totalRoomCount")
+    String totalRoomCount;
+
+    String ip;
+
+    String version;
+
+    String shangQuan;
+
+    String numberOfParkingSpaces;
+
+    String position;
+
+    String cityCode;
+
+    String numberOfHouses;
+
+    String gdcityname;
+
+    String buildYear;
+
+    String geo;
+
+    String developerName;
+
+    String dataUrl;
+
+    String propertyCompany;
+
+    String gdaddress;
+
+    Double addresssimilar;
+
+    Date updateTime;
+
+    String provincecode;
+
+    String  createTime;
+
+    String location;
+
+    String greeningRate;
+
+    Date createDate;
+
+    String bank;
+
+    String elevator;
+
+    String agencyCompany;
+
+    String property;
+
+    String tel;
+
+    String roomType;
+
+    String communityUri;
+
+    String directionType;
+
+    String coverageArea;
+
+    String other;
+
+    String buildStructure;
+
+    Double totalPrice;
+
+    String transportFacility;
+
+    String priceType;
+
+    Double buildArea;
+
+    String medicalFacility;
+
+    String totalNumberOfBuildings;
+
+    String caseNO;
+
+    String decorationStatu;
+
+
+    String communityName;
+
+    String  educationFacility;
+
+    String postOffice;
+
+    @ApiModelProperty(value = "建筑结构", name = "buildType")
+    String buildType;
+
+    Integer totalFloor;
+
+    Integer caseDate;
+
+    String title;
+
+    String commerce;
+
+    String caseType;
+
+    String floor;
+
+    @ApiModelProperty(value = "", name = "propertyYears")
+    String  propertyYears;
+
+    String decorationType;
+
+    String communityQuality;
+
+}

@@ -1,0 +1,29 @@
+#importIndex_wrapper {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+}
+
+#importIndex_wrapper .bigText {
+    font-weight: bold;
+    font-size: 20px;
+}
+
+#importIndex_wrapper .hyperlink {
+    color: blue;
+}
+
+/*全局设定，输入框的大小*/
+.layui-form-label {
+    padding: 5px 15px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    line-height: 30px;
+}
+
+.layui-form-select dl dd, .layui-form-select dl dt {
+    line-height: 30px;
+}

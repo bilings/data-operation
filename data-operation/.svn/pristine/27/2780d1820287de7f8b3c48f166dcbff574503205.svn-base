@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<head>
+    @@include('../base/header.html')
+    <link href="index.css" rel="stylesheet">
+    <title>行政区划</title>
+</head>
+</head>
+<body>
+<div id="administraiveIndex_wrapper">
+
+    <div id="administraiveTableDiv">
+        <table class="layui-hide" id="administraiveTable" lay-filter="administraiveTable"></table>
+    </div>
+
+</div>
+
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

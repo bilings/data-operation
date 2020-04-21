@@ -1,0 +1,46 @@
+#estateIndex_wrapper {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+    width: 100%;
+}
+
+#estateIndex_wrapper #estateTableDiv {
+    position: absolute;
+    top: 30px;
+    width: 100%;
+}
+
+#estateIndex_wrapper #toolbarDiv button {
+    width: 68px;
+}
+
+#estateIndex_wrapper #districtDiv {
+    width: 120px;
+}
+
+#estateIndex_wrapper #btnDiv {
+    width: 400px;
+}
+
+#estateIndex_wrapper #employeeNameDiv {
+    width: 100px;
+}
+
+#estateIndex_wrapper #visibilityDiv {
+    width: 120px;
+}
+
+/*全局设定，输入框的大小*/
+.layui-form-label {
+    padding: 5px 15px;
+}
+
+.layui-input, .layui-select, .layui-textarea {
+    height: 30px;
+    line-height: 30px;
+}
+
+.layui-form-select dl dd, .layui-form-select dl dt {
+    line-height: 30px;
+}

@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.estate.BusEstateAgentMapper">
+
+    <!-- 楼盘合并推荐列表 -->
+    <select id="selectAgentList" resultType="com.hifo.dataoperation.vo.BusEstateAgentVO">
+        select
+        am.id,
+        am.isRecommend,
+        am.fromId,
+        am.toId,
+        fm.name as fromName,
+        fm.caseNo as fromCaseNo,
+        fm.districtName as fromDistrictName,
+        fm.addrDetail as fromAddr,
+        fm.buildingNo as totalBuildingNo,
+        fm.roomNo as totalRoomNo,
+        tm.name as toName,
+        tm.caseNo as toCaseNo,
+        tm.districtName as toDistrictName,
+        tm.addrDetail as toAddr,
+        am.nameScore,
+        am.addrScore,
+        am.coordinateScore
+        from bus_estate_agent am
+        left join bus_estate fm on am.fromId = fm.id
+        left join bus_estate tm on am.toId = tm.id
+        <where>
+            <if test="vo.fromName != null and vo.fromName != ''">
+                and fm.name like #{vo.fromName}
+            </if>
+            <if test="vo.isAgent != null">
+                and fm.isAgent = #{vo.isAgent}
+            </if>
+            <if test="vo.fromDistrictId != null and vo.fromDistrictId != ''">
+                and fm.districtId = #{vo.fromDistrictId}
+            </if>
+            <if test="vo.nameScore != null">
+                and am.nameScore &gt;= #{vo.nameScore}
+            </if>
+            <if test="vo.addrScore != null">
+                and am.addrScore &gt;= #{vo.addrScore}
+            </if>
+            <if test="vo.coordinateScore != null">
+                and am.coordinateScore &gt;= #{vo.coordinateScore}
+            </if>
+            <if test="vo.isRecommend != null">
+                and am.isRecommend = #{vo.isRecommend}
+            </if>
+            <if test="vo.organizationId != null">
+                and am.organizationId = #{vo.organizationId}
+            </if>
+            <if test="vo.cityId != null and vo.cityId != ''">
+                and tm.cityId = #{vo.cityId}
+            </if>
+            and am.isDelete=0
+        </where>
+    </select>
+
+</mapper>

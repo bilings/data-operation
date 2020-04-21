@@ -1,0 +1,119 @@
+package com.hifo.dataoperation.service.avgprice.impl;
+
+import java.util.regex.Pattern;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.stereotype.Service;
+
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.dao.BusEstateAvgPriceDao;
+import com.hifo.dataoperation.dto.BusEstateAvgPriceEtyDto;
+import com.hifo.dataoperation.entity.ExtEmployee;
+import com.hifo.dataoperation.enums.BuildingTypeEnum;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.avgprice.BusAvgPriceService;
+import com.hifo.dataoperation.service.base.BasicService;
+import com.hifo.dataoperation.service.setting.AdministrativeService;
+import com.hifo.dataoperation.util.StringUtil;
+
+import lombok.var;
+
+@SuppressWarnings({"deprecation","rawtypes"})
+@Service
+public class BusAvgPriceServoiceImpl implements BusAvgPriceService {
+
+	@Autowired
+	private BusEstateAvgPriceDao busEstateAvgPriceDao;
+	
+	@Autowired
+    private AdministrativeService administrativeService;
+	
+	@Autowired
+	private BasicService basicService;
+	
+	@Override
+	public Pagination<BusEstateAvgPriceEtyDto> findByPage(BusEstateAvgPriceEtyDto busEstateAvgPriceEtyDto,
+			Pagination page) {
+		//查询子集行政区
+		var map = administrativeService.getMapByParentId(busEstateAvgPriceEtyDto.getCityId());
+		//获取登录用户
+		var employee = basicService.getLoginEmployee();
+		Query query = findListQuery(busEstateAvgPriceEtyDto, employee, page);
+		Pagination<BusEstateAvgPriceEtyDto> busEstateAvgPriceEtyDtoList = busEstateAvgPriceDao.getPageLists(page.getPage(),
+				page.getLimit(), query);
+		busEstateAvgPriceEtyDtoList.getRecords().stream().forEach(e -> {
+			if (StringUtil.isEmpty(e.getCityId())) {
+				e.setCityName(map.get(e.getCityId()));
+			}
+			if (StringUtil.isEmpty(e.getDistrictId())) {
+				e.setDistrictName(map.get(e.getDistrictId()));
+			}
+		});
+		return busEstateAvgPriceEtyDtoList;
+	}
+	
+	/**
+     * 格式化列表查询条件
+     * @param apd 楼盘均价查询参数实例
+     * @param employee 登陆用户
+     * @param page 分页参数
+     * @return Query
+     */
+	private Query findListQuery(BusEstateAvgPriceEtyDto apd, ExtEmployee employee, Pagination page) {
+        Query query = new Query();
+        Criteria criteria = new Criteria();
+        //城市
+        if (StringUtil.isNotEmpty(apd.getCityId())) {
+            criteria.and("cityId").is(apd.getCityId());
+        }
+        //区域
+        if (StringUtil.isNotEmpty(apd.getDistrictId())) {
+            criteria.and("districtId").is(apd.getDistrictId());
+        }
+        //区域名
+        if (StringUtil.isNotEmpty(apd.getDistrictName())) {
+            criteria.and("districtName").is(apd.getDistrictName());
+        }
+        //楼盘名称模糊查询
+        if (StringUtil.isNotEmpty(apd.getEstateName())) {
+            Pattern pattern = Pattern.compile("^.*" + apd.getEstateName() + ".*$", Pattern.CASE_INSENSITIVE);
+            criteria.orOperator(Criteria.where("estateName").regex(pattern));
+        }
+        //案例区间
+        if(StringUtil.isNotEmpty(apd.getCaseNoMin()) && StringUtil.isNotEmpty(apd.getCaseNoMax())){
+        	criteria.and("caseNo").gte(apd.getCaseNoMin()).lte(apd.getCaseNoMin());
+        }
+        //时间区间
+        if(StringUtil.isNotEmpty(apd.getCalDateStart()) && StringUtil.isNotEmpty(apd.getCalDateEnd())){
+        	criteria.and("calDate").gte(apd.getCalDateStart()).lte(apd.getCalDateEnd());
+        }
+        //环比区间
+        if(StringUtil.isNotEmpty(apd.getMonthGainMin()) && StringUtil.isNotEmpty(apd.getMonthGainMax())){
+        	criteria.and("monthGain").gte(apd.getMonthGainMin()).lte(apd.getMonthGainMax());
+        }
+        if (StringUtil.isEmpty(page.ascs()) && StringUtil.isEmpty(page.descs())) {
+            query.with(new Sort(new Sort.Order(Sort.Direction.ASC, "calDate")));
+        }
+        return query;
+    }
+
+	/*@Override
+	public ApiResult visibility(BusEstateAvgPriceEtyDto busEstateAvgPriceEtyDto) {
+		busEstateAvgPriceDao.updateById(busEstateAvgPriceEtyDto.getId(), busEstateAvgPriceEtyDto);
+		return ApiResult.success("修改成功");
+	}*/
+
+	@Override
+	public ApiResult buildingType() {
+		return ApiResult.success(BuildingTypeEnum.toArray());
+	}
+
+	@Override
+	public ApiResult hideOrShow(String[] ids, BusEstateAvgPriceEtyDto ba) {
+		busEstateAvgPriceDao.updateByIds(ids, ba);
+		return ApiResult.success("修改成功");
+	}
+}

@@ -1,0 +1,186 @@
+$(function () {
+    init();
+});
+
+/**
+ * 后台链接
+ * @type {{}}
+ */
+const urlConfig = {
+    buildingType: '/avgPrice/buildingType',
+    addAvgPrice: '/avgPrice/addAvgPrice',
+    estateList: '/estate/list',
+    estateBuildingType: '/avgPrice/estateBuildingType',
+    areasSection: '/avgPrice/areasSection'
+};
+
+
+/**
+ * 初始化方法
+ */
+function init() {
+    //日期
+    initDate();
+    //提交事件
+    submitAdd();
+    //加载楼盘
+    searchEstateName("");
+    //楼盘选择后
+    afterSelectEstate();
+    //建筑类型选择后
+    afterSelectBuildType();
+
+    $common.initBaseSelect(urlConfig.buildingType,null,'buildingType','建筑类型');
+}
+
+
+/**
+ * 楼盘被选中后去查询建筑类型
+ */
+function afterSelectEstate() {
+    layui.form.on('select(estateId)', function (data) {
+        $("#areasSection").text("");
+        createBuildingSelect(data.value);
+        let estateId = data.value;
+        let buildingType = $("#buildingType").val();
+        loadAreas(estateId,buildingType);
+    });
+}
+
+/**
+ * 楼盘被选中后去查询建筑类型
+ */
+function afterSelectBuildType() {
+    layui.form.on('select(buildingType)', function (data) {
+        let estateId = $("#estateId").val();
+        let buildingType = data.value;
+        loadAreas(estateId,buildingType);
+    })
+}
+
+/**
+ * 根据楼盘id创建建筑类型下拉
+ * @param estateId 楼盘id
+ */
+function createBuildingSelect(estateId) {
+    $.post({
+        url: urlConfig.estateBuildingType,
+        data: JSON.stringify({id:estateId}),
+        contentType: "application/json",
+        async: false,
+        success: function (res) {
+            if (res.code === 0) {
+                $.each(res.data, function (index, item) {
+                    $('#buildingType').append('<option value="' + (item.id || item.type) + '">' + item.name + '</option>');
+                });
+                layui.form.render('select','buildingType');
+            }else{
+                layer.msg(res.msg);
+                $common.initBaseSelect(urlConfig.buildingType,null,'buildingType','建筑类型');
+            }
+        }
+    });
+}
+
+
+
+/**
+ * 根据 楼盘id、建筑类型加载面积段
+ * @param estateId 楼盘id
+ * @param buildingType 建筑类型
+ */
+function loadAreas(estateId,buildingType){
+    $("#areasSection").text("");
+    if(!estateId || !buildingType){
+        return;
+    }
+    $.post({
+        url: urlConfig.areasSection,
+        data: JSON.stringify({
+            id: estateId,
+            buildingCategoryCode: buildingType,
+            //buildingCategory: buildingTypeName
+        }),
+        contentType: "application/json",
+        async: false,
+        success: function (res) {
+            if (res.code === 0) {
+                let text = "";
+                let data = res.data;
+                $.each(data,function (i,ite) {
+                    text += ite+",";
+                });
+                $("#areasSection").text(text.substring(0,text.length-1));
+            } else {
+                layer.msg("没有查询到相应面积段");
+            }
+        }
+    });
+}
+
+
+
+
+
+/**
+ *日期选择插件
+ */
+function initDate() {
+    //年月范
+    layui.laydate.render({
+        elem: '#calDate', //指定元素
+        type: 'month',
+        format: 'yyyyMM',
+    });
+}
+
+/**
+ * 提交新增表单数据
+ */
+function submitAdd() {
+    let form = layui.form;
+    //监听提交
+    form.on('submit(submitAvgPrice)', function (data) {
+        console.log(data.field);
+        //let param = {};
+        $.post({
+            url: urlConfig.addAvgPrice,
+            data: JSON.stringify(data.field),
+            contentType: "application/json",
+            success: function (res) {
+                if (res.code === 0) {
+                    layer.msg("新增均价成功！");
+                }
+            }
+        });
+    });
+}
+
+function searchEstateName(name){
+    $.post({
+        url: urlConfig.estateList,
+        data: JSON.stringify({page:1,limit:10,name:name}),
+        contentType: "application/json",
+        success: function (val) {
+            let res = JSON.parse(val);
+            $('#estateId').append('<option selected value="">请输入选择</option>');
+            $.each(res.data, function (index, item) {
+                let v = "";
+                if(item.name){
+                    v+=item.name+"—";
+                }
+                if(item.cityName){
+                    v+=item.cityName+"—";
+                }
+                if(item.districtName){
+                    v+=item.districtName;
+                }
+                $('#estateId').append('<option value="' + item.id + '">' + v + '</option>');
+                //console.log(v);
+            });
+            layui.form.render('select');
+        }
+    });
+
+}
+

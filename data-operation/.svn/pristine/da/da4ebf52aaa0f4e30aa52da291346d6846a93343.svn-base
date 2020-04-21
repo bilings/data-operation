@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.hifo.dataoperation.mapper.estate.AvgPriceMapper">
+
+    <!-- 查询list -->
+    <select id="query" resultType="com.hifo.dataoperation.vo.BusEstateAvgPriceExtend">
+        select be.name as estateName,be.cityName,be.mainQuality,be.districtName,be.blockName,beap.*
+        from
+        (select *
+        from bus_estate_avg_price
+        where organizationId = #{busEstateAvgPrice.organizationId}
+        <if test="busEstateAvgPrice.estateId!=null and busEstateAvgPrice.estateId>0">
+            AND estateId =#{busEstateAvgPrice.estateId}
+        </if>
+        <if test="busEstateAvgPrice.quality!=null and busEstateAvgPrice.quality!=''">
+            AND quality =#{busEstateAvgPrice.quality}
+        </if>
+        <if test="busEstateAvgPrice.monthOnMonth!=null and busEstateAvgPrice.monthOnMonth!=''">
+            AND monthOnMonth =#{busEstateAvgPrice.monthOnMonth}
+        </if>
+        <if test="busEstateAvgPrice.standAcreage!=null and busEstateAvgPrice.standAcreage!=''">
+            AND standAcreage =#{busEstateAvgPrice.standAcreage ,jdbcType=REAL}
+        </if>
+        <if test="busEstateAvgPrice.isAudit!=null and busEstateAvgPrice.isAudit!=''">
+            AND isAudit =#{busEstateAvgPrice.isAudit}
+        </if>
+        <if test="busEstateAvgPrice.buildingType!=null and busEstateAvgPrice.buildingType!=''">
+            AND buildingType =#{busEstateAvgPrice.buildingType}
+        </if>
+        <if test="busEstateAvgPrice.calDateStart!=null and busEstateAvgPrice.calDateStart!=''">
+            AND calDate &gt;=#{busEstateAvgPrice.calDateStart}
+        </if>
+        <if test="busEstateAvgPrice.calDateEnd!=null and busEstateAvgPrice.calDateEnd!=''">
+            AND calDate &lt;= #{busEstateAvgPrice.calDateEnd}
+        </if>
+        <if test="busEstateAvgPrice.caseNoMin!=null and busEstateAvgPrice.caseNoMin!=''">
+            AND caseNo &gt;=#{busEstateAvgPrice.caseNoMin}
+        </if>
+        <if test="busEstateAvgPrice.caseNoMax!=null and busEstateAvgPrice.caseNoMax!=''">
+            AND caseNo &lt;= #{busEstateAvgPrice.caseNoMax}
+        </if>
+        <if test="busEstateAvgPrice.avgPriceSysMin!=null and busEstateAvgPrice.avgPriceSysMin!=''">
+            AND avgPriceSys &gt;=#{busEstateAvgPrice.avgPriceSysMin}
+        </if>
+        <if test="busEstateAvgPrice.avgPriceSysMax!=null and busEstateAvgPrice.avgPriceSysMax!=''">
+            AND avgPriceSys &lt;= #{busEstateAvgPrice.avgPriceSysMax}
+        </if>
+        <choose>
+            <when test="busEstateAvgPrice.visibility!=null and busEstateAvgPrice.visibility!=''">
+                AND visibility=#{busEstateAvgPrice.visibility}
+            </when>
+            <otherwise>
+                and visibility in (1, 2)
+            </otherwise>
+        </choose>
+         )beap
+        LEFT JOIN bus_estate be ON beap.estateId = be.id
+        where be.cityId = #{busEstateAvgPrice.cityId}
+        <if test="busEstateAvgPrice.districtId!=null and busEstateAvgPrice.districtId!=''">
+            AND be.districtId =#{busEstateAvgPrice.districtId}
+        </if>
+        <if test="busEstateAvgPrice.districtName!=null and busEstateAvgPrice.districtName!=''">
+            AND be.districtName =#{busEstateAvgPrice.districtName}
+        </if>
+        <if test="busEstateAvgPrice.estateName!=null and busEstateAvgPrice.estateName!=''">
+            AND (be.name like '%${busEstateAvgPrice.estateName}%')
+        </if>
+    </select>
+
+    <!-- 查询Map -->
+    <select id="queryMap" resultType="java.util.Map">
+        select be.name as estateName,be.cityName,be.districtName,be.blockName,beap.*
+        from
+        (select *
+        from bus_estate_avg_price
+        where organizationId = #{busEstateAvgPrice.organizationId}
+        <if test="busEstateAvgPrice.estateId!=null and busEstateAvgPrice.estateId>0">
+            AND estateId =#{busEstateAvgPrice.estateId}
+        </if>
+        <if test="busEstateAvgPrice.quality!=null and busEstateAvgPrice.quality!=''">
+            AND quality =#{busEstateAvgPrice.quality}
+        </if>
+        <if test="busEstateAvgPrice.monthOnMonth!=null and busEstateAvgPrice.monthOnMonth!=''">
+            AND monthOnMonth =#{busEstateAvgPrice.monthOnMonth}
+        </if>
+        <if test="busEstateAvgPrice.standAcreage!=null and busEstateAvgPrice.standAcreage!=''">
+            AND standAcreage =#{busEstateAvgPrice.standAcreage ,jdbcType=REAL}
+        </if>
+        <if test="busEstateAvgPrice.isAudit!=null and busEstateAvgPrice.isAudit!=''">
+            AND isAudit =#{busEstateAvgPrice.isAudit}
+        </if>
+        <if test="busEstateAvgPrice.buildingType!=null and busEstateAvgPrice.buildingType!=''">
+            AND buildingType =#{busEstateAvgPrice.buildingType}
+        </if>
+        <if test="busEstateAvgPrice.calDateStart!=null and busEstateAvgPrice.calDateStart!=''">
+            AND calDate &gt;=#{busEstateAvgPrice.calDateStart}
+        </if>
+        <if test="busEstateAvgPrice.calDateEnd!=null and busEstateAvgPrice.calDateEnd!=''">
+            AND calDate &lt;= #{busEstateAvgPrice.calDateEnd}
+        </if>
+        <if test="busEstateAvgPrice.caseNoMin!=null and busEstateAvgPrice.caseNoMin!=''">
+            AND caseNo &gt;=#{busEstateAvgPrice.caseNoMin}
+        </if>
+        <if test="busEstateAvgPrice.caseNoMax!=null and busEstateAvgPrice.caseNoMax!=''">
+            AND caseNo &lt;= #{busEstateAvgPrice.caseNoMax}
+        </if>
+        <if test="busEstateAvgPrice.avgPriceSysMin!=null and busEstateAvgPrice.avgPriceSysMin!=''">
+            AND avgPriceSys &gt;=#{busEstateAvgPrice.avgPriceSysMin}
+        </if>
+        <if test="busEstateAvgPrice.avgPriceSysMax!=null and busEstateAvgPrice.avgPriceSysMax!=''">
+            AND avgPriceSys &lt;= #{busEstateAvgPrice.avgPriceSysMax}
+        </if>
+        <choose>
+            <when test="busEstateAvgPrice.visibility!=null and busEstateAvgPrice.visibility!=''">
+                AND visibility=#{busEstateAvgPrice.visibility}
+            </when>
+            <otherwise>
+                and visibility in (1, 2)
+            </otherwise>
+        </choose>
+        )beap
+        LEFT JOIN bus_estate be ON beap.estateId = be.id
+        where be.cityId = #{busEstateAvgPrice.cityId}
+        <if test="busEstateAvgPrice.districtId!=null and busEstateAvgPrice.districtId!=''">
+            AND be.districtId =#{busEstateAvgPrice.districtId}
+        </if>
+        <if test="busEstateAvgPrice.districtName!=null and busEstateAvgPrice.districtName!=''">
+            AND be.districtName =#{busEstateAvgPrice.districtName}
+        </if>
+        <if test="busEstateAvgPrice.estateName!=null and busEstateAvgPrice.estateName!=''">
+            AND (be.name like '%${busEstateAvgPrice.estateName}%')
+        </if>
+    </select>
+
+    <update id="batchUpdate" parameterType="java.util.List">
+        <foreach collection="list" item="item" separator=";">
+            update bus_estate_avg_price
+            <set>
+                avgPriceManual= #{item.avgPriceManual},
+                isAudit= #{item.isAudit},
+                visibility= #{item.visibility}
+            </set>
+            where id = #{item.id}
+        </foreach>
+    </update>
+
+</mapper>

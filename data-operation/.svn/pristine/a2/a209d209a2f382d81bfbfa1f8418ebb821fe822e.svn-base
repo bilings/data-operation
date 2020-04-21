@@ -1,0 +1,33 @@
+package com.hifo.dataoperation.entity;
+
+import com.baomidou.mybatisplus.annotation.TableName;
+import com.hifo.dataoperation.base.Entity;
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+
+import java.util.Date;
+
+/**
+ * 虚拟日志
+ *
+ * @author whc
+ * @date 2019/4/1
+ */
+@EqualsAndHashCode(callSuper = true)
+@Data
+@TableName("bus_virtual_rel")
+public class BusVirtualRel extends Entity {
+
+    private Integer organizationId;
+
+    private Long fromId;
+
+    private Long toId;
+
+    private Integer createId;
+
+    private String createName;
+
+    private Date createTime;
+
+}

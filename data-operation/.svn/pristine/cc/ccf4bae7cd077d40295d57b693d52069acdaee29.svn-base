@@ -1,0 +1,131 @@
+package com.hifo.dataoperation.service.crm.impl;
+
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.BusOrganizationCity;
+import com.hifo.dataoperation.mapper.crm.ExtEmployeeMapper;
+import com.hifo.dataoperation.mapper.base.Field;
+import com.hifo.dataoperation.mapper.base.Table;
+import com.hifo.dataoperation.entity.ExtEmployee;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.base.BasicService;
+import com.hifo.dataoperation.service.crm.EmployeeService;
+import com.hifo.dataoperation.base.MybatisPlusService;
+import com.hifo.dataoperation.service.setting.BusOrganizationCityService;
+import com.hifo.dataoperation.util.DateUtil;
+import com.hifo.dataoperation.util.Md5Util;
+import com.hifo.dataoperation.util.StringUtil;
+import lombok.var;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.StringTokenizer;
+
+/**
+ * 维护机构员工
+ *
+ * @author whc
+ * @date 2019/3/13 14:55
+ */
+@Service
+public class EmployeeServiceImpl extends MybatisPlusService<ExtEmployeeMapper, ExtEmployee> implements EmployeeService {
+
+    @Autowired
+    private BasicService basicService;
+    @Autowired
+    private BusOrganizationCityService busOrganizationCityService;
+
+    @Override
+    public ExtEmployee getEmployee(String username, String password) {
+        List<ExtEmployee> list = baseMapper.selectList(new QueryWrapper<ExtEmployee>().eq("username", username));
+        if (list.size() != 1) {
+            return null;
+        }
+        ExtEmployee extEmployee = list.get(0);
+        if (Md5Util.verify(password, extEmployee.getPassword())) {
+            return extEmployee;
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public IPage getEmployeeList(int organizationId, String keyword, Pagination pages) {
+        QueryWrapper<ExtEmployee> query = new QueryWrapper();
+        query.eq("organizationId", organizationId);
+        if (StringUtil.isNotEmpty(keyword)) {
+            query.and(wrapper -> wrapper.like("name", keyword).or().like("username", keyword));
+        }
+        var page = baseMapper.selectPage(pages, query);
+        return page;
+    }
+
+    @Override
+    public List<BusOrganizationCity> getCityListByOrganization(int organizationId) {
+        return busOrganizationCityService.listCityByUser(organizationId);
+    }
+
+    @Override
+    public ExtEmployee findById(String id) {
+        return basicService.load2Java(Table.ext_employee, new Field("id", id), ExtEmployee.class);
+    }
+
+    @Override
+    public void update(ExtEmployee extEmployee) {
+        // 把权限保存为json数组格式
+        String moduleCodes = extEmployee.getModuleCodes();
+        StringTokenizer st = new StringTokenizer(moduleCodes, ",");
+        List<String> moduleList = new ArrayList<>();
+        while (st.hasMoreTokens()) {
+            moduleList.add(st.nextToken());
+        }
+        // 更新数据库
+        if (StringUtil.isNull(extEmployee.getId())) {
+            // 密码md5加密
+            extEmployee.setPassword(Md5Util.md5(extEmployee.getPassword()));
+            // 新增
+            basicService.update(Table.ext_employee, extEmployee);
+        } else {
+            // 不要更新密码
+            extEmployee.setPassword(null);
+            // 更新
+            basicService.update(Table.ext_employee, extEmployee);
+        }
+    }
+
+    @Override
+    public void delete(String id) {
+        basicService.delete(Table.ext_employee, Field.pk(id));
+    }
+
+    @Override
+    public ApiResult updateCityById(Long id) {
+        return ApiResult.success(busOrganizationCityService.updateCityById(id));
+    }
+
+    @Transactional(value = "hifoTransactionManager", rollbackFor = Exception.class)
+    @Override
+    public ApiResult resetPassword(String id, String password, String pwd) {
+        var obj = getById(id);
+        if (obj == null) {
+            return ApiResult.failed("当前用户不存在。");
+        }
+        if (StringUtil.isEmpty(pwd) || !obj.getPassword().equals(Md5Util.md5(pwd))) {
+            return ApiResult.failed("原密码不正确。");
+        }
+        if (StringUtil.isEmpty(password)) {
+            return ApiResult.failed("输入的密码不符合规范。");
+        }
+        if (obj.getPassword().equals(Md5Util.md5(password.trim()))) {
+            return ApiResult.failed("新密码与原始密码一致。");
+        }
+        obj.setPassword(Md5Util.md5(password.trim()));
+        updateById(obj);
+        return ApiResult.success();
+    }
+
+}

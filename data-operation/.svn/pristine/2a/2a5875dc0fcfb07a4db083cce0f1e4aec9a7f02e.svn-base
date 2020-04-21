@@ -1,0 +1,358 @@
+var estateIndex_obj = {
+
+    urlConfig: {
+        // 获取楼盘数据
+        estateList: '/estate/list',
+        // 行政区下拉
+        districtOfCity: '/setting/districtOfCity',
+        // 隐藏（仅后端可见）
+        visibility: '/estate/visibility',
+        // 可估
+        evaluate: '/estate/evaluate',
+        // 导入
+        import: '/estate/import'
+    },
+
+    tableIns: '',
+
+    /**
+     * 页面初始化入口
+     */
+    init: function () {
+        this._displayTable();
+        this._initToolbar();
+        this._initBar();
+        this._initSearch();
+        this._initSelect();
+    },
+
+    /**
+     * 下拉
+     * @private
+     */
+    _initSelect: function () {
+        var _this = this;
+        var cityMongoId = parent.homeIndex_obj.currentCityMongoId;
+        // 行政区
+        _this._initBasicSelect(_this.urlConfig.districtOfCity, {parentId: cityMongoId}, 'districtSelect', 'districtId');
+    },
+
+    /**
+     * 区划下拉处理
+     *
+     * @param url
+     * @param data
+     * @param id
+     * @param areaId
+     * @private
+     */
+    _initBasicSelect: function (url, data, id, areaId) {
+        var _this = this;
+        $.get({
+            url: url,
+            data: data,
+            success: function (res) {
+                $('#estateIndex_wrapper #' + id).html('<option></option>');
+                $.each(res.data, function (index, item) {
+                    if (_this.estate && item.mongoId === _this.estate[areaId]) {
+                        $('#estateIndex_wrapper #' + id).append('<option value="' + item.mongoId + '" selected="">' + item.name + '</option>');
+                    } else {
+                        $('#estateIndex_wrapper #' + id).append('<option value="' + item.mongoId + '">' + item.name + '</option>');
+                    }
+                });
+                layui.form.render('select');
+            }
+        });
+    },
+
+    /**
+     * 初始化搜索条按钮
+     * @private
+     */
+    _initSearch: function () {
+        var _this = this;
+        $('#estateIndex_wrapper #searchBtn').on('click', function () {
+            _this.tableIns.reload({
+                where: {
+                    cityId: parent.homeIndex_obj.currentCityMongoId,
+                    districtId: $('#estateIndex_wrapper #districtSelect').val(),
+                    name: $('#estateIndex_wrapper #estateName').val(),
+                    createName: $('#estateIndex_wrapper #employeeName').val(),
+                    visibility: $('#estateIndex_wrapper #visibility').val()
+                }
+            });
+        });
+        $('#estateIndex_wrapper #exportBtn').on('click', function () {
+            layer.open({
+                type: 2,
+                title: '导出条件',
+                content: 'export.html',
+                area: ['97%', '97%']
+            });
+        });
+    },
+
+    /**
+     * 初始化表格信息
+     * @private
+     */
+    _displayTable: function () {
+        var _this = this;
+        // 表格初始化
+        _this.tableIns = layui.table.render({
+            elem: '#estateIndex_wrapper #estateTable',
+            url: _this.urlConfig.estateList,
+            method: 'get',
+            where: {
+                cityId: parent.homeIndex_obj.currentCityMongoId,
+                districtId: $('#estateIndex_wrapper #districtSelect').val(),
+                name: $('#estateIndex_wrapper #estateName').val(),
+                createName: $('#estateIndex_wrapper #employeeName').val(),
+                visibility: $('#estateIndex_wrapper #visibility').val()
+            },
+            toolbar: '#tableBar',
+            title: '楼盘信息表',
+            cols: [[
+                {type: 'checkbox', fixed: 'left'},
+                {
+                    field: 'communityName', title: '名称', width: 210,
+                    templet: function (d) {
+                        var a = '<a href="#" style="' +
+                            'color: blue;" onclick="estateIndex_obj._gotoDetail(' + d._id + ',\'' + d.communityName + '\')">' + d.communityName + '</a>';
+                        if (d.isVirtual === '1') {
+                            var badge = '&nbsp;<span class="layui-badge layui-bg-cyan">虚</span>';
+                            a = a + badge;
+                        }
+                        return a;
+                    }
+                },
+                {field: 'districtName', title: '行政区'},
+                {
+                    field: 'address', title: '地址', width: 200
+                    // templet: function (d) {
+                    //     try {
+                    //         var addrDetail = JSON.parse(d.address);
+                    //         var str = addrDetail.road + addrDetail.number;
+                    //         if (addrDetail.number) {
+                    //             str = str + '号';
+                    //         }
+                    //         return str;
+                    //     } catch (e) {
+                    //         return '';
+                    //     }
+                    // }
+                },
+                {
+                    field: 'buildingNo', title: '已建楼栋',
+                    templet: function (d) {
+                        if (d.buildingNo) {
+                            return '<a href="#" style="color: blue;" onclick="estateIndex_obj._gotoBuilding(' + d.id + ',\'' + d.name + '\')">' + d.buildingNo + '</a>'
+                        } else {
+                            return '';
+                        }
+                    }
+                },
+                {field: 'roomNo', title: '已建房号'},
+                {field: 'coverageArea', title: '占地面积'},
+                {field: 'createName', title: '创建人'},
+                {field: 'updateDate', title: '修改时间', width: 160, templet:"<div>{{layui.util.toDateString(d.updateDate)}}</div>"},
+                {field: 'capacity', title: '容积率', hide: 'true'},
+                {field: 'greenRatio', title: '绿化率', hide: 'true'},
+                {field: 'parkNo', title: '停车位', hide: 'true'},
+                {field: 'buildYearStart', title: '建成年代（起）', hide: 'true'},
+                {field: 'buildYearEnd', title: '建成年代（止）', hide: 'true'},
+                {field: 'developerDesc', title: '开发商', hide: 'true'},
+                {field: 'mainAcreage', title: '主力面积', hide: 'true'},
+                {field: 'priceDesc', title: '特殊说明', hide: 'true'},
+                {fixed: 'right', title: '操作', toolbar: '#lineBar', width: 250}
+            ]],
+            page: true,
+            id: 'estateTable'
+        });
+    },
+
+    /**
+     * 头部工具栏按钮
+     * @private
+     */
+    _initToolbar: function () {
+        var _this = this;
+        layui.table.on('toolbar(estateTable)', function (obj) {
+            var ids = _this._getCheckedValue();
+            if (obj.event === 'addBtn') {
+                parent.homeIndex_obj._addTab('新增楼盘', '../estate/edit.html', false, '');
+            } else if (obj.event === 'hideBtn') {
+                _this._visibility(ids, 1);
+            } else if (obj.event === 'undoHideBtn') {
+                _this._visibility(ids, 2);
+            } else if (obj.event === 'deleteBtn') {
+                _this._visibility(ids, 0);
+            } else if (obj.event === 'evaluateBtn') {
+                _this._evaluate(ids, 1);
+            } else if (obj.event === 'undoEvaluateBtn') {
+                _this._evaluate(ids, 0);
+            } else if (obj.event === 'mergeBtn') {
+                _this._merge(ids);
+            } else if (obj.event === 'virtualBtn') {
+                _this._virtual(ids);
+            }
+        });
+    },
+
+    /**
+     * 获取选中行id，以逗号分隔
+     * @returns {string}
+     * @private
+     */
+    _getCheckedValue: function () {
+        var checkStatus = layui.table.checkStatus('estateTable');
+        var ids = '';
+        $.each(checkStatus.data, function (index, item) {
+            ids += item.id;
+            if (index < checkStatus.data.length - 1) {
+                ids += ',';
+            }
+        });
+        return ids;
+    },
+
+    /**
+     * 行工具栏按钮
+     * @private
+     */
+    _initBar: function () {
+        var _this = this;
+        // 绑定按钮
+        layui.table.on('tool(estateTable)', function (obj) {
+            var data = obj.data;
+            if (obj.event === 'hide') {
+                // 隐藏和可见相互切换
+                var visibility = data.visibility === '1' ? '2' : '1';
+                _this._visibility(data.id, visibility);
+            } else if (obj.event === 'evaluate') {
+                // 可估和不可估相互切换
+                var canEvaluate = data.canEvaluate === '0' ? '1' : '0';
+                _this._evaluate(data.id, canEvaluate);
+            } else if (obj.event === 'merge') {
+                _this._merge(data.id);
+            } else if (obj.event === 'virtual') {
+                _this._virtual(data.id);
+            }
+        });
+    },
+
+    /**
+     * 隐藏/可见
+     * @param ids
+     * @param visibility
+     * @private
+     */
+    _visibility: function (ids, visibility) {
+        var _this = this;
+        $.ajax({
+            url: _this.urlConfig.visibility,
+            type: 'PUT',
+            data: {ids: ids, visibility: visibility},
+            success: function (res) {
+                if (res.code === 0) {
+                    // 触发分页的确定按钮
+                    $(".layui-laypage-btn")[0].click();
+                }
+            }
+        });
+    },
+
+    /**
+     * 可估/不可估
+     * @param ids
+     * @param canEvaluate
+     * @private
+     */
+    _evaluate: function (ids, canEvaluate) {
+        var _this = this;
+        $.ajax({
+            url: _this.urlConfig.evaluate,
+            type: "PUT",
+            data: {ids: ids, canEvaluate: canEvaluate},
+            success: function (res) {
+                if (res.code === 0) {
+                    // 触发分页的确定按钮
+                    $(".layui-laypage-btn")[0].click();
+                }
+            }
+        });
+    },
+
+    /**
+     * 跳转到楼栋
+     * @param id
+     * @param name
+     * @private
+     */
+    _gotoBuilding: function (id, name) {
+        parent.homeIndex_obj._addTab('楼栋-' + name, '../building/index.html?estateId=' + id, false, '');
+    },
+
+    /**
+     * 跳转到房号
+     * @param id
+     * @private
+     */
+    _gotoRoom: function (id) {
+        // 新增一个Tab项
+        parent.layui.element.tabAdd('tabs', {
+            title: '房号管理',
+            content: '<iframe id="房号管理" src="../room/index.html?estateId=' + id + '"></iframe>',
+            id: '房号管理'
+        });
+        // 切换到新增的Tab
+        parent.layui.element.tabChange('tabs', '房号管理');
+    },
+
+    /**
+     * 跳转到楼盘详情
+     * @param id
+     * @param name
+     * @private
+     */
+    _gotoDetail: function (id, name) {
+        parent.homeIndex_obj._addTab(name, '../estate/edit.html?id=' + id, false, '');
+    },
+
+    /**
+     * 合并
+     * @private
+     */
+    _merge: function (ids) {
+        if (ids.length === 0) {
+            layer.msg('请首先选择楼盘');
+        } else {
+            layer.open({
+                type: 2,
+                title: '合并楼盘',
+                content: 'merge.html?ids=' + ids,
+                area: ['90%', '90%']
+            });
+        }
+    },
+
+    /**
+     * 虚拟
+     * @param ids
+     * @private
+     */
+    _virtual: function (ids) {
+        if (ids.length === 0) {
+            layer.msg('请首先选择楼盘');
+        } else {
+            layer.open({
+                type: 2,
+                title: '虚拟楼盘',
+                content: 'virtual.html?ids=' + ids,
+                area: ['90%', '90%']
+            });
+        }
+    }
+};
+
+estateIndex_obj.init();

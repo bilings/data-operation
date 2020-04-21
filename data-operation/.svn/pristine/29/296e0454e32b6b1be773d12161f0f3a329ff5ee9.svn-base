@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="edit.css" rel="stylesheet">
+    <title>员工管理</title>
+</head>
+<body>
+<div id="employeeEdit_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="username" name="username" lay-verify="required" autocomplete="off"
+                       placeholder="请输入用户名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">密码</label>
+            <div class="layui-input-inline">
+                <input type="text" id="password" name="password" lay-verify="required" autocomplete="off"
+                       placeholder="请输入密码" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">姓名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="name" name="name" lay-verify="required" autocomplete="off"
+                       placeholder="请输入姓名" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">验证手机</label>
+            <div class="layui-input-inline">
+                <input type="text" id="tel" name="tel" lay-verify="required|phone" autocomplete="off"
+                       placeholder="请输入手机号" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">权限</label>
+            <div class="layui-input-block" id="permission">
+                <input type="checkbox" name="module" title="楼盘管理" value="100" lay-filter="permission"><br>
+                <input type="checkbox" name="module" title="批量导入" value="200" lay-filter="permission"><br>
+                <input type="checkbox" name="module" title="均价管理" value="300" lay-filter="permission">
+                <input type="checkbox" name="module" title="片区均价" value="301" lay-filter="permission">
+                <input type="checkbox" name="module" title="楼盘均价" value="302" lay-filter="permission">
+                <input type="checkbox" name="module" title="通用系数" value="303" lay-filter="permission"><br>
+                <input type="checkbox" name="module" title="基础配置" value="400" lay-filter="permission">
+                <input type="checkbox" name="module" title="字段选项" value="401" lay-filter="permission">
+                <input type="checkbox" name="module" title="算法优先" value="402" lay-filter="permission">
+                <input type="checkbox" name="module" title="数据订阅" value="403" lay-filter="permission">
+                <input type="checkbox" name="module" title="询价单  " value="404" lay-filter="permission">
+                <input type="checkbox" name="module" title="行政区划" value="405" lay-filter="permission"><br>
+                <input type="checkbox" name="module" title="代建任务" value="500" lay-filter="permission"><br>
+                <input type="checkbox" name="module" title="权限管理" value="600" lay-filter="permission">
+                <input type="checkbox" name="module" title="员工管理" value="601" lay-filter="permission">
+                <input type="checkbox" name="module" title="客户管理" value="602" lay-filter="permission">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block">
+                <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="edit.js"></script>
+</body>
+</html>

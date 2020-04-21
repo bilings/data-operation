@@ -1,0 +1,165 @@
+#homeIndex_wrapper {
+    min-width: 1000px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+}
+
+#homeIndex_wrapper #env {
+    position: absolute;
+    top: 0;
+    left: 60px;
+}
+
+/*#homeIndex_wrapper #loginUser {*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 150px;*/
+/*}*/
+
+/*#homeIndex_wrapper #logout {*/
+    /*position: absolute;*/
+    /*top: 0;*/
+    /*left: 240px;*/
+/*}*/
+
+#homeIndex_wrapper #switchCity {
+    position: absolute;
+    top: 0;
+    left: 300px;
+    width: 85px;
+}
+
+#homeIndex_wrapper #switch {
+    position: absolute;
+    top: 0;
+    left: 90px;
+}
+
+/**左侧导航**/
+.homeIndex_spread > .layui-nav {
+    display: none;
+}
+
+#homeIndex_wrapper > .layui-nav {
+    border-radius: 0;
+}
+
+#homeIndex_wrapper > .layui-nav-side {
+    top: 120px;
+}
+
+#homeIndex_wrapper > .layui-nav-side .layui-icon:before {
+    padding-right: 10px;
+    vertical-align: bottom;
+    font-size: 19px;
+}
+
+#homeIndex_wrapper > .layui-nav-side .layui-nav-child a {
+    text-indent: 28px;
+}
+
+/**水平导航**/
+#homeIndex_wrapper > .headerNav {
+    position: absolute;
+    top: 0;
+    left: 200px;
+    right: 0;
+    height: 60px;
+    line-height: 60px;
+}
+
+.homeIndex_spread > .headerNav {
+    left: 0 !important;
+}
+
+#homeIndex_wrapper > .headerNav > .layui-icon {
+    margin-left: 25px;
+    color: #333;
+    font-size: 18px;
+    cursor: pointer;
+}
+
+/**logo**/
+@-webkit-keyframes colorTrans {
+    0% {
+        color: #01AAED;
+    }
+    25% {
+        color: #5FB878;
+    }
+    50% {
+        color: #009688;
+    }
+    75% {
+        color: #FFB800;
+    }
+    100% {
+        color: #01AAED;
+    }
+}
+
+#homeIndex_wrapper > .logo {
+    animation: colorTrans 6s infinite;
+    -webkit-animation: colorTrans 6s infinite;
+    position: absolute;
+    width: 200px;
+    text-align: center;
+    background-color: #2F4056;
+    top: 0;
+    left: 0;
+    height: 120px;
+    padding: 12px;
+    box-sizing: border-box;
+    line-height: 38px;
+    font-weight: bold;
+}
+
+.homeIndex_spread > .logo {
+    display: none;
+}
+
+#homeIndex_wrapper > .logo img {
+    max-height: 67px;
+}
+
+/**工作台**/
+#homeIndex_wrapper > .layui-tab {
+    position: absolute;
+    top: 50px;
+    left: 200px;
+    right: 0;
+    bottom: 0;
+    margin: 0;
+}
+
+.homeIndex_spread > .layui-tab {
+    left: 0 !important;
+}
+
+#homeIndex_wrapper > .layui-tab > .layui-tab-title {
+    z-index: 2;
+    background: #fff;
+}
+
+#homeIndex_wrapper > .layui-tab > .layui-tab-content {
+    position: absolute;
+    top: 41px;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    padding: 0;
+}
+
+#homeIndex_wrapper > .layui-tab iframe {
+    display: block;
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    border: none;
+}

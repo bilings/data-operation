@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="customerUserIndex.css" rel="stylesheet">
+    <title>用户管理</title>
+</head>
+<body>
+<div id="customerUserIndex_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline">
+                    <input type="text" id="username" class="layui-input" placeholder="请输入关键字" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline" id="btnDiv">
+                    <button id="searchBtn"lay-event="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-normal ">查询</button>
+                    <script type="text/html" id="customerUserIndexBar">
+                        <button id="addBtn" lay-event="addBtn" type="button" class="layui-btn layui-btn-sm">添加用户</button>
+                        <button id="editBtn" lay-event="editBtn" type="button" class="layui-btn layui-btn-sm">编辑</button>
+                        <button id="resetBtn" lay-event="resetBtn" type="button" class="layui-btn layui-btn-sm">重置密码</button>
+                        <button id="deleteBtn" lay-event="deleteBtn"type="button" class="layui-btn layui-btn-sm">删除</button>
+                    </script>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="customerUserIndexTableDiv">
+        <table class="layui-hide" id="customerUserIndexTable" lay-filter="customerUserIndexTable"></table>
+    </div>
+</div>
+@@include('../base/footer.html')
+<script type="text/javascript" src="dict.js"></script>
+<script type="text/javascript" src="customerUserIndex.js"></script>
+</body>
+</html>

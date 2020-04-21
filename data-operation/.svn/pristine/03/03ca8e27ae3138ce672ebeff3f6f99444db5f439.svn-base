@@ -1,0 +1,111 @@
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+.cloudTableAuto{
+    width:1650px;
+    margin:20px auto;
+}
+.cloudTable{
+    border: 1px solid #e0e6ed;
+    font-size: 16px;
+    width:100%;
+}
+.cloudTableTitle{
+    padding:10px 20px;
+}
+.cloudTable td {
+    height: 40px;
+    min-width: 0px;
+    box-sizing: border-box;
+    vertical-align: middle;
+    position: relative;
+    border-bottom: 1px solid #e0e6ed;
+}
+/*  表头 */
+.cloudTable_header tr {
+    background-color: #efeff1;
+}
+.cloudTable_header th {
+    min-width: 0;
+    box-sizing: border-box;
+    text-overflow: ellipsis;
+    vertical-align: middle;
+    position: relative;
+    border-bottom: 1px solid #e0e6ed;
+    border-right: 1px solid #e0e6ed;
+    padding: 10px 0px;
+    white-space: nowrap;
+    overflow: hidden;
+    font-weight: bold;
+    text-align: -internal-center;
+}
+
+/* 表身体 */
+.cloudTable_body tr td {
+    height: 40px;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    box-sizing: border-box;
+    -webkit-box-sizing: border-box;
+    font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+.cloudTable_body tr td {
+    box-sizing: border-box;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    border-right: 1px solid #e0e6ed;
+}
+.cloudMtxTable_body{
+    /*height:102px;*/
+    height:402px;
+    width:100%;
+    overflow-y: auto;
+    border-bottom: 1px solid #e0e6ed;
+}
+
+/* 公用样式 */
+.data-cell {
+    padding-left: 15px;
+    padding-right: 15px;
+    font-family: 'Lato', 'Helvetica Neue', Arial, Helvetica, sans-serif;
+}
+.cloudTable_body tr:hover {
+    background-color: #c5e8fe;
+}
+
+.roomNoUnit{
+    display: block;
+    width:65%;
+}
+
+.listBuildArea{
+    display: none;
+    width:65%;
+}
+.listInnerArea{
+    display: none;
+    width:65%;
+}
+.listRealArea{
+    display: none;
+    width:65%;
+}
+.listOrientation{
+    display: none;
+    width:65%;
+}
+.condition{
+    display: none;
+    width:65%;
+}
+.site-demo-active {
+    left: 10px;
+    right: 10px;
+    top: 10px;
+}

@@ -1,0 +1,46 @@
+package com.hifo.dataoperation.service.estate;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hifo.dataoperation.entity.BusVirtualRel;
+
+import java.util.List;
+
+/**
+ * 合并日志Service
+ *
+ * @author xmw
+ * @date 2019/4/28 17:56
+ */
+public interface BusVirtualRelService extends IService<BusVirtualRel> {
+
+    /**
+     * 记录虚拟日志，虚拟的时候需要将曾经合并到fromId的楼盘，设置为虚拟到toId
+     *
+     * @param fromId 源楼盘
+     * @param toId   目标楼盘
+     */
+    void log(String fromId, String toId);
+
+    /**
+     * 删除合并关系
+     *
+     * @param fromId 被合并楼盘
+     */
+    void delete(String fromId);
+
+    /**
+     * 获取虚拟至其他楼盘的记录
+     *
+     * @param estateId
+     * @return
+     */
+    List<BusVirtualRel> listByFromId(String estateId);
+
+    /**
+     * 获取虚拟到该楼盘的记录
+     *
+     * @param estateId
+     * @return
+     */
+    List<BusVirtualRel> listByToId(String estateId);
+}

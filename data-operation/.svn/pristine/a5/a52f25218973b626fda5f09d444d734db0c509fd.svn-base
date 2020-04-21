@@ -1,0 +1,9 @@
+#estateProperty_wrapper {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+}
+
+#estateProperty_wrapper .layui-form-label{
+    width:initial !important;
+}

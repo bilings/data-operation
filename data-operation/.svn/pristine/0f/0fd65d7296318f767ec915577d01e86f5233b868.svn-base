@@ -1,0 +1,14 @@
+package com.hifo.dataoperation.service.coe;
+
+import com.hifo.dataoperation.entity.coe.FloorCoefficient;
+
+
+import java.util.List;
+
+
+public interface FloorCoefficientService {
+
+    List<FloorCoefficient> selectList(String configId);
+
+    void save(FloorCoefficient entiy);
+}

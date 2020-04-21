@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="index.css" rel="stylesheet">
+    <title>楼盘管理</title>
+</head>
+<body>
+<div id="estateIndex_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline" id="districtDiv">
+                    <select id="districtSelect" lay-search="">
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <input id="communityName" type="text" placeholder="楼盘名称或地址" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" id="employeeNameDiv">
+                    <input id="employeeName" type="text" placeholder="维护人" class="layui-input"/>
+                </div>
+                <div class="layui-input-inline" id="visibilityDiv">
+                    <select id="visibility" lay-search="">
+                        <option value="">楼盘状态</option>
+                        <option value="1">隐藏</option>
+                        <option value="2">可见</option>
+                        <option value="0">删除</option>
+                    </select>
+                </div>
+                <div class="layui-input-inline" id="btnDiv">
+                    <button id="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-normal">
+                        <li class="layui-icon layui-icon-search"></li>
+                    </button>
+                    <button id="clearBtn" type="reset" class="layui-btn layui-btn-sm layui-btn-primary">清空</button>
+                    <button id="exportBtn" type="button" class="layui-btn layui-btn-sm layui-btn-primary">导出</button>
+                </div>
+            </div>
+        </div>
+    </form>
+    <div id="estateTableDiv">
+        <table class="layui-hide" id="estateTable" lay-filter="estateTable"></table>
+    </div>
+    <script type="text/html" id="tableBar">
+        <div class="layui-btn-container" id="toolbarDiv">
+            <button class="layui-btn layui-btn-sm" lay-event="addBtn" id="addBtn">新增</button>
+            <!--<button class="layui-btn layui-btn-sm layui-btn-disabled"-->
+                    <!--style="width: 0;background-color: #f2f2f2;border: 0;"></button>-->
+            <button class="layui-btn layui-btn-sm" lay-event="mergeBtn" id="mergeBtn">合并</button>
+            <button class="layui-btn layui-btn-sm" lay-event="virtualBtn" id="virtualBtn">虚拟</button>
+            <button class="layui-btn layui-btn-sm" lay-event="evaluateBtn" id="evaluateBtn">可估</button>
+            <button class="layui-btn layui-btn-sm" lay-event="undoEvaluateBtn" id="undoEvaluateBtn">不可估</button>
+            <!--<button class="layui-btn layui-btn-sm layui-btn-disabled"-->
+                    <!--style="width: 0;background-color: #f2f2f2;border: 0;"></button>-->
+            <button class="layui-btn layui-btn-sm" lay-event="hideBtn" id="hideBtn">隐藏</button>
+            <button class="layui-btn layui-btn-sm" lay-event="undoHideBtn" id="undoHideBtn">可见</button>
+            <button class="layui-btn layui-btn-sm" lay-event="deleteBtn" id="deleteBtn">删除</button>
+        </div>
+    </script>
+    <script type="text/html" id="lineBar">
+        <a class="layui-btn layui-btn-primary layui-btn-sm" style="border: 0;" lay-event="hide">
+            <i class="layui-icon {{ d.visibility == '2' ? 'layui-icon-ok-circle' : 'layui-icon-close-fill' }}"></i>
+        </a>
+        <a href="#" style="color: blue" lay-event="merge">合并至</a>
+        <a href="#" style="color: blue" lay-event="virtual">虚拟至</a>
+        <a class="layui-btn layui-btn-primary layui-btn-sm" style="border: 0;" lay-event="evaluate">
+            <i class="layui-icon {{ d.canEvaluate == '1' ? 'layui-icon-auz' : 'layui-icon-password' }}"></i>
+        </a>
+    </script>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

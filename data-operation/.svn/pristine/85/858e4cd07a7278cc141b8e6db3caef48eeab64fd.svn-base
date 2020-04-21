@@ -1,0 +1,108 @@
+package com.hifo.dataoperation.service.estate;
+
+import com.baomidou.mybatisplus.extension.service.IService;
+import com.hifo.dataoperation.controller.ApiResult;
+import com.hifo.dataoperation.entity.BusBuilding;
+import com.hifo.dataoperation.pagination.Pagination;
+import org.bson.Document;
+import org.springframework.data.mongodb.core.query.Query;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.util.List;
+import java.util.Map;
+
+public interface BusBuildingService extends IService<BusBuilding> {
+    Pagination<BusBuilding> list(Pagination pages, BusBuilding busBuilding);
+
+    void hideBuilding(String[] ids);
+
+    void showBuilding(String[] ids);
+
+    String transferBuilding(long estateId, String transferIds);
+
+    BusBuilding findById(String id);
+
+    void fillSave(String[] colName, String fillIds, String id);
+
+    void delete(String[] ids);
+
+    void undelete(String[] ids);
+
+    String copy(BusBuilding busBuilding);
+
+    Query findByPage(Pagination pages,BusBuilding busBuilding);
+
+    /**
+     * 根据楼栋id查询楼栋信息
+     *
+     * @param entity
+     * @return
+     */
+    ApiResult qryBusBuildings(BusBuilding entity);
+
+    /**
+     * 根据楼栋id查询楼栋信息
+     *
+     * @param entity
+     * @return
+     */
+    BusBuilding qryBusBuilding(BusBuilding entity);
+
+    /**
+     * 编辑楼栋信息
+     *
+     * @param id
+     * @param entity
+     * @return
+     */
+    ApiResult updateBuilding(String id, BusBuilding entity);
+
+    String saveBuilding(BusBuilding entity);
+
+    String mergeBuilding(String[] fromIds, String toId);
+
+    /**
+     * 根据楼盘id查询map list
+     *
+     * @param estateId
+     * @return
+     */
+    List<Map<String, Object>> findMaps(long estateId);
+
+    /**
+     * 根据楼盘id查询 list
+     *
+     * @param estateId
+     * @return
+     */
+    List<BusBuilding> findLists(long estateId);
+
+    /**
+     * 楼栋信息导入
+     *
+     * @param file
+     * @return
+     * @throws Exception
+     */
+    String importBuilding(MultipartFile file) throws Exception;
+
+
+    String init();
+
+    /**
+     * 获取楼栋单个字段历史维护记录
+     * @param buildingId
+     * @param type
+     * @return
+     */
+    ApiResult<Map> log(String buildingId, String type);
+
+
+    /**
+     * 合并至该楼盘的记录列表
+     *
+     * @param id
+     * @return
+     */
+    ApiResult<List<Document>> getMergeListByToId(String id);
+}

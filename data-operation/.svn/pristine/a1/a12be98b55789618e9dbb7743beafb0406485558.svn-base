@@ -1,0 +1,55 @@
+var estateProperty_obj = {
+    urlConfig: {
+        log: '/estate/log',
+        mergeHistory: '/estate/mergeHistory'
+    },
+
+    init: function () {
+        // 数据来源
+        this._initProperty();
+        // 其他来源
+        this._initOtherProperty();
+    },
+    communityId:layui.util.urlParam('communityId'),
+    type:layui.util.urlParam('type'),
+    /**
+     * 数据来源
+     * @private
+     */
+    _initProperty: function () {
+        var data={communityId:this.communityId,type:this.type}
+        $.get({
+            url: this.urlConfig.log,
+            data: data,
+            success: function (res) {
+                console.log(res)
+                $('#estateProperty_wrapper #name').text(res.data.currentName.name);
+                $('#estateProperty_wrapper #sr').text(res.data.currentName.sr);
+                $('#estateProperty_wrapper #time').text(res.data.currentName.time);
+                $('#estateProperty_wrapper #init').text(res.data.currentName.init);
+                $('#estateProperty_wrapper #nameLast').text(res.data.lastName.name);
+                $('#estateProperty_wrapper #srLast').text(res.data.lastName.sr);
+                $('#estateProperty_wrapper #timeLast').text(res.data.lastName.time);
+                $('#estateProperty_wrapper #initLast').text(res.data.lastName.init);
+            }
+        });
+    },
+    /**
+     * 其他来源
+     * @private
+     */
+    _initOtherProperty: function () {
+        var data={id:this.communityId}
+        $.get({
+            url: this.urlConfig.mergeHistory,
+            data: data,
+            success: function (res) {
+                $.each(res.data, function (index, item) {
+                        $('#estateProperty_wrapper #otherSr').append('<div class="layui-col-xs12"><label class="layui-form-label" name="label-key">' + item.sr + '</label><label class="layui-form-label" name="label-key">' + item.name + '</label><label class="layui-form-label" name="label-key"><a href="#" style="color: blue;" >采用数据</a></label></div>');
+                });
+            }
+        });
+    }
+};
+
+estateProperty_obj.init();

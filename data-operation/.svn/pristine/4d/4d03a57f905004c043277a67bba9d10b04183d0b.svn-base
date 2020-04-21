@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="fill.css" rel="stylesheet">
+    <title>楼栋管理</title>
+</head>
+<body>
+<div id="fillIndex_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-row">
+                <div class="layui-col-xs6">
+                    <label class="layui-form-label" name="label-key">待填充数据的楼栋::</label>
+                    <div class="layui-input-inline" style="width: 77%!important;">
+                        <label id="bulidingNames"></label>
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-inline">
+                    <label class="layui-form-label">选中模板楼栋数据</label>
+                    <div class="layui-input-inline">
+                        <select id="listNames" name="listNames" lay-filter="listNames">
+                            <option value="">请选择</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <label class="layui-form-label">填充属性</label>
+            <input type="checkbox" lay-skin="primary" id="c_all" lay-filter="c_all" title="全选">
+            <div class="layui-input-block" id="column">
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="address" lay-filter="check_c" title="详细地址" data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="alias" lay-filter="check_c" title="楼栋别名" data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="floorOverGroundNo" lay-filter="check_c" title="地上总楼层"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="floorUnderGroundNo" lay-filter="check_c" autocomplete="off"
+                               title="地下总楼层" data-name="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="floorTotalNo" lay-filter="check_c" autocomplete="off" title="总楼层"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="builtDate" lay-filter="check_c" autocomplete="off" title="竣工日期"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="structure" lay-filter="check_c" autocomplete="off" title="建筑结构"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="buildingType" lay-filter="check_c" autocomplete="off" title="建筑类别"
+                               data-name="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="haveLift" lay-filter="check_c" autocomplete="off" title="有无电梯"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="liftNo" lay-filter="check_c" autocomplete="off" title="电梯数"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="liftBrand" lay-filter="check_c" autocomplete="off" title="电梯品牌"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="landArea" lay-filter="check_c" autocomplete="off" title="占地面积"
+                               data-name="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="avgPrice" lay-filter="check_c" autocomplete="off" title="最新均价"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="priceCoe" lay-filter="check_c" autocomplete="off" title="价格系数"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="isPerfect" lay-filter="check_c" autocomplete="off" title="是否完善"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="canEvaluate" lay-filter="check_c" autocomplete="off" title="是否可估"
+                               data-name="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="wallDecoration" lay-filter="check_c" autocomplete="off" title="外墙装饰"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="publicDecoration" lay-filter="check_c" title="公共装修档次"
+                               data-name="column">
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="quality" lay-filter="check_c" title="住宅品质" data-name="column">
+                    </div>
+                </div>
+                <div class="layui-row">
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="nonStandDesc" lay-filter="check_c" data-name="column"
+                               title="非标准层说明"><br>
+                    </div>
+                    <div class="layui-col-xs2">
+                        <input type="checkbox" id="priceDesc" lay-filter="check_c" data-name="column"
+                               title="价格差异说明">
+                    </div>
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-input-block">
+                    <button class="layui-btn" id="save" lay-submit="" lay-filter="save">保存</button>
+                    <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="fill.js"></script>
+</body>
+</html>

@@ -1,0 +1,14 @@
+#avgCoe_wrapper {
+    position: absolute;
+    left: 10px;
+    right: 10px;
+    top: 10px;
+}
+#addCityCoe{
+    width: 90px !important;
+    height: 30px !important;
+    color: #0C0C0C;
+    float: right;
+    position: absolute;
+    font-size: 14px;
+}

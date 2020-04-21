@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="renderer" content="webkit">
+<meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+<meta http-equiv="Pragma" content="no-cache">
+<meta http-equiv="Expires" content="-1" />
+<link href="/resource/js/layui/css/layui.css" rel="stylesheet">
+<link href="/resource/css/layui.ext.css" rel="stylesheet">
+<!-- layui拓展 -->
+<link href="/resource/js/layui/extend/formSelect/formSelects-v4.css" rel="stylesheet">
+<!--数据列表循环-->
+<script src="/resource/js/common/handlebars-v4.0.5.js"></script>
+    <link href="price.css" rel="stylesheet">
+    <title>均价管理</title>
+</head>
+<body>
+<div id="avgPriceIndex_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <div class="layui-input-inline qualityDiv">
+                    <select id="districtName" lay-search="">
+                    </select>
+                </div>
+                <div class="layui-input-inline qualityDiv">
+                    <select id="blockName" lay-search="">
+                    </select>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" id="estateName" class="layui-input" placeholder="楼盘名称" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" id="standAcreage" class="layui-input" placeholder="标准房面积（主力品质）" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline">
+                    <input type="text" id="monthOnMonth" class="layui-input" placeholder="环比" autocomplete="off"/>
+                </div>
+                <div class="layui-input-inline">
+                    <div class="layui-input-inline qualityDiv" >
+                        <select id="quality" lay-search="">
+
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-inline">
+                    <div class="layui-input-inline qualityDiv" >
+                        <select id="visibility" lay-search="">
+                            <option value="">是否删除</option>
+                            <option value="0">是</option>
+                            <option value="1">否</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-input-inline">
+                    <div class="layui-input-inline qualityDiv" >
+                        <select id="isMokuai" lay-search="">
+                            <option value="">是否样本</option>
+                            <option value="0">是</option>
+                            <option value="1">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-inline">
+                    <div class="layui-input-inline qualityDiv" >
+                        <select id="isAudit" lay-search="">
+                            <option value="">是否审核</option>
+                            <option value="1">是</option>
+                            <option value="0">否</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-input-inline">
+                    <div class="layui-input-inline qualityDiv" >
+                        <select id="buildingType" lay-search="">
+                            <option value="">建筑类别</option>
+                            <option value="0">是</option>
+                            <option value="1">否</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="layui-input-inline">
+                    <label class="layui-form-label">日期范围</label>
+                    <div class="layui-input-inline">
+                        <input type="text" class="layui-input" id="calDate" placeholder=" - ">
+                    </div>
+                </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">案例数量</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="caseNoMin" id="caseNoMin" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="caseNoMax" id="caseNoMax" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                    <div class="layui-inline">
+                        <label class="layui-form-label">均价</label>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="avgPriceSysMin" id="avgPriceSysMin" autocomplete="off" class="layui-input">
+                        </div>
+                        <div class="layui-form-mid">-</div>
+                        <div class="layui-input-inline" style="width: 100px;">
+                            <input type="text" name="avgPriceSysMax" id="avgPriceSysMax" autocomplete="off" class="layui-input">
+                        </div>
+                    </div>
+
+                <div class="layui-input-inline" id="btnDiv">
+                    <button id="searchBtn" type="button" class="layui-btn layui-btn-sm layui-btn-normal ">查询</button>
+                    <button id="clearBtn" type="reset" class="layui-btn layui-btn-sm layui-btn-normal">清空</button>
+                    <button id="exportAvgPrice" class="layui-btn layui-btn-sm layui-btn-primary">导出</button>
+                </div>
+            </div>
+        </div>
+    </form>
+
+    <script type="text/html" id="avgPriceToolbar" lay-filter="avgPriceToolbar">
+
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="batchCheck" lay-event="batchCheck">批量审核</button>
+        </div>
+        <!--<div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="batchConfirm" lay-event="batchConfirm">批量确定</button>
+        </div>-->
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="batchDelete" lay-event="batchDelete">批量删除</button>
+        </div>
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="batchUnDelete" lay-event="batchUnDelete">取消删除</button>
+        </div>
+
+    </script>
+
+    <table class="layui-table" id="avgPriceTable" lay-filter="avgPriceTable"></table>
+
+    <script type="text/html" id="avgPriceBar">
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="check" lay-event="check">{{ d.isAudit == '0' ? '审核' : '取消审核' }}</button>
+        </div>
+        <!--<div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="confirm" lay-event="confirm">确认</button>
+        </div>-->
+        <div class="layui-inline">
+            <button class="layui-btn layui-btn-sm" id="delete" lay-event="delete">{{ d.visibility == '1' ? '删除' : '取消删除' }}</button>
+        </div>
+    </script>
+
+    <!--Tpl物业品质 -->
+    <script type="text/html" id="qualityTpl">
+        {{#  if(d.quality ==15 ){ }}
+        双拼别墅
+        {{#  } else if(d.quality ==14 ){ }}
+        叠拼别墅
+        {{#  } else if(d.quality ==10 ){ }}
+        普通住宅（公寓）
+        {{#  } else if(d.quality ==16 ){ }}
+        独立别墅
+        {{#  } else if(d.quality ==17 ){ }}
+        类独栋
+        {{#  } else if(d.quality ==13 ){ }}
+        联排别墅
+        {{#  } else if(d.quality ==12 ){ }}
+        花园洋房
+        {{#  } else if(d.quality ==11 ){ }}
+        高档公寓
+        {{#  } }}
+    </script>
+
+    <!--Tpl建筑类别 -->
+    <script type="text/html" id="buildingTypeTpl">
+        {{#  if(d.buildingType ==19 ){ }}
+        低层
+        {{#  } else if(d.buildingType ==20 ){ }}
+        多层
+        {{#  } else if(d.buildingType ==21 ){ }}
+        小高层
+        {{#  } else if(d.buildingType ==23 ){ }}
+        超高层
+        {{#  } else if(d.buildingType ==22 ){ }}
+        高层
+        {{#  } }}
+    </script>
+
+</div>
+
+<script src="/resource/js/layui/layui.all.js"></script>
+<!-- layui拓展 -->
+<script src="/resource/js/layui/extend/ajax/ajax.js"></script>
+<script src="/resource/js/layui/extend/verify/verify.js"></script>
+<script src="/resource/js/layui/extend/util/util.js"></script>
+<script src="/resource/js/layui/extend/encrypt/base64.js"></script>
+<script src="/resource/js/layui/extend/formSelect/formSelects-v4.min.js"></script>
+<!-- ie 89支持媒体查询 -->
+<script src="/resource/js/htm5extend/html5.min.js"></script>
+<script src="/resource/js/htm5extend/respond.min.js"></script>
+
+<script type="text/javascript">
+	layui.config({
+		base: '/resource/js/layui/extend/' //自定义插件路径
+	}).use('jquery',function(){
+		window.$=layui.$; 
+		window.jQuery=layui.$;
+	});
+</script>
+<script src="/resource/js/jquery.nicescroll.min.js"></script>
+<script type="text/javascript" src="price.js"></script>
+</body>
+</html>

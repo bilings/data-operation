@@ -1,0 +1,149 @@
+var RoomIndex_obj = {
+
+    urlConfig:{
+        unitList:'/room/unitList',
+        roomList:'/room/roomList',
+    },
+
+    buildingId:'',
+    init: function () {
+        var _this = this;
+        // 获取楼栋ID
+        buildingId =layui.util.getQueryString("buildingId");
+        // 初始化单元
+        _this._initUnit();
+        //初始化房号表单
+        _this._initBasicTable();
+    },
+
+    /**
+     * 初始化单元
+     * @private
+     */
+    _initUnit:function(){
+        var _this = this;
+        $.ajax({
+            url: _this.urlConfig.unitList+"?buildingId="+buildingId,
+            type: 'get',
+            contentType: 'application/json;',
+            dataType: "json",
+            success: function (res) {
+                if (res.code === 0) {
+                    var html='';
+                    for (var re  in res.data) {
+                        html+='<button class="layui-btn site-demo-active" data-type="util1">'+re+'</button>'
+                    }
+                    $("#unitList").innerHTML = html
+                    // document.getElementById("unitList").innerHTML = htmllet;
+                    // 刷新当前页
+                    $(".layui-laypage-btn")[0].click();
+                }
+            }
+        });
+
+    },
+
+    /**
+     * 初始化房号表单
+     * @private
+     */
+    _initBasicTable: function() {
+        layui.use(['element', 'table'], function(){
+            var table = layui.table;
+            var element = layui.element;
+            element.on('tab(room-filter)', function(){
+                var $ = layui.jquery
+                var  lay_id = this.getAttribute('lay-id');
+                //封装房号
+                table.render({
+                    elem:  '#Lay_'+lay_id
+                    ,url: '/room/roomList?buildingId=1111111&util=1'
+                    ,cols: [[]]
+                    ,done: function(res, curr, count){
+                        var ob = [
+                            {field:'key', title: '物理层' }
+                            ,{field:'key', title: '名义层'}
+                        ]
+                        for (var key in res.data[0]) {
+                            if(key=="roomSize"){
+                                var addrDetail = res.data[0][key];
+                                for (var i=0;i<addrDetail;i++) {
+                                    var j = i+1;
+                                    var object = { field: i, title: j + '室号',
+                                        templet: function (d) {
+                                            try {
+                                                for (var key in d) {
+                                                    var addrDetail = d[key];
+                                                    for (var j in addrDetail) {
+                                                        if (j++ === this.field) ;
+                                                        {
+                                                            if("roomNo"==lay_id){
+                                                                return typeof(addrDetail[this.field].roomNo) == "undefined"?"":addrDetail[this.field].roomNo;
+                                                            }else if("buildArea"==lay_id){
+                                                                return addrDetail[this.field].buildArea;
+                                                                return typeof(addrDetail[this.field].buildArea) == "undefined"?"":addrDetail[this.field].buildArea;
+                                                            }else if("innerArea"==lay_id){
+                                                                return typeof(addrDetail[this.field].innerArea) == "undefined"?"":addrDetail[this.field].innerArea;
+                                                            }else if("orientation"==lay_id){
+                                                                return typeof(addrDetail[this.field].orientation) == "undefined"?"":addrDetail[this.field].orientation;
+                                                            }else if("scenery"==lay_id){
+                                                                return typeof(addrDetail[this.field].scenery) == "undefined"?"":addrDetail[this.field].scenery;
+                                                            }else if("structure"==lay_id){
+                                                                return typeof(addrDetail[this.field].structure) == "undefined"?"":addrDetail[this.field].structure;
+                                                            }else if("initPrice"==lay_id){
+                                                                return typeof(addrDetail[this.field].initPrice) == "undefined"?"":addrDetail[this.field].initPrice;
+                                                            }else if("priceCoe"==lay_id){
+                                                                return typeof(addrDetail[this.field].priceCoe) == "undefined"?"":addrDetail[this.field].priceCoe;
+                                                            }else{
+                                                                return '';
+                                                            }
+                                                        }
+                                                    }
+                                                }
+                                            } catch (e) {
+                                                return '';
+                                            }
+                                        }
+                                    }
+                                    ob.push(object)
+                                }
+                            }
+                        }
+                        table.init('Lay_'+lay_id,{
+                            cols:[ob]
+                            ,data:res.data
+                            ,limit:10
+                        });
+                    }
+                })
+
+                var $ = layui.$, active = {
+                    reload: function(){
+                        var roomReload = $('#roomReload');
+                        //执行重载
+                        table.reload('testReload', {
+                            page: {
+                                curr: 1 //重新从第 1 页开始
+                            }
+                            ,where: {
+                                key: {
+                                    id: roomReload.val()
+                                }
+                            }
+                        }, 'data');
+                    }
+                };
+                $('.roomTable .layui-btn').on('click', function(){
+                    var type = $(this).data('type');
+                    active[type] ? active[type].call(this) : '';
+                });
+                /******************列表渲染结束*********************/
+            });
+
+        });
+    }
+}
+
+$(function () {
+    RoomIndex_obj.init();
+});

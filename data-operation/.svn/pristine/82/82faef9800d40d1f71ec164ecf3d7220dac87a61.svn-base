@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="customerOrgEdit.css" rel="stylesheet">
+    <title>编辑机构</title>
+</head>
+<body>
+<div id="customerOrgEdit_wrapper">
+    <form class="layui-form" action="">
+        <div class="layui-row js-children-show hidden">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">上级机构:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="orgName" autocomplete="off" class="layui-input border-zero" name="label-value" readonly="readonly"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*机构名称:</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="name" autocomplete="off" class="layui-input" name="label-value" lay-verify="required"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*客户类型：</label>
+                <div class="layui-input-inline">
+                    <select id="typeSelect" lay-filter="typeSelect" search=""></select>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row js-parent-show hidden">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">*询价次数:</label>
+                <div class="layui-input-inline">
+                    <input type="number" id="times" autocomplete="off" class="layui-input" name="label-value" lay-verify="required" value="0"/>
+                </div>
+            </div>
+        </div>
+        <div class="layui-row">
+            <div class="layui-col-xs12">
+                <label class="layui-form-label" name="label-key">
+                    <button id="updateBtn" lay-filter="updateBtn" lay-submit="" class="layui-btn layui-btn-normal">保存</button>
+                </label>
+            </div>
+        </div>
+    </form>
+</div>
+
+@@include('../base/footer.html')
+<script type="text/javascript" src="dict.js"></script>
+<script type="text/javascript" src="customerOrgEdit.js"></script>
+</body>
+</html>

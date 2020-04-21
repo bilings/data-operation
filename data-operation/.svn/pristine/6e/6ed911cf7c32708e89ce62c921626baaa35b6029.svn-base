@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    @@include('../base/header.html')
+    <link href="index.css" rel="stylesheet">
+    <title>获客宝</title>
+</head>
+<body>
+<div id="homeIndex_wrapper">
+
+    <!-- 侧边导航 -->
+    <ul class="layui-nav layui-nav-tree layui-nav-side layui-bg-cyan">
+    </ul>
+
+    <!-- logo -->
+    <div class="logo layui-text-20">
+        <img src="/resource/img/logo.png"/>
+        <div>获客宝Plus</div>
+    </div>
+
+    <!-- 水平导航 -->
+    <div class="headerNav">
+        <!-- 收缩 -->
+        <ul class="layui-nav layui-bg-blue">
+            <li class="layui-nav-item" style="cursor: pointer"><span class="layui-icon layui-icon-shrink-right" id="spread"></span></li>
+            <li class="layui-nav-item layui-this">
+                <a href="javascript:;"><label id="cityShow"></label></a>
+                <dl class="layui-nav-child" id="cityList"></dl>
+            </li>
+            <li class="layui-nav-item">
+                <!--<a href="javascript:;">住宅</a>-->
+                <!--<dl class="layui-nav-child">-->
+                <!--<dd><a href="#">住宅</a></dd>-->
+                <!--<dd><a href="#">商业</a></dd>-->
+                <!--<dd><a href="#">办公</a></dd>-->
+                <!--<dd><a href="#">其他</a></dd>-->
+                <!--</dl>-->
+            </li>
+        </ul>
+        <ul class="layui-nav layui-bg-blue layui-layout-right">
+            <!--<li class="layui-nav-item">-->
+                <!--<a href="javascript:;">帮助及更新</a>-->
+                <!--<dl class="layui-nav-child">-->
+                    <!--<dd><a href="#">帮助文档</a></dd>-->
+                    <!--<dd><a href="#">最新更新</a></dd>-->
+                <!--</dl>-->
+            <!--</li>-->
+            <li class="layui-nav-item">
+                <a href="javascript:;" id="loginUser"></a>
+                <dl class="layui-nav-child">
+                    <dd><a href="#">修改密码</a></dd>
+                    <dd><a href="#" id="logout">安全退出</a></dd>
+                </dl>
+            </li>
+        </ul>
+    </div>
+
+    <!-- 工作台 -->
+    <div class="layui-tab layui-tab-brief" lay-allowClose="true" lay-filter="tabs">
+        <ul class="layui-tab-title"></ul>
+        <div class="layui-tab-content"></div>
+    </div>
+
+</div>
+@@include('../base/footer.html')
+<script type="text/javascript" src="menus.js"></script>
+<script type="text/javascript" src="index.js"></script>
+</body>
+</html>

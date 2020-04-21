@@ -1,0 +1,74 @@
+package com.hifo.dataoperation.controller;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.hifo.dataoperation.base.BasicController;
+import com.hifo.dataoperation.dto.BusEstateAvgPriceEtyDto;
+import com.hifo.dataoperation.intercept.RequiredPermission;
+import com.hifo.dataoperation.pagination.Pagination;
+import com.hifo.dataoperation.service.avgprice.BusAvgPriceService;
+
+import lombok.var;
+
+/**
+ * 楼盘均价 控制层
+ * @author weisibin
+ * @date 2020年4月8日18:02:39
+ */
+@SuppressWarnings("rawtypes")
+@RestController
+@RequestMapping("/avgPrice")
+public class BusAvgPriceControoler extends BasicController{
+	
+	@Autowired
+    private BusAvgPriceService busAvgPriceService;
+	
+	/**
+	 * 分页条件查询列表
+	 * @param pages 分页参数
+	 * @param busEstateAvgPriceEtyDto 交换实例
+	 * @return String 返回数据
+	 */
+	@PostMapping("/list")
+    @RequiredPermission("300")
+    public String list(Pagination pages, BusEstateAvgPriceEtyDto busEstateAvgPriceEtyDto) {
+        var page = busAvgPriceService.findByPage(busEstateAvgPriceEtyDto, pages);
+        return pageData(page.getTotal(), page.getRecords());
+    }
+	
+	/**
+	 * 修改数据可见度
+	 * @param busEstateAvgPriceEtyDto 交互实例
+	 * @return ApiResult 返回结果
+	 */
+	/*@PostMapping("/visibility")
+    public ApiResult visibility(BusEstateAvgPriceEtyDto busEstateAvgPriceEtyDto) {
+		return busAvgPriceService.visibility(busEstateAvgPriceEtyDto);
+    }*/
+	
+	/**
+	 * 获取建筑分类
+	 * @param busEstateAvgPriceEtyDto 交互实例
+	 * @return ApiResult 返回结果
+	 */
+	@RequestMapping("/buildingType")
+    public ApiResult buildingType() {
+		return busAvgPriceService.buildingType();
+    }
+	
+	/**
+	 * 批量/单条-隐藏/显示
+	 * @param busEstateAvgPriceEtyDto 交互实例
+	 * @return ApiResult 返回结果
+	 */
+	@PostMapping("/hideOrShow")
+    public ApiResult hideOrShow(@RequestParam(value="ids[]") String[] ids,BusEstateAvgPriceEtyDto ba) {
+		return busAvgPriceService.hideOrShow(ids, ba);
+    }
+	
+	
+}

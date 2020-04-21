@@ -1,0 +1,5 @@
+#estateExport_wrapper {
+    position: absolute;
+    top: 10px;
+    width: 100%;
+}

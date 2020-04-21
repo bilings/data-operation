@@ -1,0 +1,73 @@
+package com.hifo.dataoperation.enums;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+/**
+ * 建筑类别枚举
+ * @author weisibin
+ * @date 2020年4月8日16:17:01
+ */
+public enum BuildingTypeEnum {
+	//"低层_19",      
+	DI_C("19","低层"),
+	//"多层_20",
+	DUO_C("20","多层"),
+	//"小高层_21",
+	XGC("21","小高层"),
+	//"高层_22",
+	GC("22","高层"),
+	 //"超高层_23",
+	CGC("23","超高层");
+	String type;
+	String name;
+	BuildingTypeEnum(String type,String name){
+		this.type = type;
+		this.name = name;
+	}
+	/**
+	 * 获取类型
+	 * @return String 类型
+	 */
+	public String getType() {
+		return type;
+	}
+	/**
+	 * 获取类型名
+	 * @return String 类型名
+	 */
+	public String getName() {
+		return name;
+	}
+	/**
+	 * 根据状态码获取消息体
+	 * @param type 类型
+	 * @return String 类型名 
+	 */
+	public static String getMessage(Integer type) {
+		for (BuildingTypeEnum ps : BuildingTypeEnum.values()) {
+			if (ps.getType().equals(type)) {
+				return ps.getName();
+			}
+		}
+		return null;
+	}
+	
+	/**
+	 * 获取枚举数组
+	 * @return
+	 */
+	public static List<Map<String,String>> toArray(){
+		List<Map<String,String>> list = new ArrayList<>();
+		Map<String,String> m = null;
+		for (BuildingTypeEnum ps : BuildingTypeEnum.values()) {
+			m = new HashMap<>();
+			m.put("id", ps.getType());
+			m.put("name", ps.getName());
+			list.add(m);
+		}
+		return list;
+	}
+}
